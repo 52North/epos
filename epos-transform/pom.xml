@@ -19,4 +19,19 @@
 		</plugins>
 	</build>
 
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>epos-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.n52.sensorweb.sos</groupId>
+			<artifactId>api</artifactId>
+			<version>4.0.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+	</dependencies>
 </project>
