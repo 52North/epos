@@ -15,7 +15,7 @@
 
 	<packaging>pom</packaging>
 	<name>52°North EPOS Event Processor</name>
-	<description>52°North EPOS - Event Processing Observable Suite</description>
+	<description>52°North EPOS - Event Processing Open-closed Suite</description>
 	<inceptionYear>2013</inceptionYear>
 	<url>http://52north.org</url>
 
