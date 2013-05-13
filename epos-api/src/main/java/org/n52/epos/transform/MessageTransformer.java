@@ -33,6 +33,6 @@ public interface MessageTransformer<O> {
 
 	O transform(Object input) throws TransformationException;
 
-	boolean supportsInput(Class<?> input);
-	
+	boolean supportsInput(Object input);
+
 }

@@ -50,7 +50,7 @@ public interface TransformationRepsitory<O> {
 	 * @param input the input class
 	 * @return true if the input class is supported
 	 */
-	public boolean supportsInput(Class<?> input);
+	public boolean supportsInput(Object input);
 
 	/**
 	 * @return a set of supported output classes
@@ -105,7 +105,7 @@ public interface TransformationRepsitory<O> {
 				throws TransformationException {
 			List<TransformationRepsitory<?>> repos = getRepositories(outputClass);
 			for (TransformationRepsitory<?> t : repos) {
-				if (t.supportsInput(input.getClass())) {
+				if (t.supportsInput(input)) {
 					return t.transform(input);
 				}
 

@@ -20,22 +20,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.n52.epos.transform;
+package org.n52.epos.transform.xmlbeans;
 
+
+import org.apache.xmlbeans.XmlObject;
+import org.junit.Assert;
 import org.n52.epos.event.EposEvent;
-import org.n52.sos.event.events.ObservationInsertion;
+import org.n52.epos.transform.TransformationRepsitory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.vividsolutions.jts.util.Assert;
 
 public class ConversionTest {
 	
 	private static final Class<?> TARGET_CLASS = EposEvent.class;
+	private static final String OM_DOCUMENT = "om20observation.xml";
+	private static final Logger logger = LoggerFactory.getLogger(ConversionTest.class);
 
 	@org.junit.Test
 	public void testConversion() throws Exception {
-		ObservationInsertion ins = new ObservationInsertion(null, null);
 		Class<?> processorInputClass = resolveProcesserInputClass();
-		Object result = TransformationRepsitory.Instance.transform(ins, processorInputClass);
+		Object result = TransformationRepsitory.Instance.transform(XmlObject.Factory.parse(
+				getClass().getResourceAsStream(OM_DOCUMENT)), processorInputClass);
 		process(result);
 	}
 
@@ -43,8 +49,10 @@ public class ConversionTest {
 		try {
 			TARGET_CLASS.cast(cast);
 		} catch (Exception e) {
-			Assert.shouldNeverReachHere("Result could not be casted to EposEvent!");
+			Assert.fail("Result could not be casted to EposEvent!");
 		}
+		
+		logger.info(cast.toString());
 	}
 
 	private static Class<?> resolveProcesserInputClass() {

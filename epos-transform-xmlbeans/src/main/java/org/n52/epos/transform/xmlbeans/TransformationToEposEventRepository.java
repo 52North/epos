@@ -20,7 +20,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.n52.epos.transform.sos;
+package org.n52.epos.transform.xmlbeans;
 
 import java.util.HashSet;
 import java.util.ServiceLoader;
@@ -52,11 +52,12 @@ public class TransformationToEposEventRepository implements TransformationRepsit
 	
 	@Override
 	public EposEvent transform(Object input) throws TransformationException {
-		MessageTransformer<EposEvent> trans = findTransformer(input.getClass());
+		MessageTransformer<EposEvent> trans = findTransformers(input);
+		
 		return trans.transform(input);
 	}
 	
-	private MessageTransformer<EposEvent> findTransformer(Class<?> input) throws TransformationException {
+	private MessageTransformer<EposEvent> findTransformers(Object input) throws TransformationException {
 		for (MessageTransformer<EposEvent> t : transformers) {
 			if (t.supportsInput(input)) {
 				return t;
@@ -74,7 +75,7 @@ public class TransformationToEposEventRepository implements TransformationRepsit
 	}
 
 	@Override
-	public boolean supportsInput(Class<?> input) {
+	public boolean supportsInput(Object input) {
 		for (MessageTransformer<EposEvent> t : transformers) {
 			if (t.supportsInput(input)) {
 				return true;
