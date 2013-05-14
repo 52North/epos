@@ -26,7 +26,7 @@ import java.util.HashSet;
 import java.util.ServiceLoader;
 import java.util.Set;
 
-import org.n52.epos.event.EposEvent;
+import org.n52.epos.event.MapEposEvent;
 import org.n52.epos.transform.EposTransformer;
 import org.n52.epos.transform.MessageTransformer;
 import org.n52.epos.transform.TransformationException;
@@ -38,7 +38,7 @@ import org.n52.epos.transform.TransformationRepsitory;
  * 
  * @author matthes rieke
  */
-public class TransformationToEposEventRepository implements TransformationRepsitory<EposEvent> {
+public class TransformationToEposEventRepository implements TransformationRepsitory<MapEposEvent> {
 	
 	private Set<EposTransformer> transformers = new HashSet<EposTransformer>();
 	
@@ -51,14 +51,14 @@ public class TransformationToEposEventRepository implements TransformationRepsit
 	}
 	
 	@Override
-	public EposEvent transform(Object input) throws TransformationException {
-		MessageTransformer<EposEvent> trans = findTransformers(input);
+	public MapEposEvent transform(Object input) throws TransformationException {
+		MessageTransformer<MapEposEvent> trans = findTransformers(input);
 		
 		return trans.transform(input);
 	}
 	
-	private MessageTransformer<EposEvent> findTransformers(Object input) throws TransformationException {
-		for (MessageTransformer<EposEvent> t : transformers) {
+	private MessageTransformer<MapEposEvent> findTransformers(Object input) throws TransformationException {
+		for (MessageTransformer<MapEposEvent> t : transformers) {
 			if (t.supportsInput(input)) {
 				return t;
 			}
@@ -70,13 +70,13 @@ public class TransformationToEposEventRepository implements TransformationRepsit
 	@Override
 	public Set<Class<?>> getSupportedOutputs() {
 		Set<Class<?>> result = new HashSet<Class<?>>();
-		result.add(EposEvent.class);
+		result.add(MapEposEvent.class);
 		return result;
 	}
 
 	@Override
 	public boolean supportsInput(Object input) {
-		for (MessageTransformer<EposEvent> t : transformers) {
+		for (MessageTransformer<MapEposEvent> t : transformers) {
 			if (t.supportsInput(input)) {
 				return true;
 			}

@@ -24,16 +24,16 @@ package org.n52.epos.transform;
 
 import java.util.ServiceLoader;
 
-import org.n52.epos.event.EposEvent;
+import org.n52.epos.event.MapEposEvent;
 
 /**
  * {@link ServiceLoader}-enabled interface
  * for providing {@link MessageTransformer} implementations
- * which create {@link EposEvent} objects as Output.
+ * which create {@link MapEposEvent} objects as Output.
  * 
  * @author matthes rieke
  *
  */
-public interface EposTransformer extends MessageTransformer<EposEvent> {
+public interface EposTransformer extends MessageTransformer<MapEposEvent> {
 
 }

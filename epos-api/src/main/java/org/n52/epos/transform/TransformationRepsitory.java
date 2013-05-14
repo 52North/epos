@@ -48,7 +48,8 @@ public interface TransformationRepsitory<O> {
 
 	/**
 	 * @param input the input class
-	 * @return true if the input class is supported
+	 * @return true if and only if the input object can be transformed to the desired
+	 * output type O
 	 */
 	public boolean supportsInput(Object input);
 

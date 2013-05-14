@@ -25,7 +25,7 @@ package org.n52.epos.transform.xmlbeans;
 
 import org.apache.xmlbeans.XmlObject;
 import org.junit.Assert;
-import org.n52.epos.event.EposEvent;
+import org.n52.epos.event.MapEposEvent;
 import org.n52.epos.transform.TransformationRepsitory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 
 public class ConversionTest {
 	
-	private static final Class<?> TARGET_CLASS = EposEvent.class;
+	private static final Class<?> TARGET_CLASS = MapEposEvent.class;
 	private static final String OM_DOCUMENT = "om20observation.xml";
 	private static final Logger logger = LoggerFactory.getLogger(ConversionTest.class);
 
@@ -49,7 +49,7 @@ public class ConversionTest {
 		try {
 			TARGET_CLASS.cast(cast);
 		} catch (Exception e) {
-			Assert.fail("Result could not be casted to EposEvent!");
+			Assert.fail("Result could not be casted to MapEposEvent!");
 		}
 		
 		logger.info(cast.toString());

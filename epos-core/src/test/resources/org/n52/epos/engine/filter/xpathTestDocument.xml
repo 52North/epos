@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fes:Filter xmlns:fes="http://www.opengis.net/fes/2.0">
+	<fes:PropertyIsEqualTo>
+		<fes:ValueReference>SomeProperty</fes:ValueReference>
+		<fes:Literal>100</fes:Literal>
+	</fes:PropertyIsEqualTo>
+</fes:Filter>

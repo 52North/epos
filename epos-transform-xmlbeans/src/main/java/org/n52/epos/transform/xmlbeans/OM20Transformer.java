@@ -36,21 +36,21 @@ import net.opengis.om.x20.TimeObjectPropertyType;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.impl.values.XmlAnyTypeImpl;
 import org.joda.time.DateTime;
-import org.n52.epos.event.EposEvent;
+import org.n52.epos.event.MapEposEvent;
 import org.n52.epos.transform.EposTransformer;
 import org.n52.epos.transform.TransformationException;
 import org.n52.oxf.xmlbeans.tools.XmlUtil;
 
 /**
- * built-in {@link SosEvent} to {@link EposEvent} transformer.
+ * built-in {@link SosEvent} to {@link MapEposEvent} transformer.
  * 
  * @author matthes rieke
  *
  */
-public class OM20ToEposEventTransformer implements EposTransformer {
+public class OM20Transformer implements EposTransformer {
 
 	@Override
-	public EposEvent transform(Object input) throws TransformationException {
+	public MapEposEvent transform(Object input) throws TransformationException {
 		if (input instanceof OMObservationDocument) {
 			return transformFrom((OMObservationDocument) input);
 		}
@@ -61,11 +61,11 @@ public class OM20ToEposEventTransformer implements EposTransformer {
 		throw new IllegalStateException("Should never reach here!");
 	}
 
-	private EposEvent transformFrom(OMObservationDocument input) {
+	private MapEposEvent transformFrom(OMObservationDocument input) {
 		return transformFrom(input.getOMObservation());
 	}
 	
-	private EposEvent transformFrom(OMObservationType input) {
+	private MapEposEvent transformFrom(OMObservationType input) {
 		return parseObservation(input);
 	}
 
@@ -83,8 +83,8 @@ public class OM20ToEposEventTransformer implements EposTransformer {
 	}
 
 
-	private EposEvent parseObservation(OMObservationType obs) {
-		EposEvent result = parsePhenomenonTime(obs.getPhenomenonTime());
+	private MapEposEvent parseObservation(OMObservationType obs) {
+		MapEposEvent result = parsePhenomenonTime(obs.getPhenomenonTime());
 		
 		parseProcedure(obs.getProcedure(), result);
 		
@@ -97,23 +97,23 @@ public class OM20ToEposEventTransformer implements EposTransformer {
 		return result;
 	}
 
-	private void parseResult(XmlObject object, EposEvent result) {
+	private void parseResult(XmlObject object, MapEposEvent result) {
 		if (object instanceof XmlAnyTypeImpl) {
 			String value = XmlUtil.stripText(object);
 			Double asDouble = parseAsDouble(value);
 			if (asDouble != null) {
-				result.put(EposEvent.DOUBLE_VALUE_KEY, asDouble.doubleValue());
-				if (result.get(EposEvent.OBSERVED_PROPERTY_KEY) != null) {
-					result.put(result.get(EposEvent.OBSERVED_PROPERTY_KEY).toString(), asDouble.doubleValue());
+				result.put(MapEposEvent.DOUBLE_VALUE_KEY, asDouble.doubleValue());
+				if (result.get(MapEposEvent.OBSERVED_PROPERTY_KEY) != null) {
+					result.put(result.get(MapEposEvent.OBSERVED_PROPERTY_KEY).toString(), asDouble.doubleValue());
 				}
 			}
 			else {
-				if (result.get(EposEvent.OBSERVED_PROPERTY_KEY) != null) {
-					result.put(result.get(EposEvent.OBSERVED_PROPERTY_KEY).toString(), value);
+				if (result.get(MapEposEvent.OBSERVED_PROPERTY_KEY) != null) {
+					result.put(result.get(MapEposEvent.OBSERVED_PROPERTY_KEY).toString(), value);
 				}
 			}
 			
-			result.put(EposEvent.STRING_VALUE_KEY, value);
+			result.put(MapEposEvent.STRING_VALUE_KEY, value);
 			
 		}
 	}
@@ -127,40 +127,40 @@ public class OM20ToEposEventTransformer implements EposTransformer {
 	}
 
 	private void parseFeatureOfInterest(FeaturePropertyType featureOfInterest,
-			EposEvent result) {
+			MapEposEvent result) {
 		if (featureOfInterest.isSetHref()) {
-			result.put(EposEvent.FEATURE_TYPE_KEY, featureOfInterest.getHref());
+			result.put(MapEposEvent.FEATURE_TYPE_KEY, featureOfInterest.getHref());
 		}
 	}
 
-	private void parseProcedure(OMProcessPropertyType procedure, EposEvent result) {
+	private void parseProcedure(OMProcessPropertyType procedure, MapEposEvent result) {
 		if (procedure.isSetHref()) {
-			result.put(EposEvent.SENSORID_KEY, procedure.getHref());
+			result.put(MapEposEvent.SENSORID_KEY, procedure.getHref());
 			result.put("procedure", procedure.getHref());
 		}
 	}
 
 	private void parseObservedProperty(ReferenceType observedProperty,
-			EposEvent result) {
+			MapEposEvent result) {
 		if (observedProperty.isSetHref()) {
-			result.put(EposEvent.OBSERVED_PROPERTY_KEY, observedProperty.getHref());
+			result.put(MapEposEvent.OBSERVED_PROPERTY_KEY, observedProperty.getHref());
 		}
 	}
 
-	private EposEvent parsePhenomenonTime(TimeObjectPropertyType phenomenonTime) {
+	private MapEposEvent parsePhenomenonTime(TimeObjectPropertyType phenomenonTime) {
 		AbstractTimeObjectType timeObject = phenomenonTime.getAbstractTimeObject();
 		
 		if (timeObject instanceof TimeInstantType) {
 			TimePositionType pos = ((TimeInstantType) timeObject).getTimePosition();
 			DateTime dateTime = new DateTime(pos.getStringValue());
-			return new EposEvent(dateTime.getMillis(), dateTime.getMillis());
+			return new MapEposEvent(dateTime.getMillis(), dateTime.getMillis());
 		}
 		else if (timeObject instanceof TimePeriodType) {
 			TimePositionType begin = ((TimePeriodType) timeObject).getBeginPosition();
 			TimePositionType end = ((TimePeriodType) timeObject).getEndPosition();
 			DateTime beginDate = new DateTime(begin.getStringValue());
 			DateTime endDate = new DateTime(end.getStringValue());
-			return new EposEvent(beginDate.getMillis(), endDate.getMillis());
+			return new MapEposEvent(beginDate.getMillis(), endDate.getMillis());
 		}
 		
 		return null;
