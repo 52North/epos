@@ -13,7 +13,7 @@
 			<pattern>%d{ISO8601} [%t] %-5p %c: %m%n</pattern>
 		</encoder>
 	</appender>
-	<logger name="org.n52.epos" level="INFO" />
+	<logger name="org.n52.epos" level="DEBUG" />
 	<root level="INFO">
 		<appender-ref ref="console" />
 	</root>

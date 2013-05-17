@@ -12,7 +12,7 @@
 	<artifactId>epos-pattern-esper</artifactId>
 
 	<packaging>jar</packaging>
-	<name>52°North EPOS Esper Pattern Engine</name>
+	<name>EPOS Esper Pattern Engine</name>
 
 	<build>
 	    <plugins>

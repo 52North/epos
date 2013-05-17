@@ -25,15 +25,14 @@ package org.n52.epos.transform.xmlbeans;
 
 import org.apache.xmlbeans.XmlObject;
 import org.junit.Assert;
-import org.n52.epos.event.MapEposEvent;
+import org.n52.epos.event.EposEvent;
 import org.n52.epos.transform.TransformationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 public class ConversionTest {
 	
-	private static final Class<?> TARGET_CLASS = MapEposEvent.class;
+	private static final Class<?> TARGET_CLASS = EposEvent.class;
 	private static final String OM_DOCUMENT = "om20observation.xml";
 	private static final Logger logger = LoggerFactory.getLogger(ConversionTest.class);
 

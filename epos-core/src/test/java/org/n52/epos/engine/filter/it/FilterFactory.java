@@ -22,42 +22,24 @@
  */
 package org.n52.epos.engine.filter.it;
 
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.xpath.XPathExpressionException;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.n52.epos.engine.EposEngine;
-import org.n52.epos.engine.rules.RuleInstance;
+import org.n52.epos.engine.filter.XPathFilter;
 import org.n52.epos.filter.ActiveFilter;
-import org.n52.epos.rules.Rule;
-import org.n52.epos.rules.RuleListener;
 
-public class RegisterRuleIT {
+public class FilterFactory {
 
-	@Mock
-	private RuleListener listener;
 	
-	@Before
-	public void init() {
-		MockitoAnnotations.initMocks(this);
+	public static ActiveFilter createXPathFilter() throws XPathExpressionException {
+		Map<String, String> prefixes = new HashMap<String, String>();
+		prefixes.put("om", "http://www.opengis.net/om/2.0");
+		prefixes.put("xlink", "http://www.w3.org/1999/xlink");
+		return new XPathFilter("//om:observedProperty[@xlink:href='http://www.52north.org/test/observableProperty/1']",
+				prefixes);
 	}
 	
-	@Test
-	public void registerRule() throws XPathExpressionException {
-		EposEngine engine = EposEngine.getInstance();
-		engine.registerRule(createRule());
-	}
-
-	private Rule createRule() throws XPathExpressionException {
-		ActiveFilter xpath = FilterFactory.createXPathFilter();
-		RuleInstance result = new RuleInstance(listener);
-		result.addActiveFilter(xpath);
-		return result;
-	}
-	
-
 	
 }

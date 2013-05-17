@@ -79,6 +79,7 @@ public class EposEngine {
 	 * @param event the event object
 	 */
 	public void filterEvent(EposEvent event) {
+		logger.debug("Received new Event: {}", event);
 		boolean insertIntoPatternEngineRequired = false;
 		
 		List<Rule> tmpRules = createRuleCopies();
@@ -92,6 +93,7 @@ public class EposEngine {
 		}
 		
 		if (insertIntoPatternEngineRequired && this.patternEngine != null) {
+			logger.debug("Pusing event into PatternEngine instance.");
 			this.patternEngine.insertEvent(event);
 		}
 	}

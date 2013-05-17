@@ -20,20 +20,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.n52.epos.transform;
+package org.n52.epos.engine.filter.it;
 
-import java.util.ServiceLoader;
+import java.io.IOException;
 
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
 import org.n52.epos.event.EposEvent;
+import org.n52.epos.transform.TransformationException;
+import org.n52.epos.transform.TransformationRepository;
 
-/**
- * {@link ServiceLoader}-enabled interface
- * for providing {@link MessageTransformer} implementations
- * which create {@link EposEvent} objects as Output.
- * 
- * @author matthes rieke
- *
- */
-public interface EposTransformer extends MessageTransformer<EposEvent> {
+public class EventFactory {
+
+	public static EposEvent createOMEvent() throws XmlException, IOException, TransformationException {
+		XmlObject xo = XmlObject.Factory.parse(EventFactory.class.getResourceAsStream("om20-observation.xml"));
+		return (EposEvent) TransformationRepository.Instance.transform(xo, EposEvent.class);
+	}
 
 }

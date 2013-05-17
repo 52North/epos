@@ -36,6 +36,7 @@ import net.opengis.om.x20.TimeObjectPropertyType;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.impl.values.XmlAnyTypeImpl;
 import org.joda.time.DateTime;
+import org.n52.epos.event.EposEvent;
 import org.n52.epos.event.MapEposEvent;
 import org.n52.epos.transform.EposTransformer;
 import org.n52.epos.transform.TransformationException;
@@ -50,15 +51,22 @@ import org.n52.oxf.xmlbeans.tools.XmlUtil;
 public class OM20Transformer implements EposTransformer {
 
 	@Override
-	public MapEposEvent transform(Object input) throws TransformationException {
+	public EposEvent transform(Object input) throws TransformationException {
+		MapEposEvent result = null;
+		
 		if (input instanceof OMObservationDocument) {
-			return transformFrom((OMObservationDocument) input);
+			result = transformFrom((OMObservationDocument) input);
 		}
 		else if (input instanceof OMObservationType) {
-			return transformFrom((OMObservationType) input);
+			result = transformFrom((OMObservationType) input);
 		}
 		
-		throw new IllegalStateException("Should never reach here!");
+		if (result == null) {
+			throw new IllegalStateException("Should never reach here!");
+		}
+		
+		result.put(MapEposEvent.ORIGNIAL_OBJECT_KEY, input);
+		return result;
 	}
 
 	private MapEposEvent transformFrom(OMObservationDocument input) {

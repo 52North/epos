@@ -33,9 +33,12 @@ import org.n52.epos.pattern.PatternEngine;
 import org.n52.epos.rules.PassiveFilterAlreadyPresentException;
 import org.n52.epos.rules.Rule;
 import org.n52.epos.rules.RuleListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RuleInstance implements Rule {
 
+	private static final Logger logger = LoggerFactory.getLogger(RuleInstance.class);
 	
 	private List<EposFilter> filters = new ArrayList<EposFilter>();
 	private RuleListener listener;
@@ -87,9 +90,11 @@ public class RuleInstance implements Rule {
 	 */
 	@Override
 	public void filter(EposEvent event) {
+		logger.debug("Received Event, evaluating filters...");
 		for (EposFilter filter : this.filters) {
 			if (filter instanceof ActiveFilter) {
 				if (!((ActiveFilter) filter).matches(event)) {
+					logger.debug("Filter {} did not match, disregarding event.", filter);
 					return;
 				}
 			}
