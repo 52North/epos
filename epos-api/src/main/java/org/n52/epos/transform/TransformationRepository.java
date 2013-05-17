@@ -35,7 +35,7 @@ import java.util.Set;
  *
  * @param <O> output type of the repository implementation
  */
-public interface TransformationRepsitory<O> {
+public interface TransformationRepository<O> {
 
 	/**
 	 * Transform an object to the desired output type.
@@ -61,32 +61,32 @@ public interface TransformationRepsitory<O> {
 	
 	/**
 	 * The Instance class providing access to the implementing
-	 * instances of {@link TransformationRepsitory}.
+	 * instances of {@link TransformationRepository}.
 	 * 
 	 * @author matthes rieke
 	 *
 	 */
 	public static class Instance {
 
-		private static List<TransformationRepsitory<?>> repos;
+		private static List<TransformationRepository<?>> repos;
 
 		static {
 			@SuppressWarnings("rawtypes")
-			ServiceLoader<TransformationRepsitory> loader = ServiceLoader
-					.load(TransformationRepsitory.class);
+			ServiceLoader<TransformationRepository> loader = ServiceLoader
+					.load(TransformationRepository.class);
 
-			repos = new ArrayList<TransformationRepsitory<?>>();
-			for (TransformationRepsitory<?> transformationRepsitory : loader) {
+			repos = new ArrayList<TransformationRepository<?>>();
+			for (TransformationRepository<?> transformationRepsitory : loader) {
 				repos.add(transformationRepsitory);
 			}
 		}
 
-		private static List<TransformationRepsitory<?>> getRepositories(
+		private static List<TransformationRepository<?>> getRepositories(
 				Class<?> out) {
-			List<TransformationRepsitory<?>> result = new ArrayList<TransformationRepsitory<?>>();
+			List<TransformationRepository<?>> result = new ArrayList<TransformationRepository<?>>();
 
 			Set<Class<?>> outputClasses;
-			for (TransformationRepsitory<?> t : repos) {
+			for (TransformationRepository<?> t : repos) {
 				outputClasses = t.getSupportedOutputs();
 				if (outputClasses != null && outputClasses.contains(out)) {
 					result.add(t);
@@ -104,8 +104,8 @@ public interface TransformationRepsitory<O> {
 		 */
 		public static Object transform(Object input, Class<?> outputClass)
 				throws TransformationException {
-			List<TransformationRepsitory<?>> repos = getRepositories(outputClass);
-			for (TransformationRepsitory<?> t : repos) {
+			List<TransformationRepository<?>> repos = getRepositories(outputClass);
+			for (TransformationRepository<?> t : repos) {
 				if (t.supportsInput(input)) {
 					return t.transform(input);
 				}

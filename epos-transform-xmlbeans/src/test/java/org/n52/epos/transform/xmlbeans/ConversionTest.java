@@ -26,7 +26,7 @@ package org.n52.epos.transform.xmlbeans;
 import org.apache.xmlbeans.XmlObject;
 import org.junit.Assert;
 import org.n52.epos.event.MapEposEvent;
-import org.n52.epos.transform.TransformationRepsitory;
+import org.n52.epos.transform.TransformationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +40,7 @@ public class ConversionTest {
 	@org.junit.Test
 	public void testConversion() throws Exception {
 		Class<?> processorInputClass = resolveProcesserInputClass();
-		Object result = TransformationRepsitory.Instance.transform(XmlObject.Factory.parse(
+		Object result = TransformationRepository.Instance.transform(XmlObject.Factory.parse(
 				getClass().getResourceAsStream(OM_DOCUMENT)), processorInputClass);
 		process(result);
 	}
@@ -49,7 +49,7 @@ public class ConversionTest {
 		try {
 			TARGET_CLASS.cast(cast);
 		} catch (Exception e) {
-			Assert.fail("Result could not be casted to MapEposEvent!");
+			Assert.fail("Result could not be casted to "+TARGET_CLASS.getCanonicalName());
 		}
 		
 		logger.info(cast.toString());

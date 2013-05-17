@@ -22,6 +22,7 @@
 	<modules>
 		<module>epos-api</module>
 		<module>epos-core</module>
+		<module>epos-pattern</module>
 		<module>epos-transform-xmlbeans</module>
 	</modules>
 
@@ -135,6 +136,16 @@
 				<artifactId>epos-transform</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>epos-pattern-eml</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
+				<artifactId>epos-pattern-esper</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 			
 			<!-- 52N libraries -->
 			<dependency>
@@ -151,6 +162,11 @@
 				<groupId>org.n52.sensorweb</groupId>
 				<artifactId>52n-oxf-conversion</artifactId>
 				<version>${oxf.version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.n52.sensorweb</groupId>
+			    <artifactId>52n-xml-eml-v001</artifactId>
+			    <version>${n52.xml.version}</version>
 			</dependency>
 
 			<!-- externals -->

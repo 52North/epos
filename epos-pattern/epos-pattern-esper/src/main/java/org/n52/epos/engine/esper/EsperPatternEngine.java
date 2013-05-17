@@ -20,10 +20,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.n52.epos.filter;
+package org.n52.epos.engine.esper;
 
+import org.n52.epos.event.EposEvent;
+import org.n52.epos.pattern.NoPassiveFilterPresentException;
+import org.n52.epos.pattern.PatternEngine;
+import org.n52.epos.rules.Rule;
 
-public interface PassiveFilter extends EposFilter  {
+public class EsperPatternEngine implements PatternEngine {
 
+	@Override
+	public void insertEvent(EposEvent event) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void registerRule(Rule rule) throws NoPassiveFilterPresentException {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

@@ -20,10 +20,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.n52.epos.filter;
+package org.n52.epos.pattern;
 
+/**
+ * Got it?
+ * 
+ * @author matthes rieke
+ *
+ */
+public class NoPassiveFilterPresentException extends Exception {
 
-public interface PassiveFilter extends EposFilter  {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
+	public NoPassiveFilterPresentException() {
+		super();
+	}
 
+	public NoPassiveFilterPresentException(String message, Throwable cause,
+			boolean enableSuppression, boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
+	}
+
+	public NoPassiveFilterPresentException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	public NoPassiveFilterPresentException(String message) {
+		super(message);
+	}
+
+	public NoPassiveFilterPresentException(Throwable cause) {
+		super(cause);
+	}
+
+	
+	
 }

@@ -22,8 +22,34 @@
  */
 package org.n52.epos.filter;
 
+public class FilterInstantiationException extends Exception {
 
-public interface PassiveFilter extends EposFilter  {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
+	public FilterInstantiationException() {
+		super();
+	}
 
+	public FilterInstantiationException(String message, Throwable cause,
+			boolean enableSuppression, boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
+	}
+
+	public FilterInstantiationException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	public FilterInstantiationException(String message) {
+		super(message);
+	}
+
+	public FilterInstantiationException(Throwable cause) {
+		super(cause);
+	}
+
+	
+	
 }

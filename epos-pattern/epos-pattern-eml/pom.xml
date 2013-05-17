@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.n52.epos</groupId>
+		<artifactId>epos-pattern</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>epos-pattern-eml</artifactId>
+
+	<packaging>jar</packaging>
+	<name>52°North EPOS EML Patterns</name>
+
+	<build>
+	    <plugins>
+	        <plugin>
+	            <artifactId>maven-compiler-plugin</artifactId>
+	        </plugin>
+	    </plugins>
+	</build>
+	
+	<dependencies>
+		<dependency>
+		    <groupId>${project.groupId}</groupId>
+		    <artifactId>epos-api</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.n52.sensorweb</groupId>
+		    <artifactId>52n-xml-eml-v001</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>junit</groupId>
+		    <artifactId>junit</artifactId>
+		</dependency>
+	</dependencies>
+	
+</project>

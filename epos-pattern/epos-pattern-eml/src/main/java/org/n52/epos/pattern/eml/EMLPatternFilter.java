@@ -20,10 +20,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.n52.epos.filter;
+package org.n52.epos.pattern.eml;
 
+import net.opengis.eml.x001.EMLDocument;
 
-public interface PassiveFilter extends EposFilter  {
+import org.n52.epos.event.EposEvent;
+import org.n52.epos.filter.PassiveFilter;
 
+public class EMLPatternFilter implements PassiveFilter {
 
+	public EMLPatternFilter(EMLDocument emlDoc) {
+		// TODO Auto-generated constructor stub
+	}
+
+	public void onTriggeredMatch(EposEvent event) {
+		
+	}
+	
 }

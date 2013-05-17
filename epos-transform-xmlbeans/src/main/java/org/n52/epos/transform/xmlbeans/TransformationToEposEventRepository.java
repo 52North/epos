@@ -30,7 +30,7 @@ import org.n52.epos.event.MapEposEvent;
 import org.n52.epos.transform.EposTransformer;
 import org.n52.epos.transform.MessageTransformer;
 import org.n52.epos.transform.TransformationException;
-import org.n52.epos.transform.TransformationRepsitory;
+import org.n52.epos.transform.TransformationRepository;
 
 /**
  * This class holds all ({@link ServiceLoader}-registered)
@@ -38,7 +38,7 @@ import org.n52.epos.transform.TransformationRepsitory;
  * 
  * @author matthes rieke
  */
-public class TransformationToEposEventRepository implements TransformationRepsitory<MapEposEvent> {
+public class TransformationToEposEventRepository implements TransformationRepository<MapEposEvent> {
 	
 	private Set<EposTransformer> transformers = new HashSet<EposTransformer>();
 	

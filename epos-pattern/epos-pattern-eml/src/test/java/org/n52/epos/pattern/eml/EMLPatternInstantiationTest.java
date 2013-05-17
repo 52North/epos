@@ -20,12 +20,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.n52.epos.filter;
+package org.n52.epos.pattern.eml;
 
-import org.n52.epos.event.EposEvent;
+import java.io.IOException;
 
-public interface ActiveFilter extends EposFilter {
+import net.opengis.eml.x001.EMLDocument;
 
-	public boolean matches(EposEvent event);
+import org.apache.xmlbeans.XmlException;
+import org.junit.Assert;
+import org.junit.Test;
+import org.n52.epos.filter.EposFilter;
+import org.n52.epos.filter.FilterInstantiationException;
+import org.n52.epos.filter.FilterInstantiationRepository;
+
+public class EMLPatternInstantiationTest {
+
+	@Test
+	public void shouldInstantiationEMLPatternFilter() throws XmlException, IOException, FilterInstantiationException {
+		EMLDocument eml = EMLDocument.Factory.parse(getClass().getResourceAsStream("eml.xml"));
+		
+		EposFilter filter = FilterInstantiationRepository.Instance.instantiate(eml);
+		
+		Assert.assertTrue("filter is null!", filter != null);
+		Assert.assertTrue("Not a PassiveFilter!", filter instanceof EMLPatternFilter);
+	}
 	
 }
