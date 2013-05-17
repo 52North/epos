@@ -93,6 +93,10 @@
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>2.12</version>
 				</plugin>
+				<plugin>
+					<artifactId>maven-failsafe-plugin</artifactId>
+					<version>2.12.3</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 
@@ -133,7 +137,7 @@
 			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
-				<artifactId>epos-transform</artifactId>
+				<artifactId>epos-transform-xmlbeans</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
@@ -146,7 +150,7 @@
 				<artifactId>epos-pattern-esper</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-			
+
 			<!-- 52N libraries -->
 			<dependency>
 				<groupId>org.n52.sensorweb</groupId>
@@ -164,9 +168,9 @@
 				<version>${oxf.version}</version>
 			</dependency>
 			<dependency>
-			    <groupId>org.n52.sensorweb</groupId>
-			    <artifactId>52n-xml-eml-v001</artifactId>
-			    <version>${n52.xml.version}</version>
+				<groupId>org.n52.sensorweb</groupId>
+				<artifactId>52n-xml-eml-v001</artifactId>
+				<version>${n52.xml.version}</version>
 			</dependency>
 
 			<!-- externals -->
@@ -176,12 +180,12 @@
 				<version>4.11</version>
 				<scope>test</scope>
 			</dependency>
-		    <dependency>
-		        <groupId>org.mockito</groupId>
-		        <artifactId>mockito-all</artifactId>
-		        <version>1.9.5</version>
-		        <scope>test</scope>
-		    </dependency>
+			<dependency>
+				<groupId>org.mockito</groupId>
+				<artifactId>mockito-all</artifactId>
+				<version>1.9.5</version>
+				<scope>test</scope>
+			</dependency>
 			<dependency>
 				<groupId>net.sf.saxon</groupId>
 				<artifactId>saxon</artifactId>
@@ -192,7 +196,7 @@
 				<artifactId>xalan</artifactId>
 				<version>2.7.1</version>
 			</dependency>
-			
+
 			<dependency>
 				<groupId>ch.qos.logback</groupId>
 				<artifactId>logback-classic</artifactId>

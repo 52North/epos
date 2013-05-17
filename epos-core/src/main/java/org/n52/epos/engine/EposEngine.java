@@ -30,6 +30,7 @@ import org.n52.epos.engine.rules.RuleInstance;
 import org.n52.epos.event.EposEvent;
 import org.n52.epos.filter.PassiveFilter;
 import org.n52.epos.pattern.PatternEngine;
+import org.n52.epos.rules.Rule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +47,7 @@ public class EposEngine {
 	private static EposEngine instance;
 	private static final Logger logger = LoggerFactory.getLogger(EposEngine.class);
 	
-	private List<RuleInstance> rules = new ArrayList<RuleInstance>();
+	private List<Rule> rules = new ArrayList<Rule>();
 	private PatternEngine patternEngine;
 	
 	private EposEngine() {
@@ -80,7 +81,9 @@ public class EposEngine {
 	public void filterEvent(EposEvent event) {
 		boolean insertIntoPatternEngineRequired = false;
 		
-		for (RuleInstance rule : this.rules) {
+		List<Rule> tmpRules = createRuleCopies();
+		
+		for (Rule rule : tmpRules) {
 			if (!rule.hasPassiveFilter()) {
 				rule.filter(event);
 			} else {
@@ -91,6 +94,14 @@ public class EposEngine {
 		if (insertIntoPatternEngineRequired && this.patternEngine != null) {
 			this.patternEngine.insertEvent(event);
 		}
+	}
+
+	private synchronized List<Rule> createRuleCopies() {
+		return new ArrayList<Rule>(this.rules);
+	}
+
+	public synchronized void registerRule(Rule newRule) {
+		this.rules.add(newRule);
 	}
 	
 }
