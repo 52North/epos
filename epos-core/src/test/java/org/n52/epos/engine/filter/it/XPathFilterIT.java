@@ -34,6 +34,7 @@ import org.n52.epos.engine.rules.RuleInstance;
 import org.n52.epos.event.EposEvent;
 import org.n52.epos.rules.Rule;
 import org.n52.epos.rules.RuleListener;
+import org.n52.epos.test.EventFactory;
 import org.n52.epos.transform.TransformationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

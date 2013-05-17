@@ -35,6 +35,10 @@
 		    <groupId>junit</groupId>
 		    <artifactId>junit</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>epos-test</artifactId>
+		</dependency>
 	</dependencies>
 	
 </project>

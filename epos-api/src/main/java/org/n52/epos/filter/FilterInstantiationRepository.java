@@ -26,6 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * @author matthes rieke
@@ -50,7 +53,8 @@ public interface FilterInstantiationRepository {
 	 *
 	 */
 	public static class Instance {
-
+		
+		private static final Logger logger = LoggerFactory.getLogger(Instance.class);
 		private static List<FilterInstantiationRepository> repos;
 
 		static {
@@ -71,6 +75,7 @@ public interface FilterInstantiationRepository {
 			for (FilterInstantiationRepository t : repos) {
 				supportedInput = t.getSupportedInput();
 				if (supportedInput != null && supportedInput.isAssignableFrom(inputClass)) {
+					logger.debug("Found implementation: {}", t.getClass().getCanonicalName());
 					result.add(t);
 				}
 			}

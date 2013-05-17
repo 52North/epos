@@ -8,8 +8,8 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>epos-transform-xmlbeans</artifactId>
-	<name>EPOS Transform module for XMLBeans bindings</name>
+	<artifactId>epos-test</artifactId>
+	<name>EPOS Test module</name>
 
 	<build>
 		<plugins>
@@ -21,34 +21,26 @@
 	</build>
 
 	<dependencies>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>epos-api</artifactId>
-		</dependency>
+	    <dependency>
+	        <groupId>${project.groupId}</groupId>
+	        <artifactId>epos-api</artifactId>
+	    </dependency>
 		<dependency>
 			<groupId>org.n52.sensorweb</groupId>
 			<artifactId>52n-oxf-xmlbeans</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.n52.sensorweb</groupId>
-			<artifactId>52n-xml-om-v20</artifactId>
-			<version>1.1.4</version>
-		</dependency>
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>epos-test</artifactId>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 		</dependency>
 	</dependencies>
+
 </project>

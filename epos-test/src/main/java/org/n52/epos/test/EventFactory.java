@@ -20,7 +20,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.n52.epos.engine.filter.it;
+package org.n52.epos.test;
 
 import java.io.IOException;
 
