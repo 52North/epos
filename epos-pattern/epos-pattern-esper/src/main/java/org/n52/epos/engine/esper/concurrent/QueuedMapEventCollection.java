@@ -1,0 +1,161 @@
+/**
+ * Copyright (C) 2013
+ * by 52 North Initiative for Geospatial Open Source Software GmbH
+ *
+ * Contact: Andreas Wytzisk
+ * 52 North Initiative for Geospatial Open Source Software GmbH
+ * Martin-Luther-King-Weg 24
+ * 48155 Muenster, Germany
+ * info@52north.org
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.n52.epos.engine.esper.concurrent;
+
+import java.util.List;
+import java.util.concurrent.Future;
+
+import org.n52.epos.event.MapEposEvent;
+
+/**
+ * This class provides mechanisms for concurrent handling of incoming MapEvent.
+ * 
+ * 
+ * @author matthes rieke <m.rieke@52north.org>
+ *
+ */
+/**
+ * @author matthes rieke <m.rieke@52north.org>
+ *
+ */
+public class QueuedMapEventCollection {
+	
+	public static final int INITIAL_PRIORITY = Integer.MIN_VALUE;
+	
+	private List<MapEposEvent> collection;
+	private boolean filled;
+	private Object processedBarrier = new Object();
+	private long id;
+	private long startTime;
+	private long elapsedTime;
+
+	private Future<?> future;
+
+
+	/**
+	 * Constructor which takes a priority id.
+	 * Some concurrent handlers (including the SES' default one)
+	 * will not use the priority.
+	 * 
+	 * @param pid priority
+	 */
+	public QueuedMapEventCollection() {
+	}
+
+	
+	/**
+	 * Use this method to set the data of the container.
+	 * here, waiting threads (which are waiting using the {@link #waitUntilProcessingFinished(long)}
+	 * method) are notified.
+	 * 
+	 * @param collection the processed result of the NotificationMessage contents
+	 */
+	public synchronized void setCollection(List<MapEposEvent> collection) {
+		this.collection = collection;
+		this.filled = true;
+		setElapsedTime();
+		
+		synchronized (this.processedBarrier) {
+			this.processedBarrier.notifyAll();
+		}
+	}
+	
+	/**
+	 * wait at a barrier until processing is finished.
+	 * {@link Object#wait(long)} is being called here.
+	 * 
+	 * @param timeoutMillis the wait timeout
+	 * @throws InterruptedException if the wait got interuppted
+	 */
+	public void waitUntilProcessingFinished(long timeoutMillis) throws InterruptedException {
+		synchronized (this.processedBarrier) {
+			this.processedBarrier.wait(timeoutMillis);
+		}
+	}
+
+	/**
+	 * @return the event data
+	 */
+	public synchronized List<MapEposEvent> getCollection() {
+		return this.collection;
+	}
+
+	/**
+	 * @return true if {@link #getCollection()} returns the processed data.
+	 */
+	public synchronized boolean isFilled() {
+		return this.filled;
+	}
+
+
+	public void setID(long sequence) {
+		this.id = sequence;
+	}
+
+
+	public long getID() {
+		return this.id;
+	}
+
+
+	/**
+	 * set the time delta, starting from creation to processing finished
+	 */
+	public void setElapsedTime() {
+		this.elapsedTime = System.currentTimeMillis() - this.startTime;
+	}
+
+
+	/**
+	 * @return the elapsed time delta, starting from creation to processing finished
+	 */
+	public long getElapsedTime() {
+		return this.elapsedTime;
+	}
+
+
+	public void updateStartTime() {
+		this.startTime = System.currentTimeMillis();
+	}
+
+
+	/**
+	 * @param f the future object
+	 */
+	public void setFuture(Future<?> f) {
+		this.future = f;
+	}
+
+
+	/**
+	 * @return the future object
+	 */
+	public Future<?> getFuture() {
+		return this.future;
+	}
+	
+	
+	
+
+	
+}

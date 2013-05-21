@@ -50,4 +50,10 @@ public interface PatternEngine {
 	 */
 	public void registerRule(Rule rule) throws NoPassiveFilterPresentException;
 
+	
+	/**
+	 * an implementation shall free all resources to avoid memory leaks.
+	 */
+	public void shutdown();
+
 }

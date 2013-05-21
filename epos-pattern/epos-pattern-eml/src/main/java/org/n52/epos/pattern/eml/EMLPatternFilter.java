@@ -23,18 +23,30 @@
 package org.n52.epos.pattern.eml;
 
 import net.opengis.eml.x001.EMLDocument;
+import net.opengis.eml.x001.EMLDocument.EML;
 
 import org.n52.epos.event.EposEvent;
 import org.n52.epos.filter.PassiveFilter;
 
 public class EMLPatternFilter implements PassiveFilter {
 
+	private EML eml;
+
 	public EMLPatternFilter(EMLDocument emlDoc) {
-		// TODO Auto-generated constructor stub
+		this.eml = emlDoc.getEML();
 	}
 
 	public void onTriggeredMatch(EposEvent event) {
 		
+	}
+
+	public EML getEml() {
+		return this.eml;
+	}
+
+	public String getInputStreamName() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

@@ -29,6 +29,7 @@ import java.util.ServiceLoader;
 import org.n52.epos.engine.rules.RuleInstance;
 import org.n52.epos.event.EposEvent;
 import org.n52.epos.filter.PassiveFilter;
+import org.n52.epos.pattern.NoPassiveFilterPresentException;
 import org.n52.epos.pattern.PatternEngine;
 import org.n52.epos.rules.Rule;
 import org.slf4j.Logger;
@@ -102,8 +103,21 @@ public class EposEngine {
 		return new ArrayList<Rule>(this.rules);
 	}
 
+	/**
+	 * Add a new rule to the engine.
+	 * 
+	 * @param newRule the new rule
+	 */
 	public synchronized void registerRule(Rule newRule) {
 		this.rules.add(newRule);
+		
+		if (newRule.hasPassiveFilter()) {
+			try {
+				this.patternEngine.registerRule(newRule);
+			} catch (NoPassiveFilterPresentException e) {
+				logger.warn(e.getMessage(), e);
+			}
+		}
 	}
 
 	
@@ -111,8 +125,7 @@ public class EposEngine {
 	 * release all resources
 	 */
 	public void shutdown() {
-		// TODO Auto-generated method stub
-		
+		this.patternEngine.shutdown();
 	}
 	
 }
