@@ -39,9 +39,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.n52.ses.pattern.eml.filter.IFilterElement;
-import org.n52.ses.pattern.eml.filter.expression.AFilterExpression;
-import org.n52.ses.pattern.eml.filter.expression.FilterExpressionFactory;
+import org.n52.epos.pattern.eml.filter.IFilterElement;
+import org.n52.epos.pattern.eml.filter.expression.AFilterExpression;
+import org.n52.epos.pattern.eml.filter.expression.FilterExpressionFactory;
 
 public class FilterExpressionTest {
 

@@ -41,4 +41,10 @@ public class EsperPatternEngine implements PatternEngine {
 		
 	}
 
+	@Override
+	public void shutdown() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -27,6 +27,10 @@
 		    <groupId>${project.groupId}</groupId>
 		    <artifactId>epos-api</artifactId>
 		</dependency>
+		<dependency>
+		    <groupId>${project.groupId}</groupId>
+		    <artifactId>epos-pattern-eml</artifactId>
+		</dependency>
 	</dependencies>
 	
 </project>
