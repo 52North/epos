@@ -20,28 +20,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.n52.epos.pattern.spatial;
+/**
+ * Part of the diploma thesis of Thomas Everding.
+ * @author Thomas Everding
+ */
 
-
-import com.vividsolutions.jts.geom.Geometry;
+package org.n52.ses.eml.v001.filter;
 
 /**
+ * Standard methods for all filter elements
  * 
- * @author Matthes Rieke <m.rieke@uni-muenster.de>
- *
+ * @author Thomas Everding
+ * 
  */
-public interface ICreateBuffer {
+public interface IFilterElement {
 	
 	/**
-	 * Creates a buffer of the given geometry using the crs to
-	 * and the distance (with ucum-code) to do it the right way ;-)
+	 * Creates the esper String for this expression
 	 * 
-	 * @param geom The input geometry
-	 * @param distance The distance
-	 * @param ucumUom Unit of measurement in UCUM-Code
-	 * @param crs The CoordinateSystem
-	 * @return The buffered geometry
+	 * @param complexPatternGuard if <code>true</code> the guard is used for a complex pattern, else for a simple
+	 * pattern
+	 * @return the esper string for this expression
 	 */
-	public abstract Geometry buffer(Geometry geom, double distance, String ucumUom, String crs);
+	public String createExpressionString(boolean complexPatternGuard);
 
+	/**
+	 * Sets if a property is used in a filter statement. It has to be checked if it exists.
+	 * 
+	 * @param nodeValue the property name
+	 */
+	public void setUsedProperty(String nodeValue);	
 }

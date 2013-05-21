@@ -20,28 +20,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.n52.epos.pattern.spatial;
+/**
+ * Part of the diploma thesis of Thomas Everding.
+ * @author Thomas Everding
+ */
 
+package org.n52.ses.eml.v001.filter.expression;
 
-import com.vividsolutions.jts.geom.Geometry;
+import org.n52.ses.eml.v001.filter.IFilterElement;
 
 /**
+ * represents a single ogc:expression
  * 
- * @author Matthes Rieke <m.rieke@uni-muenster.de>
+ * @author Thomas Everding
  *
  */
-public interface ICreateBuffer {
+public abstract class AFilterExpression implements IFilterElement{
 	
 	/**
-	 * Creates a buffer of the given geometry using the crs to
-	 * and the distance (with ucum-code) to do it the right way ;-)
-	 * 
-	 * @param geom The input geometry
-	 * @param distance The distance
-	 * @param ucumUom Unit of measurement in UCUM-Code
-	 * @param crs The CoordinateSystem
-	 * @return The buffered geometry
+	 * Factory to build {@link AFilterExpression}s.
 	 */
-	public abstract Geometry buffer(Geometry geom, double distance, String ucumUom, String crs);
+	public static final FilterExpressionFactory FACTORY = new FilterExpressionFactory();
+	
+	/**
+	 * the used property of this expression
+	 */
+	protected String usedProperty = null;
+
+	/**
+	 * 
+	 * @return the name of the property that is used in this filter expression (if any)
+	 */
+	public String getUsedProperty() {
+		return this.usedProperty;
+	}
+
+	@Override
+	public void setUsedProperty(String usedProperty) {
+		this.usedProperty = usedProperty;
+	}
+
 
 }

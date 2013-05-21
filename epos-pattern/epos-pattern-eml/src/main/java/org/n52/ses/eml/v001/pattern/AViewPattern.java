@@ -20,28 +20,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.n52.epos.pattern.spatial;
+/**
+ * Part of the diploma thesis of Thomas Everding.
+ * @author Thomas Everding
+ */
 
+package org.n52.ses.eml.v001.pattern;
 
-import com.vividsolutions.jts.geom.Geometry;
 
 /**
+ * superclass for all patterns with views
  * 
- * @author Matthes Rieke <m.rieke@uni-muenster.de>
+ * @author Thomas Everding
  *
  */
-public interface ICreateBuffer {
+public abstract class AViewPattern extends APattern{
 	
 	/**
-	 * Creates a buffer of the given geometry using the crs to
-	 * and the distance (with ucum-code) to do it the right way ;-)
-	 * 
-	 * @param geom The input geometry
-	 * @param distance The distance
-	 * @param ucumUom Unit of measurement in UCUM-Code
-	 * @param crs The CoordinateSystem
-	 * @return The buffered geometry
+	 * the view (used for esper)
 	 */
-	public abstract Geometry buffer(Geometry geom, double distance, String ucumUom, String crs);
+	protected DataView view;
 
+	/**
+	 * @return the view
+	 */
+	public DataView getView() {
+		return this.view;
+	}
+
+	/**
+	 * sets the view
+	 * 
+	 * @param view the view to set
+	 */
+	public void setView(DataView view) {
+		this.view = view;
+	}
 }

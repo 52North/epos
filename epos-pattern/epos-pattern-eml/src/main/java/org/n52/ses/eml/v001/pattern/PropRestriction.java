@@ -20,28 +20,55 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.n52.epos.pattern.spatial;
+/**
+ * Part of the diploma thesis of Thomas Everding.
+ * @author Thomas Everding
+ */
 
-
-import com.vividsolutions.jts.geom.Geometry;
+package org.n52.ses.eml.v001.pattern;
 
 /**
+ * representation of a property restriction
  * 
- * @author Matthes Rieke <m.rieke@uni-muenster.de>
+ * @author Thomas Everding
  *
  */
-public interface ICreateBuffer {
+public class PropRestriction {
 	
-	/**
-	 * Creates a buffer of the given geometry using the crs to
-	 * and the distance (with ucum-code) to do it the right way ;-)
-	 * 
-	 * @param geom The input geometry
-	 * @param distance The distance
-	 * @param ucumUom Unit of measurement in UCUM-Code
-	 * @param crs The CoordinateSystem
-	 * @return The buffered geometry
-	 */
-	public abstract Geometry buffer(Geometry geom, double distance, String ucumUom, String crs);
+	private String name;
+	
+	private Object value;
 
+	/**
+	 * @return the name of the property
+	 */
+	public String getName() {
+		return this.name;
+	}
+
+	/**
+	 * sets the name of the property
+	 * 
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @return the value of the property
+	 */
+	public Object getValue() {
+		return this.value;
+	}
+
+	/**
+	 * sets the value of the property
+	 * 
+	 * @param value the value to set
+	 */
+	public void setValue(Object value) {
+		this.value = value;
+	}
+	
 }

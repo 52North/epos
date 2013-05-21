@@ -20,28 +20,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.n52.epos.pattern.spatial;
+package org.n52.ses.eml.v001.filter.spatial;
 
 
-import com.vividsolutions.jts.geom.Geometry;
+import net.opengis.fes.x20.BinarySpatialOpType;
 
 /**
  * 
  * @author Matthes Rieke <m.rieke@uni-muenster.de>
  *
  */
-public interface ICreateBuffer {
-	
+public class CrossesFilter extends ABinarySpatialFilter {
+
 	/**
-	 * Creates a buffer of the given geometry using the crs to
-	 * and the distance (with ucum-code) to do it the right way ;-)
 	 * 
-	 * @param geom The input geometry
-	 * @param distance The distance
-	 * @param ucumUom Unit of measurement in UCUM-Code
-	 * @param crs The CoordinateSystem
-	 * @return The buffered geometry
+	 * Constructor
+	 *
+	 * @param bsOp FES binary spatial operator
 	 */
-	public abstract Geometry buffer(Geometry geom, double distance, String ucumUom, String crs);
+	public CrossesFilter(BinarySpatialOpType bsOp) {
+		super(bsOp);
+	}
+
+	@Override
+	public String createExpressionString(boolean complexPatternGuard) {
+		return createExpressionForBinaryFilter("crosses");
+	}
+
+	@Override
+	public void setUsedProperty(String nodeValue) {
+		/*empty*/
+	}
 
 }

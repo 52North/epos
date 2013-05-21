@@ -20,28 +20,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.n52.epos.pattern.spatial;
+/**
+ * Part of the diploma thesis of Thomas Everding.
+ * @author Thomas Everding
+ */
 
 
-import com.vividsolutions.jts.geom.Geometry;
+package org.n52.ses.eml.v001.filter.comparison;
+
+import org.n52.ses.eml.v001.filter.IFilterElement;
 
 /**
+ * Representation of a comparison filter operation
  * 
- * @author Matthes Rieke <m.rieke@uni-muenster.de>
+ * @author Thomas Everding
  *
  */
-public interface ICreateBuffer {
+public abstract class AComparisonFilter implements IFilterElement{
 	
 	/**
-	 * Creates a buffer of the given geometry using the crs to
-	 * and the distance (with ucum-code) to do it the right way ;-)
-	 * 
-	 * @param geom The input geometry
-	 * @param distance The distance
-	 * @param ucumUom Unit of measurement in UCUM-Code
-	 * @param crs The CoordinateSystem
-	 * @return The buffered geometry
+	 * Factory to build new comparison filters.
 	 */
-	public abstract Geometry buffer(Geometry geom, double distance, String ucumUom, String crs);
-
+	public static final ComparisonFilterFactory FACTORY = new ComparisonFilterFactory();
+	
+	/**
+	 * the string representation of the usedProperty. needed
+	 * for checking if it exists.
+	 */
+	protected String usedProperty = null;
+	
+	@Override
+	public void setUsedProperty(String nodeValue) {
+		this.usedProperty = nodeValue;
+	}
 }

@@ -20,28 +20,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.n52.epos.pattern.spatial;
+package org.n52.ses.eml.v001.filterlogic.esper.customFunctions;
 
-
-import com.vividsolutions.jts.geom.Geometry;
+import java.util.Map;
 
 /**
- * 
- * @author Matthes Rieke <m.rieke@uni-muenster.de>
- *
+ * Provides methods to check properties
  */
-public interface ICreateBuffer {
+public class PropertyMethods {
 	
 	/**
-	 * Creates a buffer of the given geometry using the crs to
-	 * and the distance (with ucum-code) to do it the right way ;-)
+	 * check if a property exists
 	 * 
-	 * @param geom The input geometry
-	 * @param distance The distance
-	 * @param ucumUom Unit of measurement in UCUM-Code
-	 * @param crs The CoordinateSystem
-	 * @return The buffered geometry
+	 * @param event the event that should contain the property
+	 * @param propertyName the property name
+	 * 
+	 * @return true, if the event contains the property
 	 */
-	public abstract Geometry buffer(Geometry geom, double distance, String ucumUom, String crs);
+	@SuppressWarnings("rawtypes")
+	public static boolean propertyExists(Object event, Object propertyName) {
+		Map eventMap = (Map) event;
+		if (eventMap.containsKey(propertyName.toString())) {
+			if (eventMap.get(propertyName.toString()) == null) {
+				return false;
+			}
+		}
+		else {
+			return false;
+		}
+		return true;
+	}
+	
 
 }

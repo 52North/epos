@@ -33,7 +33,7 @@ import org.n52.epos.filter.EposFilter;
 import org.n52.epos.filter.FilterInstantiationException;
 import org.n52.epos.filter.FilterInstantiationRepository;
 
-public class EMLPatternInstantiationTest {
+public class EMLRuleInstantiationTest {
 
 	@Test
 	public void shouldInstantiationEMLPatternFilter() throws XmlException, IOException, FilterInstantiationException {

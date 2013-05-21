@@ -105,5 +105,14 @@ public class EposEngine {
 	public synchronized void registerRule(Rule newRule) {
 		this.rules.add(newRule);
 	}
+
+	
+	/**
+	 * release all resources
+	 */
+	public void shutdown() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
