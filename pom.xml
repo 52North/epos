@@ -20,11 +20,12 @@
 	<url>http://52north.org</url>
 
 	<modules>
+		<module>epos-all</module>
 		<module>epos-api</module>
 		<module>epos-core</module>
 		<module>epos-pattern</module>
 		<module>epos-test</module>
-		<module>epos-transform-xmlbeans</module>
+		<module>epos-transform</module>
 	</modules>
 
 	<licenses>
