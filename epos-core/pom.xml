@@ -28,6 +28,7 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>epos-transform-xmlbeans</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -52,10 +53,10 @@
 
 	<profiles>
 		<profile>
-			<id>integration-test</id>
+			<id>integration-tests</id>
 			<activation>
 				<property>
-					<name>!disable-integration-test</name>
+					<name>!disable-integration-tests</name>
 				</property>
 			</activation>
 

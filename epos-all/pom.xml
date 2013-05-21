@@ -18,17 +18,18 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>epos-core</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>epos-transform</artifactId>
-			<version>${project.version}</version>
+			<artifactId>epos-transform-xmlbeans</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>epos-pattern</artifactId>
-			<version>${project.version}</version>
+			<artifactId>epos-pattern-eml</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>epos-pattern-esper</artifactId>
 		</dependency>
 	</dependencies>
 

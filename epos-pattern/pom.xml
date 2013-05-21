@@ -17,6 +17,7 @@
 	<modules>
 		<module>epos-pattern-eml</module>
 		<module>epos-pattern-esper</module>
+		<module>epos-pattern-spatial</module>
 	</modules>
 
 </project>

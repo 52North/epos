@@ -140,6 +140,11 @@
 			</dependency>
 			<dependency>
 				<groupId>${project.groupId}</groupId>
+				<artifactId>epos-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${project.groupId}</groupId>
 				<artifactId>epos-transform-xmlbeans</artifactId>
 				<version>${project.version}</version>
 			</dependency>
@@ -158,6 +163,11 @@
 				<groupId>${project.groupId}</groupId>
 				<artifactId>epos-pattern-esper</artifactId>
 				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>${project.groupId}</groupId>
+			    <artifactId>epos-pattern-spatial</artifactId>
+			    <version>${project.version}</version>
 			</dependency>
 
 			<!-- 52N libraries -->
