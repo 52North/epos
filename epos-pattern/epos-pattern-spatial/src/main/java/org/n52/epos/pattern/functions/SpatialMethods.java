@@ -20,7 +20,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.n52.epos.pattern.eml.filterlogic.esper.customFunctions;
+package org.n52.epos.pattern.functions;
 
 
 import org.slf4j.Logger;

@@ -25,7 +25,7 @@ package org.n52.epos.pattern.eml.filter.expression;
 import java.util.HashSet;
 
 import org.apache.xmlbeans.XmlObject;
-import org.n52.epos.pattern.eml.filterlogic.esper.customFunctions.MethodNames;
+import org.n52.epos.pattern.functions.MethodNames;
 
 
 /**

@@ -22,18 +22,296 @@
  */
 package org.n52.epos.pattern.eml;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+
 import net.opengis.eml.x001.EMLDocument;
 import net.opengis.eml.x001.EMLDocument.EML;
+import net.opengis.eml.x001.EventAttributeType;
+import net.opengis.eml.x001.RepetitivePatternDocument;
+import net.opengis.eml.x001.SimplePatternType;
+import net.opengis.eml.x001.SimplePatternType.PropertyRestrictions;
+import net.opengis.fes.x20.FilterType;
 
+import org.apache.xmlbeans.XmlObject;
+import org.n52.epos.event.DataTypesMap;
 import org.n52.epos.event.EposEvent;
-import org.n52.epos.filter.PassiveFilter;
+import org.n52.epos.event.MapEposEvent;
+import org.n52.epos.filter.pattern.EventPattern;
+import org.n52.epos.filter.pattern.PatternFilter;
+import org.n52.epos.pattern.eml.pattern.APattern;
+import org.n52.epos.pattern.eml.pattern.PatternComplex;
+import org.n52.epos.pattern.eml.pattern.PatternRepetitive;
+import org.n52.epos.pattern.eml.pattern.PatternSimple;
+import org.n52.epos.pattern.eml.pattern.SelFunction;
+import org.n52.epos.pattern.eml.pattern.Statement;
+import org.n52.oxf.xmlbeans.tools.XmlUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
 
-public class EMLPatternFilter implements PassiveFilter {
+import com.vividsolutions.jts.geom.Geometry;
 
+public class EMLPatternFilter implements PatternFilter {
+
+	private static final Logger logger = LoggerFactory.getLogger(EMLPatternFilter.class);
 	private EML eml;
+	private EMLParser parser;
+	private String inputStreamName;
+	private Map<String, Object> eventProperties;
+	private Map<String, Map<String, Object>> registeredEvents = new HashMap<String, Map<String,Object>>();
+	private HashMap<String, APattern> patterns;
+	private List<EventPattern> eventPatterns = new ArrayList<EventPattern>();
 
-	public EMLPatternFilter(EMLDocument emlDoc) {
+	public EMLPatternFilter(EMLDocument emlDoc) throws Exception {
 		this.eml = emlDoc.getEML();
+		
+		initialize();
+	}
+
+	private void initialize() throws Exception {
+		replacePhenomenonStringsAndConvertUnits(eml);
+		
+		if (logger.isDebugEnabled())
+			logger.debug("initializing EMLPatternFilter controller");
+		this.parser = new EMLParser(this);
+		this.parser.parseEML(eml);
+		
+		this.inputStreamName = this.parser.getInputStreamName();
+		
+		this.patterns = this.parser.getPatterns();
+		
+		/*
+		 * Instantiate propertyNames for esper config
+		 */
+		
+		Map<String, APattern> simplePatterns = new HashMap<String, APattern>();
+		
+		for (String key : patterns.keySet()) {
+			APattern value = patterns.get(key);
+			if (value instanceof PatternSimple) {
+				simplePatterns.put(key, value);
+			}
+		}
+		
+		//register Map as event type with registered phenomenons/types
+		this.eventProperties = new HashMap<String, Object>();
+		this.eventProperties.put(MapEposEvent.START_KEY, Long.class);
+		this.eventProperties.put(MapEposEvent.END_KEY, Long.class);
+		this.eventProperties.put(MapEposEvent.STRING_VALUE_KEY, String.class);
+		this.eventProperties.put(MapEposEvent.DOUBLE_VALUE_KEY, Double.class);
+		this.eventProperties.put(MapEposEvent.CAUSALITY_KEY, Vector.class);
+		this.eventProperties.put(MapEposEvent.GEOMETRY_KEY, Geometry.class);
+		this.eventProperties.put(MapEposEvent.SENSORID_KEY, String.class);
+		this.eventProperties.put(MapEposEvent.THIS_KEY, Map.class);
+
+		/*
+		 * Get data types for phenomenons.
+		 */
+		
+		
+		//TODO: check if string as a value does work (seems not...)
+		DataTypesMap dtm = DataTypesMap.getInstance();
+		
+		/*
+		 * the following loop is needed if a simple pattern 
+		 * accesses an event property which is not a standard
+		 * property known by the EML parser. If so this property 
+		 * has to be added to the event that is registered with
+		 * a data type. 
+		 */
+		for (String key : simplePatterns.keySet()) {
+			APattern val = simplePatterns.get(key);
+			for (Object key2 : val.getPropertyNames()) {
+				this.eventProperties.put(key2.toString(), dtm.getDataType(key2.toString()));
+			}
+		}
+
+		getPropertiesFromPatterns(this.eventProperties, patterns);
+		
+		for (String key : simplePatterns.keySet()) {
+			PatternSimple val = (PatternSimple) simplePatterns.get(key);
+//			logger.info("#### registering event for input " + val.getInputName());
+			
+//			logger.info("datatype of field '" + MapEvent.SENSORID_KEY + "' is '" + eventProperties.get(MapEvent.SENSORID_KEY) + "'");
+			
+			registerEvent(val.getInputName(), this.eventProperties);
+		}
+		
+		
+		//build listeners
+		this.buildListeners(patterns);
+		
+	}
+	
+	private void registerEvent(String inputName,
+			Map<String, Object> eventProperties2) {
+		this.registeredEvents.put(inputName, new HashMap<String, Object>(eventProperties2));
+	}
+
+
+	private void getPropertiesFromPatterns(Map<String, Object> properties,
+			Map<String, APattern> patternMap) {
+		
+		APattern pat;
+		String curr;
+		DataTypesMap dtm = DataTypesMap.getInstance();
+		for (String key : patternMap.keySet()) {
+			 pat = patternMap.get(key);
+			for (Object s : pat.getPropertyNames()) {
+				curr = s.toString();
+				
+				if (curr.contains("/")) {
+					curr = curr.substring(curr.indexOf("/")+1, curr.length());	
+				} else {
+					curr = curr.substring(curr.indexOf(".")+1, curr.length());
+				}
+				
+				properties.put(curr, dtm.getDataType(curr));
+			}
+		}
+		
+	}
+	
+	/**
+	 * builds and registers the listeners for all patterns
+	 * 
+	 * @param patterns the patterns
+	 */
+	private void buildListeners(HashMap<String, APattern> patterns) {
+		HashMap<String, Object> completedPatterns = new HashMap<String, Object>();
+		Vector<APattern> uncompletedPatterns = new Vector<APattern>();
+		APattern patt;
+		
+		List<String> internalStreamNames = new ArrayList<String>();
+		internalStreamNames.addAll(patterns.keySet());
+		
+		//check every pattern
+		for (String key : patterns.keySet()) {
+			patt = patterns.get(key);
+			
+			//first run: only simple and timer patterns
+			if (patt instanceof PatternComplex || patt instanceof PatternRepetitive) {
+				//these patterns need other patterns to be registered first
+				uncompletedPatterns.add(patt);
+				continue;
+			}
+			
+			this.buildListenersForPattern(patt, internalStreamNames);
+			completedPatterns.put(patt.getPatternID(), patt);
+		}
+		
+		//second run: complex and repetitive patterns
+		int i = -1;
+		int maxTests = uncompletedPatterns.size() * 3;
+		while (uncompletedPatterns.size() > 0) {
+			uncompletedPatterns = this.buildComplexListeners(completedPatterns, uncompletedPatterns, internalStreamNames);
+			
+			//check for loop
+			i++;
+			if (i > maxTests) {
+				logger.warn("One of the patterns can not be build or there is a loop in the patterns. This is not allowed.");
+				break;
+			}
+		}
+	}
+	
+
+	/**
+	 * builds the listeners for patterns that use other patterns (complex and repetitive)
+	 * 
+	 * @param completedPatterns already completed patterns
+	 * @param uncompletedPatterns patterns without listener
+	 * @param internalStreamNames 
+	 * @return the patterns witch could not be build
+	 */
+	private Vector<APattern> buildComplexListeners(HashMap<String, Object> completedPatterns,
+			Vector<APattern> uncompletedPatterns, List<String> internalStreamNames) {
+		
+		Vector<APattern> stillUncomPatterns = new Vector<APattern>();
+		PatternComplex cp;
+		PatternRepetitive rp;
+		for (APattern pat : uncompletedPatterns) {
+			//check if all internal patterns are already completed
+			if (pat instanceof PatternComplex) {
+				//complex pattern
+				cp = (PatternComplex) pat;
+				
+				if (completedPatterns.containsKey(cp.getFirstPatternID())
+						&& completedPatterns.containsKey(cp.getSecondPatternID())) {
+					//build pattern listeners
+					this.buildListenersForPattern(pat, internalStreamNames);
+					completedPatterns.put(pat.getPatternID(), pat);
+				}
+				else {
+					//append to list, try later
+					stillUncomPatterns.add(pat);
+				}
+			}
+			else {
+				//repetitive pattern
+				rp = (PatternRepetitive) pat;
+				
+				if (completedPatterns.containsKey(rp.getPatternToRepeatID())) {
+					//build pattern listeners
+					this.buildListenersForPattern(pat, internalStreamNames);
+					completedPatterns.put(pat.getPatternID(), pat);
+				}
+				else {
+					//append to list, try later
+					stillUncomPatterns.add(pat);
+				}
+			}
+		}
+		
+		return stillUncomPatterns;
+	}
+	
+
+	/**
+	 * builds and registers the listeners for a single pattern
+	 * 
+	 * @param pattern the pattern
+	 */
+	private void buildListenersForPattern(APattern pattern, List<String> internalStreamNames) {
+		
+		if (logger.isDebugEnabled())
+			logger.debug("building listener for pattern " + pattern.getPatternID());
+		if (pattern instanceof PatternRepetitive) {
+//			/*
+//			 * repetitive pattern needs two statements per select function
+//			 * 
+//			 * first statement is the counting statement, the others are the selecting statements.
+//			 */
+//			Statement[] statements = pattern.createEsperStatements();
+//			
+//			//create listeners for the selecting statements
+//			for (int i = 1; i < statements.length; i++) {
+//				this.eventPatterns.add(createEventPattern(pattern, ))
+//			}
+			logger.warn(RepetitivePatternDocument.type.getDocumentElementName() + " currently not " +
+					"supported.");
+		}
+		else {
+			/*
+			 * other pattern only needs one per statement
+			 */
+			for (Statement statement : pattern.createEsperStatements()) {
+				this.eventPatterns.add(createEventPattern(pattern, statement, internalStreamNames));
+			}
+		}
+	}
+	
+	
+
+	private EventPattern createEventPattern(APattern pattern,
+			Statement statement, List<String> internalStreamNames) {
+		EMLEventPattern result = new EMLEventPattern(pattern, statement, internalStreamNames);
+		return result;
 	}
 
 	public void onTriggeredMatch(EposEvent event) {
@@ -42,6 +320,137 @@ public class EMLPatternFilter implements PassiveFilter {
 
 	public EML getEml() {
 		return this.eml;
+	}
+
+	@Override
+	public List<EventPattern> getPatterns() {
+		return this.eventPatterns;
+	}
+
+	@Override
+	public CharSequence serialize() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	/**
+	 * replaces phenomenon Strings containing ":" to "__" and
+	 * converts any quantity units to its base units.
+	 * @param converter the unit converter
+	 * @throws Exception exceptions that occur
+	 */
+	public void replacePhenomenonStringsAndConvertUnits(EML emlXml) throws Exception {
+		if (emlXml != null) {
+			FilterType filter = null;
+			SimplePatternType[] patterns = emlXml.getSimplePatterns().getSimplePatternArray();
+			for (SimplePatternType spt : patterns) {
+				if (spt.isSetGuard()) {
+					filter = spt.getGuard().getFilter();
+					
+					EMLHelper.replaceForFilter(filter);
+				}
+				
+				PropertyRestrictions propRes = spt.getPropertyRestrictions();
+				if (propRes != null) {
+					EventAttributeType[] arr = propRes.getPropertyRestrictionArray();
+					
+					for (EventAttributeType eat : arr) {
+						XmlObject obj = XmlObject.Factory.newInstance();
+
+						Element elem = (Element) eat.getValue().getDomNode();
+						String tempText = XmlUtil.toString(elem.getFirstChild()).trim();
+						
+//						tempText = tempText.replaceAll(":", "__").replaceAll("\\.", "_");
+						
+						//TODO unit conversion not performed.
+						
+						obj.newCursor().setTextValue(tempText);
+						eat.setValue(obj);
+					}
+				}
+			}
+
+		}
+
+	}
+
+	@Override
+	public String getInputStreamName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object getEventDatatype(String eventName) {
+		for (String registered : this.registeredEvents.keySet()) {
+			if (registered.equals(eventName)) {
+				return this.registeredEvents.get(registered);
+			}
+		}
+		return null;
+	}
+
+	public Object getDatatype(String fullPropertyName) {
+		// split into event and property name part
+		String eventName;
+		String propertyName;
+		int lastSlash = fullPropertyName.lastIndexOf("/");
+
+		propertyName = fullPropertyName.substring(lastSlash + 1);
+
+		int lastButOneSlash = fullPropertyName.substring(0, lastSlash)
+				.lastIndexOf("/");
+
+		if (lastButOneSlash <= 0) {
+			// full name looks like "event/value"
+			eventName = fullPropertyName.substring(0, lastSlash);
+		} else {
+			// full name looks like "event/nestedEvent/value", we need
+			// nestedEvent
+			eventName = fullPropertyName.substring(lastButOneSlash + 1,
+					lastSlash);
+		}
+
+		// check all inputs first
+		// for (InputDescription descr : this.inputDescriptions) {
+		// if (descr.getName().equals(eventName)) {
+		// return DataTypeNameToClassConverter.convert(descr.getDataType());
+		// }
+		// }
+
+		// then check property Restrictions
+//		for (EventPattern pat : this.patterns) {
+//			if (pat.getRelatedInputPatterns() == null || pat.getRelatedInputPatterns().isEmpty()) {
+//				PatternSimple pats = (PatternSimple) pat;
+//				for (PropRestriction propRes : pats.getPropertyRestrictions()) {
+//					if (propRes.getName().equals(propertyName)) {
+//						if (propRes.getValue().equals(
+//								"\"" + MapEposEvent.DOUBLE_VALUE_KEY + "\"")) {
+//							return Number.class;
+//						}
+//					}
+//				}
+//			}
+//		}
+
+		// then check all patterns
+		for (EventPattern pat : getPatterns()) {
+			if (pat.getNewEventName().equals(eventName)) {
+				// this select function defines the data type
+				return pat.getEventProperties().get(propertyName);
+			}
+		}
+		return null;
+	}
+
+	public String resolveNewEventName(String firstPatternID,
+			int firstSelectFunctionNumber) {
+		APattern pattern = this.parser.getPatterns().get(firstPatternID);
+		
+		if (pattern == null) {
+			return null;
+		}
+		
+		return pattern.getSelectFunctions().get(firstSelectFunctionNumber).getNewEventName();
 	}
 	
 }

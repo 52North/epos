@@ -25,55 +25,38 @@
  * @author Thomas Everding
  */
 
-package org.n52.epos.pattern.eml.util;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
+package org.n52.epos.pattern.functions;
 
 /**
- * ThreadPool for the execution of {@link Runnable}s.
- * Implemented as Singleton. 
+ * contains the names of the custom functions (methods)
  * 
  * @author Thomas Everding
  *
  */
-public class ThreadPool {
-	
-	private static ThreadPool instance = null;
-	
-	private ExecutorService executor;
+public class MethodNames {
 	
 	/**
-	 * 
-	 * Private Constructor
-	 *
+	 * name for the method to test if an event is the causal ancestor of another event
 	 */
-	private ThreadPool() {
-		this.executor = Executors.newSingleThreadExecutor(new NamedThreadFactory("EML-UpdateHandlerPool"));
-	}
-	
+	public static final String IS_CAUSAL_ANCESTOR_NAME = "CausalityMethods.isCausalAncestorOf";
 	
 	/**
-	 * 
-	 * @return the only instance of this class
+	 * name for the method to test if an event is not the causal ancestor of another event
 	 */
-	public static synchronized ThreadPool getInstance() {
-		if (instance == null) {
-			instance = new ThreadPool();
-		}
-		
-		return instance;
-	}
-	
+	public static final String IS_NOT_CAUSAL_ANCESTOR_NAME = "CausalityMethods.isNotCausalAncestorOf";
 	
 	/**
-	 * Executes a class implementing {@link Runnable}.
-	 * Does not block.
-	 * 
-	 * @param runnable the runnable
+	 * name for the method to test if a property exists in a received event
 	 */
-	public synchronized void execute(Runnable runnable) {
-		this.executor.submit(runnable);
-	}
+	public static final String PROPERTY_EXISTS_NAME = "PropertyMethods.propertyExists";
+	
+	/**
+	 * operation name to be used in esper statements for the any interacts filter
+	 */
+	public static final String ANY_INTERACTS_OPERATION = "TemporalMethods.anyInteracts";
+	
+	/**
+	 * prefix for the spatial methods
+	 */
+	public static final String SPATIAL_METHODS_PREFIX = "SpatialMethods.";
 }

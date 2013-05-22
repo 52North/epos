@@ -20,24 +20,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.n52.epos.pattern.eml;
+package org.n52.epos.filter.pattern;
 
-import net.opengis.eml.x001.EMLDocument;
+import java.util.List;
+import java.util.Map;
 
-import org.n52.epos.filter.EposFilter;
-import org.n52.epos.filter.FilterInstantiationRepository;
+public interface EventPattern {
 
-public class EMLRuleInstantiation implements FilterInstantiationRepository {
+	public List<String> getRelatedInputPatterns();
+	
+	public String createStringRepresentation();
+	
+	public boolean createsFinalOutput();
+	
+	public boolean createsNewInternalEvent();
 
-	@Override
-	public EposFilter instantiateFrom(Object input) throws Exception {
-		EMLDocument emlDoc = (EMLDocument) input;
-		return new EMLPatternFilter(emlDoc);
-	}
+	public String getNewEventName();
 
-	@Override
-	public Class<?> getSupportedInput() {
-		return EMLDocument.class;
-	}
+	public boolean usesOriginalEventAsOutput();
 
+	public String getID();
+
+	public String getInputName();
+
+	public Map<String, Object> getEventProperties();
 }

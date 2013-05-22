@@ -20,12 +20,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.n52.epos.pattern.eml;
+package org.n52.epos.filter.pattern;
 
 
 import java.util.Map;
 
-import net.opengis.eml.x001.EMLDocument.EML;
 
 import org.n52.epos.event.MapEposEvent;
 
@@ -37,16 +36,9 @@ import org.n52.epos.event.MapEposEvent;
  */
 public interface ILogicController {
 
-	
-	/**
-	 * Initializes the controller
-	 * 
-	 * @param eml the EML to execute
-	 * @param unitConverter the unit converter
-	 * @throws Exception 
-	 */
-	void initialize(EML eml) throws Exception;
 
+	void initialize(PatternFilter originalFilter) throws Exception;
+	
 	/**
 	 * send a new event to the engine
 	 * 
@@ -95,4 +87,5 @@ public interface ILogicController {
 	void removeFromEngine();
 
 	String getInputStreamName();
+
 }

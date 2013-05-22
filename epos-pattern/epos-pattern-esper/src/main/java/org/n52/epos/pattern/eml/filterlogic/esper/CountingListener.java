@@ -31,8 +31,7 @@ import java.util.HashMap;
 import java.util.Vector;
 
 import org.n52.epos.event.MapEposEvent;
-import org.n52.epos.pattern.eml.Constants;
-import org.n52.epos.pattern.eml.ILogicController;
+import org.n52.epos.filter.pattern.ILogicController;
 
 import com.espertech.esper.client.UpdateListener;
 import com.espertech.esper.client.EventBean;
@@ -78,7 +77,8 @@ public class CountingListener implements UpdateListener {
 		eventProperties.put(MapEposEvent.END_KEY, Long.class);
 		eventProperties.put(MapEposEvent.CAUSALITY_KEY, Vector.class);
 		
-		this.eventName = this.inputEventName + Constants.REPETIVITE_COUNT_EVENT_SUFFIX;
+		//TODO hard-coded "_count" - epos-pattern-eml does not have to know that!
+		this.eventName = this.inputEventName + "_count";
 		this.controller.registerEvent(this.eventName, eventProperties);
 	}
 

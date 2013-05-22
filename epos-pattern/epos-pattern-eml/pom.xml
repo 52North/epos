@@ -37,10 +37,6 @@
 		</dependency>
 		<dependency>
 		    <groupId>org.n52.sensorweb</groupId>
-		    <artifactId>52n-xml-em-v020</artifactId>
-		</dependency>
-		<dependency>
-		    <groupId>org.n52.sensorweb</groupId>
 		    <artifactId>52n-oxf-conversion</artifactId>
 		</dependency>
 		<dependency>
@@ -54,10 +50,6 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>epos-test</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.espertech</groupId>
-			<artifactId>esper</artifactId>
 		</dependency>
 	</dependencies>
 	

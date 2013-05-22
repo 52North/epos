@@ -25,38 +25,55 @@
  * @author Thomas Everding
  */
 
-package org.n52.epos.pattern.eml.filterlogic.esper.customFunctions;
+package org.n52.epos.engine.esper.concurrent;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 
 /**
- * contains the names of the custom functions (methods)
+ * ThreadPool for the execution of {@link Runnable}s.
+ * Implemented as Singleton. 
  * 
  * @author Thomas Everding
  *
  */
-public class MethodNames {
+public class ThreadPool {
+	
+	private static ThreadPool instance = null;
+	
+	private ExecutorService executor;
 	
 	/**
-	 * name for the method to test if an event is the causal ancestor of another event
+	 * 
+	 * Private Constructor
+	 *
 	 */
-	public static final String IS_CAUSAL_ANCESTOR_NAME = "CausalityMethods.isCausalAncestorOf";
+	private ThreadPool() {
+		this.executor = Executors.newSingleThreadExecutor(new NamedThreadFactory("EML-UpdateHandlerPool"));
+	}
+	
 	
 	/**
-	 * name for the method to test if an event is not the causal ancestor of another event
+	 * 
+	 * @return the only instance of this class
 	 */
-	public static final String IS_NOT_CAUSAL_ANCESTOR_NAME = "CausalityMethods.isNotCausalAncestorOf";
+	public static synchronized ThreadPool getInstance() {
+		if (instance == null) {
+			instance = new ThreadPool();
+		}
+		
+		return instance;
+	}
+	
 	
 	/**
-	 * name for the method to test if a property exists in a received event
+	 * Executes a class implementing {@link Runnable}.
+	 * Does not block.
+	 * 
+	 * @param runnable the runnable
 	 */
-	public static final String PROPERTY_EXISTS_NAME = "PropertyMethods.propertyExists";
-	
-	/**
-	 * operation name to be used in esper statements for the any interacts filter
-	 */
-	public static final String ANY_INTERACTS_OPERATION = "TemporalMethods.anyInteracts";
-	
-	/**
-	 * prefix for the spatial methods
-	 */
-	public static final String SPATIAL_METHODS_PREFIX = "SpatialMethods.";
+	public synchronized void execute(Runnable runnable) {
+		this.executor.submit(runnable);
+	}
 }

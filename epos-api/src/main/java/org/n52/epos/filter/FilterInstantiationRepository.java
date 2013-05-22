@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
  */
 public interface FilterInstantiationRepository {
 
-	public EposFilter instantiateFrom(Object input);
+	public EposFilter instantiateFrom(Object input) throws Exception;
 
 
 	/**
@@ -92,7 +92,12 @@ public interface FilterInstantiationRepository {
 				throws FilterInstantiationException {
 			List<FilterInstantiationRepository> repos = getRepositories(input.getClass());
 			for (FilterInstantiationRepository t : repos) {
-				return t.instantiateFrom(input);
+				try {
+					return t.instantiateFrom(input);
+				} catch (Exception e) {
+					logger.warn(e.getMessage(), e);
+					logger.warn("Skipping FilterInstnationRepository: "+ t.getClass().getName());
+				}
 			}
 
 			throw new FilterInstantiationException(

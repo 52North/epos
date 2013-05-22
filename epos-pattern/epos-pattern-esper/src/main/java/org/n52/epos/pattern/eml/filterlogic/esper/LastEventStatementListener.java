@@ -22,7 +22,7 @@
  */
 package org.n52.epos.pattern.eml.filterlogic.esper;
 
-import org.n52.epos.pattern.eml.pattern.Statement;
+import org.n52.epos.filter.pattern.EventPattern;
 import org.n52.epos.rules.Rule;
 
 import com.espertech.esper.client.EventBean;
@@ -43,7 +43,7 @@ public class LastEventStatementListener extends StatementListener {
 	/**
 	 * see {@link StatementListener#StatementListener(Statement, EsperController, SubscriptionManager)}
 	 */
-	public LastEventStatementListener(Statement statement,
+	public LastEventStatementListener(EventPattern statement,
 			EsperController controller, Rule sub) {
 		super(statement, controller, sub);
 	}

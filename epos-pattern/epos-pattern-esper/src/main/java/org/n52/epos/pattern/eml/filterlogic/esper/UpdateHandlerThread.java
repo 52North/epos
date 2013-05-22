@@ -31,9 +31,7 @@ import java.util.Date;
 import java.util.Map;
 
 import org.n52.epos.event.MapEposEvent;
-import org.n52.epos.pattern.eml.Constants;
-import org.n52.epos.pattern.eml.MapEventFactory;
-import org.n52.epos.pattern.eml.pattern.Statement;
+import org.n52.epos.filter.pattern.EventPattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +57,7 @@ public class UpdateHandlerThread implements Runnable {
 	
 	private EsperController controller;
 	
-	private Statement statement;
+	private EventPattern statement;
 	
 	private EventBean bean;
 	
@@ -78,6 +76,7 @@ public class UpdateHandlerThread implements Runnable {
 	public UpdateHandlerThread(StatementListener listener, EventBean bean) {
 		this.doOutput = listener.isDoOutput();
 		this.controller = listener.getController();
+		
 		this.statement = listener.getStatement();
 		this.bean = bean;
 		this.listener = listener;
@@ -87,7 +86,7 @@ public class UpdateHandlerThread implements Runnable {
 	@Override
 	public void run() {
 		if (logger.isDebugEnabled()) {
-			logger.debug("Update received for statement: " + this.statement.getStatement());
+			logger.debug("Update received for pattern: " + this.statement);
 		}
 		
 //		logger.info("bean type: " + bean.getClass().getName());
@@ -141,97 +140,11 @@ public class UpdateHandlerThread implements Runnable {
 			}
 		}
 		
-//		//create causality if wanted
-//		if (this.statement.getSelectFunction().getCreateCausality()) {
-//			logger.info("creating causality");
-//			logger.info("underl: " + bean.getUnderlying().getClass().getName());
-//			
-//			StringBuilder log = new StringBuilder();
-//			log.append("if map then content:");
-//			if (bean.getUnderlying() instanceof HashMap) {
-//				HashMap map = (HashMap) bean.getUnderlying();
-//				for (Object key : map.keySet()) {
-//					log.append("\n\t" + key.toString() + ": " + map.get(key));
-//				}
-//			}
-//			logger.info(log.toString());
-//			
-//			log = new StringBuilder();
-//			log.append("result event:");
-//			for (String key : event.keySet()) {
-//				log.append("\n\t" + key + ": " + event.get(key));
-//			}
-//			logger.info(log.toString());
-//			
-//			//TODO: identify what is done next, dies somewhere here...
-//			
-//			if (bean.getUnderlying() instanceof MapEvent) {
-//				logger.info("undelying is a map event!");
-//				//select event performed?
-//				MapEvent underlying = (MapEvent) bean.getUnderlying();
-//				
-//				logger.info("underlying map event: " + underlying);
-//				
-//				Vector<MapEvent> underlyingCausality = (Vector<MapEvent>) underlying.get(MapEvent.CAUSALITY_KEY);
-//				
-//				//add causality of underlying event
-//				logger.info("undelying events: " + underlyingCausality.size());
-//				for (MapEvent e : underlyingCausality) {
-//					event.addCausalAncestor(e);
-//				}
-//				
-//				//add underlying event to causality
-//				event.addCausalAncestor(underlying);
-//			}
-//			else if (bean.getUnderlying() instanceof HashMap) {
-//				logger.info("undelying is a hash map");
-//				HashMap<?, ?> map = (HashMap<?, ?>) bean.getUnderlying();
-//				
-//				log = new StringBuilder();
-//				log.append("undelying values:");
-//				for (Object key : map.keySet()) {
-//					log.append("\n\t" + key.toString() + ": " + map.get(key).toString() + " (" + map.get(key).getClass().getName() + ")");
-//				}
-//				logger.info(log.toString());
-//				
-//				//notify on select performed?
-//				EPStatement epStatement = this.controller.getEPStatement(this.statement.getStatement());
-//				if (epStatement != null) {
-//					logger.info("ep statement available");
-//					Object obj = epStatement.getUserObject();
-//					if (obj != null) {
-//						logger.info("user object: " + obj.getClass().getName());
-//					}
-//					else {
-//						logger.info("user object is null");
-//					}
-//				}
-//				
-//				EPRuntime epRuntime = this.controller.getEpService().getEPRuntime();
-//				Map<String, Object> values = epRuntime.getVariableValueAll();
-//				
-//				log = new StringBuilder();
-//				log.append("runtime variable values:");
-//				
-//				for (String key : values.keySet()) {
-//					log.append("\n\t" + key + ": " + values.get(key).toString() + " (" + values.get(key).getClass().getName() + ")");
-//				}
-//				logger.info(log.toString());
-//				
-//				Context context = this.controller.getEpService().getContext();
-//				try {
-//					logger.info("context results for name 'arrival': " + context.lookup("arrival"));
-//				}
-//				catch (NamingException e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		}
 		
 		try {
 			//send event to esper engine for further processing
-			if (!this.statement.getSelectFunction().getNewEventName().equals("")) {
-				this.controller.sendEvent(this.statement.getSelectFunction().getNewEventName(), event);
+			if (!this.statement.createsNewInternalEvent()) {
+				this.controller.sendEvent(this.statement.getNewEventName(), event);
 			}
 			
 			//if output=true send event to output
@@ -272,7 +185,11 @@ public class UpdateHandlerThread implements Runnable {
 
 
 	private MapEposEvent parseEventFromMap(Map<String, Object> properties) {
-		return MapEventFactory.parseFromMap(properties, this.statement.getSelectFunction().getCreateCausality());
+		
+		//TODO create a routine to transform a MapEventBean to MapEposEvent
+//		return MapEventFactory.parseFromMap(properties, this.statement.getSelectFunction().getCreateCausality());
+		return null;
+		
 //		StringBuilder log = new StringBuilder();
 //		log.append("parsing MapEvent from Map");
 //		log.append("\n\tproperties:");
@@ -388,7 +305,8 @@ public class UpdateHandlerThread implements Runnable {
 			}
 			
 			//check for timer events
-			if (obj.equals(Constants.TIMER_EVENT_VALUE)) {
+			//TODO make global! epos-pattern-eml does not have to use this name
+			if (obj.equals("TimerEvent")) {
 				//timer event caught
 				result = new MapEposEvent(now.getTime(), now.getTime());
 				result.put(MapEposEvent.VALUE_KEY, now.getTime());

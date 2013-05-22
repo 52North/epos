@@ -20,7 +20,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.n52.epos.pattern.eml.util;
+package org.n52.epos.pattern.eml.filterlogic.esper.util;
 
 import java.util.Map;
 import java.util.Vector;
@@ -34,8 +34,6 @@ import net.opengis.em.x020.EventEventRelationshipType;
 import net.opengis.em.x020.EventType;
 import net.opengis.em.x020.EventType.EventTime;
 import net.opengis.em.x020.NamedValueType;
-import net.opengis.eml.x001.EMLDocument;
-import net.opengis.eml.x001.EMLDocument.EML;
 import net.opengis.gml.FeaturePropertyType;
 import net.opengis.gml.TimeInstantDocument;
 import net.opengis.gml.TimeInstantType;
@@ -302,7 +300,7 @@ public class EventModelGenerator {
 	 * @param eml if eml available put it in the procedure
 	 * @return XmlObject holding the {@link EventType}
 	 */
-	public XmlObject generateEventDocument(EML eml) {
+	public XmlObject generateEventDocument(XmlObject eml) {
 
 		if (this.resultEventType != null) {
 			generateFromEventType(this.eventMap, this.resultEventType);
@@ -310,9 +308,7 @@ public class EventModelGenerator {
 		}
 		generateFromEventType(this.eventMap, this.resultDerivedEventType);
 		if (eml  != null) {
-			EMLDocument doc = EMLDocument.Factory.newInstance();
-			doc.setEML(eml);
-			this.resultDerivedEventType.setProcedure(doc);
+			this.resultDerivedEventType.setProcedure(eml);
 		}
 		else {
 			this.resultDerivedEventType.addNewProcedure();

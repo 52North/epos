@@ -30,13 +30,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.n52.epos.engine.esper.concurrent.IConcurrentNotificationHandler;
+import org.n52.epos.engine.esper.concurrent.NamedThreadFactory;
 import org.n52.epos.event.EposEvent;
 import org.n52.epos.event.MapEposEvent;
 import org.n52.epos.filter.PassiveFilter;
+import org.n52.epos.filter.pattern.ILogicController;
+import org.n52.epos.filter.pattern.PatternFilter;
 import org.n52.epos.pattern.PatternEngine;
-import org.n52.epos.pattern.eml.EMLPatternFilter;
-import org.n52.epos.pattern.eml.ILogicController;
-import org.n52.epos.pattern.eml.util.NamedThreadFactory;
 import org.n52.epos.rules.Rule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,14 +52,9 @@ public class EsperFilterEngine implements PatternEngine {
 	private static final Logger logger = LoggerFactory
 			.getLogger(EsperFilterEngine.class);
 	private Class<?> controllerClass;
-//	private boolean insertionSuspended;
-//	private Random random;
 	private IConcurrentNotificationHandler queueWorker;
 	private ExecutorService messageProcessingPool;
 	private boolean controlledConcurrentUse;
-//	private boolean performanceTesting = false;
-//	private boolean testingSimulateLatency = true;
-//	private boolean testingThrowRandomExceptions = false;
 
 	/**
 	 * 
@@ -93,48 +88,6 @@ public class EsperFilterEngine implements PatternEngine {
 		// multiple runtime objects needed for pattern management
 		this.esperControllers = new ConcurrentHashMap<Rule, ILogicController>();
 
-		/*
-		 * check if we have enrichment activated
-		 */
-		// String enrich = conf.getPropertyForKey(
-		// ConfigurationRegistry.USE_ENRICHMENT).toString();
-		// if (Boolean.parseBoolean(enrich.trim())) {
-		// // DUMMY - USE REFLECTIONS HERE in future
-		// this.enricher = new AIXMEnrichment();
-		// }
-
-		/*
-		 * concurrent fifo worker implementation. first, check if we use
-		 * concurrency monitoring
-		 */
-		// TODO use config
-		this.controlledConcurrentUse = true;
-
-		if (logger.isInfoEnabled())
-			logger.info("Concurrent Message Processing? {}",
-					this.controlledConcurrentUse);
-
-		if (this.controlledConcurrentUse) {
-			ServiceLoader<IConcurrentNotificationHandler> concurrentLoader = ServiceLoader
-					.load(IConcurrentNotificationHandler.class);
-			for (IConcurrentNotificationHandler icnh : concurrentLoader) {
-					this.queueWorker = icnh;
-					break;
-			}
-
-//			this.queueWorker.setPollListener(this);
-			
-			//TODO use config
-			this.queueWorker.setTimeout(5000);
-			this.queueWorker.setUseIntelligentTimeout(false);
-
-			this.queueWorker.startWorking();
-		}
-
-//		if (this.performanceTesting) {
-//			this.random = new Random();
-//		}
-
 	}
 
 
@@ -158,7 +111,7 @@ public class EsperFilterEngine implements PatternEngine {
 		PassiveFilter originalFilter = rule.getPassiveFilter();
 
 		ILogicController controller = null;
-		if (originalFilter instanceof EMLPatternFilter) {
+		if (originalFilter instanceof PatternFilter) {
 			/*
 			 * parse the EML and get the patterns Also UNITCONVERSION is done
 			 * here now as a first step
@@ -168,8 +121,7 @@ public class EsperFilterEngine implements PatternEngine {
 						.getConstructor(Rule.class);
 				controller = (ILogicController) con.newInstance(rule);
 
-				EMLPatternFilter emlFilter = (EMLPatternFilter) originalFilter;
-				controller.initialize(emlFilter.getEml());
+				controller.initialize((PatternFilter) originalFilter);
 				logger.info("Registering EML Controller for external input stream '"
 						+ controller.getInputStreamName() + "'");
 				this.esperControllers.put(rule, controller);

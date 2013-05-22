@@ -30,8 +30,8 @@ package org.n52.epos.pattern.eml.pattern;
 import java.util.Vector;
 
 import org.n52.epos.pattern.eml.Constants;
-import org.n52.epos.pattern.eml.ILogicController;
-import org.n52.epos.pattern.eml.filterlogic.EMLParser;
+import org.n52.epos.pattern.eml.EMLParser;
+import org.n52.epos.pattern.eml.EMLPatternFilter;
 
 
 
@@ -49,7 +49,7 @@ public class PatternSimple extends AGuardedViewPattern {
 	
 	private Statement[] statements = null;
 	
-	private ILogicController controller;
+	private EMLPatternFilter controller;
 	
 	
 	/**
@@ -58,7 +58,7 @@ public class PatternSimple extends AGuardedViewPattern {
 	 * 
 	 * @param logicController controller of this process
 	 */
-	public PatternSimple(ILogicController logicController) {
+	public PatternSimple(EMLPatternFilter logicController) {
 		this.controller = logicController;
 	}
 	

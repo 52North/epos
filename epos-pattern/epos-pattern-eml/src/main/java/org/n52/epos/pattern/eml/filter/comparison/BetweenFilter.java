@@ -30,7 +30,7 @@ package org.n52.epos.pattern.eml.filter.comparison;
 import java.util.HashSet;
 
 import org.n52.epos.pattern.eml.filter.expression.AFilterExpression;
-import org.n52.epos.pattern.eml.filterlogic.esper.customFunctions.MethodNames;
+import org.n52.epos.pattern.functions.MethodNames;
 
 import net.opengis.fes.x20.PropertyIsBetweenType;
 

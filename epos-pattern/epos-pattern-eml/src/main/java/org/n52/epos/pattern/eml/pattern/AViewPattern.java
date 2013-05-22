@@ -34,7 +34,7 @@ package org.n52.epos.pattern.eml.pattern;
  * @author Thomas Everding
  *
  */
-public abstract class AViewPattern extends APattern{
+public abstract class AViewPattern extends APattern {
 	
 	/**
 	 * the view (used for esper)

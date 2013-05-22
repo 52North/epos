@@ -111,7 +111,7 @@ public class EposEngine {
 	public synchronized void registerRule(Rule newRule) {
 		this.rules.add(newRule);
 		
-		if (newRule.hasPassiveFilter()) {
+		if (newRule.hasPassiveFilter() && this.patternEngine != null) {
 			try {
 				this.patternEngine.registerRule(newRule);
 			} catch (NoPassiveFilterPresentException e) {
@@ -125,7 +125,8 @@ public class EposEngine {
 	 * release all resources
 	 */
 	public void shutdown() {
-		this.patternEngine.shutdown();
+		if (this.patternEngine != null)
+			this.patternEngine.shutdown();
 	}
 	
 }

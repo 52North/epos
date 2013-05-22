@@ -28,7 +28,7 @@
 package org.n52.epos.pattern.eml.pattern;
 
 import org.n52.epos.pattern.eml.Constants;
-import org.n52.epos.pattern.eml.filterlogic.EMLParser;
+import org.n52.epos.pattern.eml.EMLParser;
 
 /**
  * representation of a timer pattern
@@ -36,7 +36,7 @@ import org.n52.epos.pattern.eml.filterlogic.EMLParser;
  * @author Thomas Everding
  *
  */
-public class PatternTimer extends AViewPattern{
+public class PatternTimer extends AViewPattern {
 	
 	/**
 	 * <code>true</code> for interval patterns

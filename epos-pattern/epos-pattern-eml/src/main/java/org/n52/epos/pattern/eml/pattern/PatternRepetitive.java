@@ -30,8 +30,7 @@ package org.n52.epos.pattern.eml.pattern;
 import java.util.HashMap;
 
 import org.n52.epos.pattern.eml.Constants;
-import org.n52.epos.pattern.eml.ILogicController;
-import org.n52.epos.pattern.eml.filterlogic.EMLParser;
+import org.n52.epos.pattern.eml.EMLParser;
 
 
 /**
@@ -40,14 +39,12 @@ import org.n52.epos.pattern.eml.filterlogic.EMLParser;
  * @author Thomas Everding
  *
  */
-public class PatternRepetitive extends APattern{ 
+public class PatternRepetitive extends APattern { 
 	
 	private int repetitionCount;
 	
 	private String patternToRepeatID;
 	
-	private ILogicController controller;
-
 	private int selectFunctionNumber;
 
 	private String inputEventName;
@@ -87,12 +84,11 @@ public class PatternRepetitive extends APattern{
 		//two statements needed per select function
 		Statement[] result = new Statement[this.selectFunctions.size() +1];
 		
-		if (this.controller != null) {
-			//get input event name
-			this.inputEventName = this.controller.getNewEventName(this.patternToRepeatID, this.selectFunctionNumber);			
-		}
-		
-		else if (this.parser != null) {
+//		if (this.controller != null) {
+//			//get input event name
+//			this.inputEventName = this.controller.getNewEventName(this.patternToRepeatID, this.selectFunctionNumber);			
+//		} else
+		if (this.parser != null) {
 			this.inputEventName = getNewEventNameWithParser(/*this.patternToRepeatID, */this.selectFunctionNumber);
 			
 		}
@@ -200,12 +196,12 @@ public class PatternRepetitive extends APattern{
 		return createEsperStatements();
 	}
 
-	/**
-	 * @param logicController the controller to set
-	 */
-	public void setController(ILogicController logicController) {
-		this.controller = logicController;
-	}
+//	/**
+//	 * @param logicController the controller to set
+//	 */
+//	public void setController(ILogicController logicController) {
+//		this.controller = logicController;
+//	}
 
 	
 	/**

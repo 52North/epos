@@ -36,7 +36,7 @@ import net.opengis.gml.x32.PolygonType;
 
 import org.apache.xmlbeans.XmlException;
 import org.n52.epos.event.MapEposEvent;
-import org.n52.epos.pattern.eml.filterlogic.esper.customFunctions.MethodNames;
+import org.n52.epos.pattern.functions.MethodNames;
 import org.n52.epos.pattern.spatial.SpatialAnalysisTools;
 import org.n52.oxf.conversion.gml32.xmlbeans.jts.GMLGeometryFactory;
 import org.n52.oxf.xmlbeans.tools.XmlUtil;

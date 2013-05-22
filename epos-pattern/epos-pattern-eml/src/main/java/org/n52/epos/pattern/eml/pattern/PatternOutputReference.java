@@ -22,8 +22,7 @@
  */
 package org.n52.epos.pattern.eml.pattern;
 
-import org.n52.epos.pattern.eml.ILogicController;
-
+import org.n52.epos.pattern.eml.EMLPatternFilter;
 
 
 
@@ -39,9 +38,9 @@ public class PatternOutputReference {
 	
 	private String patternID;
 	
-	private ILogicController controller;
-	
 	private String newEventName = "";
+
+	private EMLPatternFilter controller;
 	
 	
 	/**
@@ -52,7 +51,7 @@ public class PatternOutputReference {
 	 * @param patternID the ID of the pattern
 	 * @param controller the logic controller to resolve the reference
 	 */
-	public PatternOutputReference(int selectFuncgtionNumber, String patternID, ILogicController controller) {
+	public PatternOutputReference(int selectFuncgtionNumber, String patternID, EMLPatternFilter controller) {
 		this.selectFunctionNumber = selectFuncgtionNumber;
 		this.patternID = patternID;
 		this.controller = controller;
@@ -84,7 +83,7 @@ public class PatternOutputReference {
 	public String getNewEventName() {
 		if (this.newEventName.equals("") || this.newEventName.equals("null")) {
 			//resolve reference
-			this.newEventName = this.controller.getNewEventName(this.patternID, this.selectFunctionNumber);
+			this.newEventName = this.controller.resolveNewEventName(this.patternID, this.selectFunctionNumber);
 			
 			//check result
 			if (this.newEventName.equals("null")) {

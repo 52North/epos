@@ -24,7 +24,7 @@ package org.n52.epos.pattern.eml.filter.spatial;
 
 import org.apache.xmlbeans.XmlException;
 import org.n52.epos.event.MapEposEvent;
-import org.n52.epos.pattern.eml.filterlogic.esper.customFunctions.MethodNames;
+import org.n52.epos.pattern.functions.MethodNames;
 import org.n52.oxf.conversion.gml32.xmlbeans.jts.GMLGeometryFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

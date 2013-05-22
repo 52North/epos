@@ -32,7 +32,7 @@ import java.util.Vector;
 
 import org.n52.epos.event.MapEposEvent;
 import org.n52.epos.pattern.eml.Constants;
-import org.n52.epos.pattern.eml.ILogicController;
+import org.n52.epos.pattern.eml.EMLPatternFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,7 +77,7 @@ public class SelFunction {
 	private boolean allowOriginalMessageAsResult = false;
 
 
-	private ILogicController controller;
+	private EMLPatternFilter controller;
 	
 	/**
 	 * contains the data types of the resulting event or the inner (nested) types, if the resulting event contains
@@ -93,7 +93,7 @@ public class SelFunction {
 	 * @param logicController controller of this process
 	 * 
 	 */
-	public SelFunction(ILogicController logicController) {
+	public SelFunction(EMLPatternFilter logicController) {
 		this.functionParameters = new HashMap<String, Object>();
 		this.fullPropertyNames = new HashMap<String, String>();
 		this.dataTypes = new HashMap<String, Object>();
@@ -637,24 +637,4 @@ public class SelFunction {
 	}
 
 
-	/**
-	 * registers newEventName.doubleValue at the DataTypesMap if
-	 * should be.
-	 */
-	public void registerOutputProperties() {
-//		if (this.functionName.equals(Constants.FUNC_SELECT_COUNT_NAME) ||
-//				this.functionName.equals(Constants.FUNC_SELECT_AVG_NAME) ||
-//				this.functionName.equals(Constants.FUNC_SELECT_MAX_NAME) ||
-//				this.functionName.equals(Constants.FUNC_SELECT_MIN_NAME) ||
-//				this.functionName.equals(Constants.FUNC_SELECT_STDDEV_NAME) ||
-//				this.functionName.equals(Constants.FUNC_SELECT_SUM_NAME)) {
-//			
-//			/*
-//			 * TODO: is this ok? value is then recognized as Double in every
-//			 * stream
-//			 */
-//			DataTypesMap.getInstance().registerNewDataType(this.newEventName+ "."+ MapEvent.DOUBLE_VALUE_KEY, Double.class);
-//			//preserving not possible
-//		}
-	}
 }

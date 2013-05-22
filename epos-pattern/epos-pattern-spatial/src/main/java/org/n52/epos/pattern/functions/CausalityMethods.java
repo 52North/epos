@@ -25,7 +25,7 @@
  * @author Thomas Everding
  */
 
-package org.n52.epos.pattern.eml.filterlogic.esper.customFunctions;
+package org.n52.epos.pattern.functions;
 
 import java.util.Vector;
 

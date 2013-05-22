@@ -25,7 +25,7 @@
  * @author Thomas Everding
  */
 
-package org.n52.epos.pattern.eml.filterlogic;
+package org.n52.epos.pattern.eml;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -63,8 +63,6 @@ import net.opengis.eml.x001.ViewType.TimeView;
 import net.opengis.eml.x001.ViewType.UserDefinedView;
 
 import org.apache.xmlbeans.GDuration;
-import org.n52.epos.pattern.eml.Constants;
-import org.n52.epos.pattern.eml.ILogicController;
 import org.n52.epos.pattern.eml.pattern.AGuardedViewPattern;
 import org.n52.epos.pattern.eml.pattern.APattern;
 import org.n52.epos.pattern.eml.pattern.AViewPattern;
@@ -93,7 +91,7 @@ public class EMLParser {
 	
 	private HashMap<String, APattern> patterns;
 	
-	private ILogicController controller;
+	private EMLPatternFilter controller;
 
 	private String inputStreamName;
 	
@@ -108,7 +106,7 @@ public class EMLParser {
 	 * @param controller controller of this process
 	 * 
 	 */
-	public EMLParser(ILogicController controller) {
+	public EMLParser(EMLPatternFilter controller) {
 		this.patterns = new HashMap<String, APattern>();
 		this.controller = controller;
 	}
@@ -359,7 +357,7 @@ public class EMLParser {
 		repetitivePattern.setSelectFunctionToUse(pattern.getPatternToRepeat().getSelectFunctionNumber());
 		
 		//set controller
-		repetitivePattern.setController(this.controller);
+//		repetitivePattern.setController(this.controller);
 		
 		/*
 		 * parse derived content
@@ -409,8 +407,10 @@ public class EMLParser {
 			//get the new event names of the two source patterns as input names
 			Vector<PatternOutputReference> vec = new Vector<PatternOutputReference>(2);
 			PatternComplex cp = (PatternComplex) representation;
-			vec.add(new PatternOutputReference(cp.getFirstSelectFunctionNumber(), cp.getFirstPatternID(), this.controller));
-			vec.add(new PatternOutputReference(cp.getSecondSelectFunctionNumber(), cp.getSecondPatternID(), this.controller));
+			vec.add(new PatternOutputReference(cp.getFirstSelectFunctionNumber(), cp.getFirstPatternID(),
+					this.controller));
+			vec.add(new PatternOutputReference(cp.getSecondSelectFunctionNumber(), cp.getSecondPatternID(),
+					this.controller));
 			
 			inputNames = vec;
 		}
@@ -418,7 +418,8 @@ public class EMLParser {
 			//get the event to count as input name
 			Vector<PatternOutputReference> vec = new Vector<PatternOutputReference>(1);
 			PatternRepetitive rp = (PatternRepetitive) representation;
-			vec.add(new PatternOutputReference(rp.getSelectFunctionNumber(), rp.getPatternToRepeatID(), this.controller));
+			vec.add(new PatternOutputReference(rp.getSelectFunctionNumber(), rp.getPatternToRepeatID(),
+					this.controller));
 			
 			inputNames = vec;
 		}

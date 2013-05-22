@@ -30,7 +30,8 @@ package org.n52.epos.pattern.eml.pattern;
 import java.util.HashSet;
 import java.util.Vector;
 
-import org.n52.epos.pattern.eml.filterlogic.EMLParser;
+import org.n52.epos.filter.pattern.EventPattern;
+import org.n52.epos.pattern.eml.EMLParser;
 
 
 /**
@@ -39,7 +40,7 @@ import org.n52.epos.pattern.eml.filterlogic.EMLParser;
  * @author Thomas Everding
  *
  */
-public abstract class APattern{
+public abstract class APattern {
 	
 	/**
 	 * pattern id

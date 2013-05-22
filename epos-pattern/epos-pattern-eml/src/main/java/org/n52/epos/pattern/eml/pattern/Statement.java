@@ -27,7 +27,6 @@
 
 package org.n52.epos.pattern.eml.pattern;
 
-import org.n52.epos.pattern.eml.filterlogic.esper.EsperController;
 
 /**
  * contains a statement string (for esper) and possibly a SelFunction

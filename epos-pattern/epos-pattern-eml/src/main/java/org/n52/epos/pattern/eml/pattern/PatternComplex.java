@@ -31,9 +31,10 @@ import java.util.HashMap;
 
 import org.n52.epos.event.MapEposEvent;
 import org.n52.epos.pattern.eml.Constants;
-import org.n52.epos.pattern.eml.ILogicController;
-import org.n52.epos.pattern.eml.filterlogic.EMLParser;
-import org.n52.epos.pattern.eml.filterlogic.esper.customFunctions.MethodNames;
+import org.n52.epos.pattern.eml.EMLEventPattern;
+import org.n52.epos.pattern.eml.EMLParser;
+import org.n52.epos.pattern.eml.EMLPatternFilter;
+import org.n52.epos.pattern.functions.MethodNames;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,11 +63,11 @@ public class PatternComplex extends AGuardedViewPattern {
 
 	private int secondSelectFunctionNumber;
 
-	private ILogicController controller;
-
 	private long maxListeningDuration = -1;
 
 	private EMLParser parser;
+
+	private EMLPatternFilter controller;
 
 
 	/**
@@ -74,6 +75,12 @@ public class PatternComplex extends AGuardedViewPattern {
 	 */
 	public PatternOperator getOperator() {
 		return this.operator;
+	}
+
+
+	
+	public void setController(EMLPatternFilter controller) {
+		this.controller = controller;
 	}
 
 
@@ -151,13 +158,6 @@ public class PatternComplex extends AGuardedViewPattern {
 	}
 
 
-	/**
-	 * @param logicController the controller to set
-	 */
-	public void setController(ILogicController logicController) {
-		this.controller = logicController;
-	}
-
 
 	/**
 	 * @return the maxListeningDuration (ms)
@@ -183,14 +183,13 @@ public class PatternComplex extends AGuardedViewPattern {
 		String secondInputEventName = "";
 		if (this.controller != null ) {
 			//get first input event name
-			firstInputEventName = this.controller.getNewEventName(this.firstPatternID, this.firstSelectFunctionNumber);
+			firstInputEventName = this.controller.resolveNewEventName(this.firstPatternID, this.firstSelectFunctionNumber);
 
 			//get second input event name
-			secondInputEventName = this.controller.getNewEventName(this.secondPatternID, this.secondSelectFunctionNumber);
+			secondInputEventName = this.controller.resolveNewEventName(this.secondPatternID, this.secondSelectFunctionNumber);
 
-		}
-
-		else if (this.parser != null) {
+		} else
+		if (this.parser != null) {
 			firstInputEventName = getNewEventNameWithParser(this.firstSelectFunctionNumber) ;
 
 			secondInputEventName = getNewEventNameWithParser(this.secondSelectFunctionNumber);

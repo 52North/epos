@@ -27,15 +27,14 @@
 
 package org.n52.epos.pattern.eml.filterlogic.esper;
 
-import java.util.HashMap;
 
+import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
+import org.n52.epos.engine.esper.concurrent.ThreadPool;
 import org.n52.epos.event.MapEposEvent;
-import org.n52.epos.pattern.eml.EMLPatternFilter;
-import org.n52.epos.pattern.eml.pattern.SelFunction;
-import org.n52.epos.pattern.eml.pattern.Statement;
-import org.n52.epos.pattern.eml.util.EventModelGenerator;
-import org.n52.epos.pattern.eml.util.ThreadPool;
+import org.n52.epos.filter.pattern.EventPattern;
+import org.n52.epos.filter.pattern.PatternFilter;
+import org.n52.epos.pattern.eml.filterlogic.esper.util.EventModelGenerator;
 import org.n52.epos.rules.Rule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +50,7 @@ import com.espertech.esper.client.EventBean;
  */
 public class StatementListener implements UpdateListener {
 
-	private Statement statement;
+	private EventPattern statement;
 
 	private EsperController controller;
 
@@ -75,7 +74,7 @@ public class StatementListener implements UpdateListener {
 	 * @param controller
 	 *            the esper controller with the esper engine
 	 */
-	public StatementListener(Statement statement, EsperController controller) {
+	public StatementListener(EventPattern statement, EsperController controller) {
 		this.statement = statement;
 		this.controller = controller;
 
@@ -91,41 +90,28 @@ public class StatementListener implements UpdateListener {
 	 *            listener
 	 * @param controller
 	 *            the esper controller with the esper engine
-	 * @param sub
+	 * @param rule
 	 *            the subscription manager
 	 */
-	public StatementListener(Statement statement, EsperController controller,
-			Rule sub) {
+	public StatementListener(EventPattern statement, EsperController controller,
+			Rule rule) {
 		this(statement, controller);
-		this.rule = sub;
+		this.rule = rule;
 	}
 
 	/**
 	 * initializes the listener
 	 */
-	@SuppressWarnings("unchecked")
 	private void initialize() {
 		// set instance number
 		this.instanceNumber = instanceCount;
 		instanceCount++;
 
-		// check for output
-		if (this.statement.getSelectFunction().getOutputName().equals("")) {
-
-			// TODO (hack for static EML) fix output for StaticEMLDocument
-			if (this.statement.getSelectFunction().getNewEventName().equals("")) {
-				this.doOutput = true;
-			} else {
-				this.doOutput = false;
-			}
-		} else {
-			this.doOutput = true;
-		}
+		this.doOutput = this.statement.createsFinalOutput() || this.statement.createsNewInternalEvent();
 
 		// register new event at esper engine
-		SelFunction sel = this.statement.getSelectFunction();
-		if (!sel.getNewEventName().equals("")) {
-			String eventName = sel.getNewEventName();
+		if (this.statement.createsNewInternalEvent()) {
+			String eventName = this.statement.getNewEventName();
 
 			// common attributes
 			// HashMap<String, Object> eventProperties = new HashMap<String,
@@ -133,43 +119,46 @@ public class StatementListener implements UpdateListener {
 			// eventProperties.put(MapEvent.START_KEY, Long.class);
 			// eventProperties.put(MapEvent.END_KEY, Long.class);
 			// eventProperties.put(MapEvent.CAUSALITY_KEY, Vector.class);
-
-			HashMap<String, Object> eventProperties = this.controller
-					.getEventProperties();
-
-			// register every event attribute
-			// TODO for string as result value maybe start debugging here
-			if (sel.isSingleValueOutput()) {
-				for (String key : sel.getDataTypes().keySet()) {
-					if (!eventProperties.containsKey(key))
-						eventProperties.put(key, sel.getDataTypes().get(key));
-				}
-			} else {
-				// nested properties
-				HashMap<String, Object> nestedMap = new HashMap<String, Object>();
-				for (String key : sel.getDataTypes().keySet()) {
-					nestedMap.put(key, sel.getDataTypes().get(key));
-				}
-
-				if (nestedMap.get(MapEposEvent.VALUE_KEY) instanceof HashMap) {
-					// get inner map
-					nestedMap = (HashMap<String, Object>) nestedMap
-							.get(MapEposEvent.VALUE_KEY);
-				}
-
-				// add nested properties
-				for (String key : nestedMap.keySet()) {
-					if (key.equals(MapEposEvent.START_KEY)
-							|| key.equals(MapEposEvent.END_KEY)
-							|| key.equals(MapEposEvent.CAUSALITY_KEY)) {
-						// do nothing
-					} else {
-						if (!eventProperties.containsKey(key))
-							eventProperties.put(key, nestedMap.get(key));
-					}
-
-				}
-			}
+			
+			//TODO RE-IMPLEMENT! Unit test
+			
+			
+//			HashMap<String, Object> eventProperties = this.controller
+//					.getEventProperties();
+//
+//			// register every event attribute
+//			// TODO for string as result value maybe start debugging here
+//			if (sel.isSingleValueOutput()) {
+//				for (String key : sel.getDataTypes().keySet()) {
+//					if (!eventProperties.containsKey(key))
+//						eventProperties.put(key, sel.getDataTypes().get(key));
+//				}
+//			} else {
+//				// nested properties
+//				HashMap<String, Object> nestedMap = new HashMap<String, Object>();
+//				for (String key : sel.getDataTypes().keySet()) {
+//					nestedMap.put(key, sel.getDataTypes().get(key));
+//				}
+//
+//				if (nestedMap.get(MapEposEvent.VALUE_KEY) instanceof HashMap) {
+//					// get inner map
+//					nestedMap = (HashMap<String, Object>) nestedMap
+//							.get(MapEposEvent.VALUE_KEY);
+//				}
+//
+//				// add nested properties
+//				for (String key : nestedMap.keySet()) {
+//					if (key.equals(MapEposEvent.START_KEY)
+//							|| key.equals(MapEposEvent.END_KEY)
+//							|| key.equals(MapEposEvent.CAUSALITY_KEY)) {
+//						// do nothing
+//					} else {
+//						if (!eventProperties.containsKey(key))
+//							eventProperties.put(key, nestedMap.get(key));
+//					}
+//
+//				}
+//			}
 
 			// logger.info("registering event properties as outputs from statement: "
 			// + statement.getStatement());
@@ -178,7 +167,7 @@ public class StatementListener implements UpdateListener {
 			// logger.info("key '" + key + "' has the type '" +
 			// eventProperties.get(key) + "'");
 			// }
-			this.controller.registerEvent(eventName, eventProperties);
+//			this.controller.registerEvent(eventName, eventProperties);
 		}
 	}
 
@@ -256,13 +245,13 @@ public class StatementListener implements UpdateListener {
 	public synchronized void doOutput(MapEposEvent resultEvent) {
 		if (logger.isDebugEnabled())
 			logger.debug("performing output for statement:\n"
-					+ this.statement.getStatement());
+					+ this.statement);
 
 		boolean sent = false;
 
 		// check if it is allowed to use the original message.
 		// check also if it is used for GENESIS
-		if (this.statement.getSelectFunction().allowsOriginalMessageAsResult()) {
+		if (this.statement.usesOriginalEventAsOutput()) {
 			// get original message
 			Object origMessage = resultEvent.getOriginalObject();
 			if (origMessage != null) {
@@ -284,12 +273,17 @@ public class StatementListener implements UpdateListener {
 			StatementListener.logger.info("generating OGC Event model output");
 			EventModelGenerator eventGen = new EventModelGenerator(resultEvent);
 
-			if (this.rule.getPassiveFilter() instanceof EMLPatternFilter) {
-				eventDoc = eventGen
-						.generateEventDocument(((EMLPatternFilter) this.rule
-								.getPassiveFilter()).getEml());
-
-			} else {
+			if (this.rule.getPassiveFilter() instanceof PatternFilter) {
+				XmlObject xo;
+				try {
+					xo = XmlObject.Factory.parse(((PatternFilter) this.rule.getPassiveFilter()).serialize().toString());
+					eventDoc = eventGen.generateEventDocument(xo);
+				} catch (XmlException e) {
+					logger.warn(e.getMessage(), e);
+				}
+			}
+			
+			if (eventDoc == null) {
 				eventDoc = eventGen.generateEventDocument();
 			}
 
@@ -306,7 +300,7 @@ public class StatementListener implements UpdateListener {
 	/**
 	 * @return the statement
 	 */
-	public Statement getStatement() {
+	public EventPattern getStatement() {
 		return this.statement;
 	}
 

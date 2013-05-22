@@ -36,7 +36,7 @@ import org.n52.epos.event.DataTypesMap;
 import org.n52.epos.event.MapEposEvent;
 import org.n52.epos.pattern.eml.filter.expression.ABinaryFilterExpression;
 import org.n52.epos.pattern.eml.filter.expression.AFilterExpression;
-import org.n52.epos.pattern.eml.filterlogic.esper.customFunctions.MethodNames;
+import org.n52.epos.pattern.functions.MethodNames;
 
 import net.opengis.fes.x20.BinaryComparisonOpType;
 

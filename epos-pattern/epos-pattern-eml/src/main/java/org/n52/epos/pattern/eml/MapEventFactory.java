@@ -29,8 +29,6 @@ import java.util.Vector;
 
 import org.n52.epos.event.MapEposEvent;
 
-import com.espertech.esper.event.map.MapEventBean;
-
 
 /**
  * Creates MapEvent from different inputs
@@ -111,26 +109,12 @@ public class MapEventFactory {
 					else if (map.get(key) instanceof MapEposEvent) {
 						event.addCausalAncestor((MapEposEvent) map.get(key));
 					}
-					else if (map.get(key) instanceof MapEventBean) {
-						MapEventBean ancestorBean = (MapEventBean) map.get(key);
-						event.addCausalAncestor(parseFromMap(ancestorBean.getProperties(), createCausality));
-					}
 				}
 			}
 			else {
-				if (key.equals(MapEposEvent.VALUE_KEY) && (map.get(key) instanceof MapEventBean)) {
-					/*
-					 * select event with causality should end up here
-					 * -> recursive call
-					 */
-					MapEventBean valueBean = (MapEventBean) map.get(key);
-					event.put(key, parseFromMap(valueBean.getProperties(), createCausality));
-				}
-				else {
-					//fallback / usual: just put it into the result
-					event.put(key, map.get(key));
+				//fallback / usual: just put it into the result
+				event.put(key, map.get(key));
 //					logger.info("putting key into MapEvent: " + key);
-				}
 			}
 		}
 		return event;

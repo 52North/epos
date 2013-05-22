@@ -34,7 +34,7 @@ package org.n52.epos.pattern.eml.pattern;
  * @author Thomas Everding
  *
  */
-public abstract class AGuardedViewPattern extends AViewPattern{
+public abstract class AGuardedViewPattern extends AViewPattern {
 	
 	/**
 	 * the guard for this pattern

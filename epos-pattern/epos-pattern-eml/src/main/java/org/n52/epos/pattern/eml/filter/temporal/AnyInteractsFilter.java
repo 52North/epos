@@ -26,8 +26,8 @@ import net.opengis.fes.x20.BinaryTemporalOpType;
 import net.opengis.fes.x20.TemporalOpsType;
 
 import org.joda.time.Interval;
-import org.n52.epos.pattern.eml.filterlogic.esper.customFunctions.MethodNames;
-import org.n52.epos.pattern.eml.filterlogic.esper.customFunctions.TemporalMethods;
+import org.n52.epos.pattern.functions.MethodNames;
+import org.n52.epos.pattern.functions.TemporalMethods;
 
 /**
  * Implementation of the FES2.0 AnyInteracts filter 
