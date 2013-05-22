@@ -115,10 +115,8 @@ public class FilterExpressionFactory {
 		else if (VALUE_REFERENCE_QNAME_2.equals(exprQName)) {
 			ValueReferenceExpression result = new ValueReferenceExpression(expressionType, propertyNames);
 			
-			Element elem = (Element) expressionType.getDomNode();
-			//TODO create unit test!
-			String name = XmlUtil.toString(elem.getFirstChild()).trim();
-			//replaceAll(":", "__")
+			String name = XmlUtil.stripText(expressionType);
+			//name = name.replaceAll(":", "__")
 			name = name.replaceAll("/", ".");
 			
 			result.setUsedProperty(name);

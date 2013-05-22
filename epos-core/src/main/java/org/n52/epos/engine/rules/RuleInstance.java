@@ -29,7 +29,6 @@ import org.n52.epos.event.EposEvent;
 import org.n52.epos.filter.ActiveFilter;
 import org.n52.epos.filter.EposFilter;
 import org.n52.epos.filter.PassiveFilter;
-import org.n52.epos.pattern.PatternEngine;
 import org.n52.epos.rules.PassiveFilterAlreadyPresentException;
 import org.n52.epos.rules.Rule;
 import org.n52.epos.rules.RuleListener;
@@ -75,21 +74,17 @@ public class RuleInstance implements Rule {
 		return null;
 	}
 	
-	private void onAllFiltersMatch(EposEvent event) {
-		this.listener.onMatchingEvent(event);
+	private void onAllFiltersMatch(EposEvent event, Object desiredOutputToConsumer) {
+		this.listener.onMatchingEvent(event, desiredOutputToConsumer);
 	}
 
-	/**
-	 * evaluate all registered {@link ActiveFilter}
-	 * instances against event. If all pass, {@link #onAllFiltersMatch(EposEvent)}
-	 * is called.
-	 * {@link PassiveFilter} instances are not taken into consideration,
-	 * as they match only from inside a {@link PatternEngine}.
-	 * 
-	 * @param event the event to filter
-	 */
 	@Override
 	public void filter(EposEvent event) {
+		filter(event, null);
+	}
+	
+	@Override
+	public void filter(EposEvent event, Object desiredOutputToConsumer) {
 		logger.debug("Received Event, evaluating filters...");
 		for (EposFilter filter : this.filters) {
 			if (filter instanceof ActiveFilter) {
@@ -100,7 +95,7 @@ public class RuleInstance implements Rule {
 			}
 		}
 		
-		onAllFiltersMatch(event);
+		onAllFiltersMatch(event, desiredOutputToConsumer);
 	}
 
 	@Override

@@ -44,7 +44,6 @@ import org.n52.oxf.conversion.unit.ucum.UCUMTools;
 import org.n52.oxf.xmlbeans.tools.XmlUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Element;
 
 public class EMLHelper {
 	
@@ -206,12 +205,9 @@ public class EMLHelper {
 		} 
 
 		else if (VALUE_REFERENCE_QNAME.equals(etQn)) {
-			Element elem = (Element) et.getDomNode();
-			String urn = XmlUtil.toString(elem.getFirstChild()).trim();
+			String urn = XmlUtil.stripText(et);
 			urn = urn.replaceAll(":", "__").replaceAll("\\.", "_");
-//			XmlUtil.setElementText(elem, urn);
-			//TODO check with unit test!
-			elem.setTextContent(urn);
+			XmlUtil.setTextContent(et, urn);
 		}
 
 	}

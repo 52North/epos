@@ -33,5 +33,18 @@ public interface RuleListener {
 	 * @param event the matching event
 	 */
 	public void onMatchingEvent(EposEvent event);
+
+	/**
+	 * This method is called whenever an {@link EposEvent}
+	 * matched the Rule to which this listener is attached.
+	 * Same as {@link #onMatchingEvent(EposEvent)} but an
+	 * implementation should forward the desiredOutputToConsumer
+	 * to the final consumer.
+	 * 
+	 * @param event the matching event
+	 * @param desiredOutputToConsumer this output shall be forwarded
+	 * to the final consumer
+	 */
+	public void onMatchingEvent(EposEvent event, Object desiredOutputToConsumer);
 	
 }

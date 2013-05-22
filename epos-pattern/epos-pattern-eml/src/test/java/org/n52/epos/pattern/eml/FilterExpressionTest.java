@@ -62,6 +62,8 @@ public class FilterExpressionTest {
 		
 		result = feFactory.buildFilterExpression(readValueReference(), new HashSet<Object>(), parent);
 		Assert.assertNotNull("Result for ValueReference not available.", result);
+		System.out.println(result.getUsedProperty());
+		Assert.assertTrue("UsedProperty not as expected!", result.getUsedProperty().equals("urn:test:value.asdf.geometry"));
 	}
 
 	private XmlObject readValueReference() throws XmlException, IOException {

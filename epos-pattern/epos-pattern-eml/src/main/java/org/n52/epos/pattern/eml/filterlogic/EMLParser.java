@@ -94,6 +94,8 @@ public class EMLParser {
 	private HashMap<String, APattern> patterns;
 	
 	private ILogicController controller;
+
+	private String inputStreamName;
 	
 	private static final Logger logger = LoggerFactory
 			.getLogger(EMLParser.class);
@@ -171,8 +173,9 @@ public class EMLParser {
 		 */
 
 		//set input name
-		simplePattern.setInputName(pattern.getInputName().toString()
+		simplePattern.setInputName(pattern.getInputName().trim()
 				.replaceAll(":", "__").replaceAll("\\.", "_"));
+		this.inputStreamName = simplePattern.getInputName();
 		
 		//set property restrictions
 		if (pattern.getPropertyRestrictions().getPropertyRestrictionArray().length > 0) {
@@ -220,13 +223,13 @@ public class EMLParser {
 		complexPattern.setOperator(this.parsePatternOperator(pattern));
 		
 		//set first pattern ID
-		complexPattern.setFirstPatternID(pattern.getFirstPattern().getPatternReference().toString());
+		complexPattern.setFirstPatternID(pattern.getFirstPattern().getPatternReference().trim());
 		
 		//set select function to use
 		complexPattern.setFirstSelectFunctionNumber(pattern.getFirstPattern().getSelectFunctionNumber());
 		
 		//set second pattern
-		complexPattern.setSecondPatternID(pattern.getSecondPattern().getPatternReference().toString());
+		complexPattern.setSecondPatternID(pattern.getSecondPattern().getPatternReference().trim());
 		
 		//set select function to use
 		complexPattern.setSecondSelectFunctionNumber(pattern.getSecondPattern().getSelectFunctionNumber());
@@ -350,7 +353,7 @@ public class EMLParser {
 		repetitivePattern.setRepetitionCount(pattern.getEventCount().intValue());
 		
 		//set pattern to repeat
-		repetitivePattern.setPatternToRepeatID(pattern.getPatternToRepeat().getPatternReference().toString());
+		repetitivePattern.setPatternToRepeatID(pattern.getPatternToRepeat().getPatternReference().trim());
 		
 		//set select function to use
 		repetitivePattern.setSelectFunctionToUse(pattern.getPatternToRepeat().getSelectFunctionNumber());
@@ -382,13 +385,13 @@ public class EMLParser {
 		/*
 		 * set pattern ID
 		 */
-		representation.setPatternID(bean.getPatternID().toString());
+		representation.setPatternID(bean.getPatternID().trim());
 		
 		/*
 		 * set description
 		 */
 		if (bean.isSetPatternDescription()) {
-			representation.setDescription(bean.getPatternDescription());
+			representation.setDescription(bean.getPatternDescription().trim());
 		}
 		
 		/*
@@ -859,5 +862,10 @@ public class EMLParser {
 	 */
 	public HashMap<String, APattern> getPatterns() {
 		return this.patterns;
+	}
+
+
+	public String getInputStreamName() {
+		return this.inputStreamName;
 	}
 }

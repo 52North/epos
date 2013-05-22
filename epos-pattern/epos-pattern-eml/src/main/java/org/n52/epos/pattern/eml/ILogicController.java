@@ -93,4 +93,6 @@ public interface ILogicController {
 	String getNewEventName(String patternID, int selectFunctionNumber);
 	
 	void removeFromEngine();
+
+	String getInputStreamName();
 }

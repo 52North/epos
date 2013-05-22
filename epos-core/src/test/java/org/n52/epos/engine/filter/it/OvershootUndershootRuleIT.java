@@ -58,8 +58,6 @@ public class OvershootUndershootRuleIT {
 		
 		subscribe(notificationReceiver);
 		
-		Thread.sleep(1000);
-		
 		notification();
 		
 		synchronized (mutex) {
@@ -93,6 +91,16 @@ public class OvershootUndershootRuleIT {
 					result = event;
 					mutex.notifyAll();
 				}
+			}
+
+			@Override
+			public void onMatchingEvent(EposEvent event,
+					Object desiredOutputToConsumer) {
+				synchronized (mutex) {
+					result = event;
+					mutex.notifyAll();
+					logger.info("Desired output: {}", desiredOutputToConsumer);
+				}				
 			}
 		};
 	}

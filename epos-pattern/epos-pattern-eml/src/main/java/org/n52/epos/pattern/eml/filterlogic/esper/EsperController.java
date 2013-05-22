@@ -107,6 +107,8 @@ public class EsperController implements ILogicController {
 
 	private HashMap<String, Object> eventProperties;
 	
+	private String inputStreamName;
+	
 	
 	/**
 	 * 
@@ -134,6 +136,10 @@ public class EsperController implements ILogicController {
 		this.subMgr = sub;
 	}
 	
+	@Override
+	public String getInputStreamName() {
+		return inputStreamName;
+	}
 
 	/**
 	 * Registers an event with a name at the engine. Nestable maps are allowed.
@@ -264,6 +270,9 @@ public class EsperController implements ILogicController {
 			logger.debug("initializing esper controller");
 		this.parser = new EMLParser(this);
 		this.parser.parseEML(eml);
+		
+		this.inputStreamName = this.parser.getInputStreamName();
+		
 		HashMap<String, APattern> patterns = this.parser.getPatterns();
 		
 		/*

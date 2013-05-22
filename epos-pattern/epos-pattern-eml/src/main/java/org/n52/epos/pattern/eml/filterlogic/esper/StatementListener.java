@@ -29,10 +29,12 @@ package org.n52.epos.pattern.eml.filterlogic.esper;
 
 import java.util.HashMap;
 
-
+import org.apache.xmlbeans.XmlObject;
 import org.n52.epos.event.MapEposEvent;
+import org.n52.epos.pattern.eml.EMLPatternFilter;
 import org.n52.epos.pattern.eml.pattern.SelFunction;
 import org.n52.epos.pattern.eml.pattern.Statement;
+import org.n52.epos.pattern.eml.util.EventModelGenerator;
 import org.n52.epos.pattern.eml.util.ThreadPool;
 import org.n52.epos.rules.Rule;
 import org.slf4j.Logger;
@@ -273,6 +275,25 @@ public class StatementListener implements UpdateListener {
 					// any other exception occurred, sent is false -> do nothing
 				}
 			}
+		}
+
+		if (!sent) {
+			XmlObject eventDoc = null;
+
+			// generate Event model
+			StatementListener.logger.info("generating OGC Event model output");
+			EventModelGenerator eventGen = new EventModelGenerator(resultEvent);
+
+			if (this.rule.getPassiveFilter() instanceof EMLPatternFilter) {
+				eventDoc = eventGen
+						.generateEventDocument(((EMLPatternFilter) this.rule
+								.getPassiveFilter()).getEml());
+
+			} else {
+				eventDoc = eventGen.generateEventDocument();
+			}
+
+			this.rule.filter(resultEvent, eventDoc);
 		}
 
 		if (!sent) {

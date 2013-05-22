@@ -2,7 +2,7 @@
 	xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:ows="http://www.opengis.net/ows"
 	xmlns:swe="http://www.opengis.net/swe/1.0.1">
 	<fes:Within>
-		<fes:ValueReference>input/geometry</fes:ValueReference>
+		<fes:ValueReference>urn:test:value.asdf/geometry</fes:ValueReference>
 		<fes:Literal>
 			<gml:Polygon gml:id="aoi_01">
 				<gml:exterior>

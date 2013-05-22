@@ -75,9 +75,16 @@ public class XPathFilterIT {
 
 		@Override
 		public void onMatchingEvent(EposEvent event) {
+			onMatchingEvent(event, null);
+		}
+
+		@Override
+		public void onMatchingEvent(EposEvent event,
+				Object desiredOutputToConsumer) {
 			synchronized (mutex) {
 				result = event;
-			}
+				mutex.notifyAll();
+			}			
 		}
 		
 	}

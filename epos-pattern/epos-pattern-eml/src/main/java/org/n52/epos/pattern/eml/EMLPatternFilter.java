@@ -43,10 +43,5 @@ public class EMLPatternFilter implements PassiveFilter {
 	public EML getEml() {
 		return this.eml;
 	}
-
-	public String getInputStreamName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 }

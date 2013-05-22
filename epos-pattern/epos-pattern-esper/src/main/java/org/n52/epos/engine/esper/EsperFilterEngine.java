@@ -30,7 +30,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.n52.epos.engine.esper.concurrent.IConcurrentNotificationHandler;
-import org.n52.epos.engine.esper.concurrent.IConcurrentNotificationHandler.IPollListener;
 import org.n52.epos.event.EposEvent;
 import org.n52.epos.event.MapEposEvent;
 import org.n52.epos.filter.PassiveFilter;
@@ -47,9 +46,9 @@ import org.slf4j.LoggerFactory;
  * @author Matthes Rieke <m.rieke@uni-muenster.de>
  * 
  */
-public class EsperFilterEngine implements IPollListener, PatternEngine {
+public class EsperFilterEngine implements PatternEngine {
 
-	private Map<ILogicController, String> esperControllers;
+	private Map<Rule, ILogicController> esperControllers;
 	private static final Logger logger = LoggerFactory
 			.getLogger(EsperFilterEngine.class);
 	private Class<?> controllerClass;
@@ -92,7 +91,7 @@ public class EsperFilterEngine implements IPollListener, PatternEngine {
 		}
 
 		// multiple runtime objects needed for pattern management
-		this.esperControllers = new ConcurrentHashMap<ILogicController, String>();
+		this.esperControllers = new ConcurrentHashMap<Rule, ILogicController>();
 
 		/*
 		 * check if we have enrichment activated
@@ -123,7 +122,7 @@ public class EsperFilterEngine implements IPollListener, PatternEngine {
 					break;
 			}
 
-			this.queueWorker.setPollListener(this);
+//			this.queueWorker.setPollListener(this);
 			
 			//TODO use config
 			this.queueWorker.setTimeout(5000);
@@ -141,24 +140,24 @@ public class EsperFilterEngine implements IPollListener, PatternEngine {
 
 	public void insertEvent(EposEvent message) {
 		if (message instanceof MapEposEvent) {
-			for (ILogicController controller : this.esperControllers.keySet()) {
-				controller.sendEvent(this.esperControllers.get(controller),
+			for (Rule rule : this.esperControllers.keySet()) {
+				ILogicController controller = this.esperControllers.get(rule);
+				controller.sendEvent(controller.getInputStreamName(),
 						(MapEposEvent) message);
 			}		
 		}
 	}
 
 
-	public void registerRule(Rule subMgr) {
+	public void registerRule(Rule rule) {
 
-		if (!subMgr.hasPassiveFilter()) {
+		if (!rule.hasPassiveFilter()) {
 			throw new IllegalStateException("FilterEngine needs a PassiveFilter.");
 		}
 
-		PassiveFilter originalFilter = subMgr.getPassiveFilter();
+		PassiveFilter originalFilter = rule.getPassiveFilter();
 
 		ILogicController controller = null;
-		String streamName = "";
 		if (originalFilter instanceof EMLPatternFilter) {
 			/*
 			 * parse the EML and get the patterns Also UNITCONVERSION is done
@@ -167,12 +166,13 @@ public class EsperFilterEngine implements IPollListener, PatternEngine {
 			try {
 				Constructor<?> con = this.controllerClass
 						.getConstructor(Rule.class);
-				controller = (ILogicController) con.newInstance(subMgr);
+				controller = (ILogicController) con.newInstance(rule);
 
 				EMLPatternFilter emlFilter = (EMLPatternFilter) originalFilter;
 				controller.initialize(emlFilter.getEml());
-				streamName = emlFilter.getInputStreamName();
-				
+				logger.info("Registering EML Controller for external input stream '"
+						+ controller.getInputStreamName() + "'");
+				this.esperControllers.put(rule, controller);
 			} catch (Exception e) {
 				logger.warn(e.getMessage(), e);
 				throw new RuntimeException(e);
@@ -187,48 +187,6 @@ public class EsperFilterEngine implements IPollListener, PatternEngine {
 //			streamName = epl.getExternalInputName();
 //		}
 
-		logger.info("Registering EML Controller for external input stream '"
-				+ streamName + "'");
-		this.esperControllers.put(controller, streamName);
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.n52.ses.filter.engine.IFilterEngine#unregisterFilter(org.apache.muse
-	 * .ws.notification.SubscriptionManager)
-	 */
-	public void unregisterFilter(Rule subMgr) throws Exception {
-//		if (this.performanceTesting) {
-//			/*
-//			 * for testing purposes: wait until we have processed all messages
-//			 */
-//			long start = System.currentTimeMillis();
-//			this.queueWorker.joinUntilEmpty();
-//			long wait = System.currentTimeMillis() - start;
-//			Thread.sleep(2000);
-//			logger.info("Wait time til completion in sec: "
-//					+ (wait * 1.0f / 1000));
-//			logger.info("notProcessed Failures: "
-//					+ this.queueWorker.getNotProcessedFailureCount());
-//			this.queueWorker.resetFailures();
-//		}
-
-		for (ILogicController espc : this.esperControllers.keySet()) {
-			espc.removeFromEngine();
-			this.esperControllers.remove(espc);
-		}
-	}
-
-	public void onElementPolled(MapEposEvent alert) {
-		if (this.esperControllers == null)
-			return;
-
-		for (ILogicController espc : this.esperControllers.keySet()) {
-			espc.sendEvent(this.esperControllers.get(espc), alert);
-		}
 	}
 
 	public void shutdown() {
@@ -240,8 +198,8 @@ public class EsperFilterEngine implements IPollListener, PatternEngine {
 			this.messageProcessingPool.shutdownNow();
 		}
 
-		for (ILogicController espc : this.esperControllers.keySet()) {
-			espc.removeFromEngine();
+		for (Rule espc : this.esperControllers.keySet()) {
+			this.esperControllers.get(espc).removeFromEngine();
 		}
 	}
 

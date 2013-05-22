@@ -77,6 +77,16 @@ public interface Rule {
 	 * @param event the event to filter
 	 */
 	public void filter(EposEvent event);
+
+	/**
+	 * same as {@link #filter(EposEvent)}, but the {@link RuleListener}
+	 * shall be invoked through {@link RuleListener#onMatchingEvent(EposEvent, Object)}.
+	 * 
+	 * @param event the event to filter
+	 * @param desiredOutputToConsumer the desired output to provide
+	 * to the consumer
+	 */
+	void filter(EposEvent event, Object desiredOutputToConsumer);
 	
 	
 	
