@@ -25,7 +25,7 @@
  * @author Thomas Everding
  */
 
-package org.n52.epos.pattern.eml.filterlogic.esper;
+package org.n52.epos.engine.esper;
 
 import java.util.HashMap;
 import java.util.Vector;

@@ -20,7 +20,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.n52.epos.pattern.eml.filterlogic.esper;
+package org.n52.epos.engine.esper;
 
 import org.n52.epos.filter.pattern.EventPattern;
 import org.n52.epos.rules.Rule;
@@ -29,7 +29,7 @@ import com.espertech.esper.client.EventBean;
 
 /**
  * This class extends the StatementListener. It only processes
- * the first event of an incoming event-array. This functionality
+ * the last event of an incoming event-array. This functionality
  * is close to impossible to create within esper using EPL.
  * Only constructor and the {@link StatementListener#update(EventBean[], EventBean[])}
  * method are needed.
@@ -37,14 +37,13 @@ import com.espertech.esper.client.EventBean;
  * @author Matthes Rieke <m.rieke@uni-muenster.de>
  *
  */
-public class FirstEventStatementListener extends StatementListener {
+public class LastEventStatementListener extends StatementListener {
 
-	
 	
 	/**
 	 * see {@link StatementListener#StatementListener(Statement, EsperController, SubscriptionManager)}
 	 */
-	public FirstEventStatementListener(EventPattern statement,
+	public LastEventStatementListener(EventPattern statement,
 			EsperController controller, Rule sub) {
 		super(statement, controller, sub);
 	}
@@ -52,7 +51,7 @@ public class FirstEventStatementListener extends StatementListener {
 	@Override
 	public void update(EventBean[] newEvents, EventBean[] oldEvents) {
 		if (newEvents != null && newEvents.length > 0) {
-			this.handleMatch(newEvents[0]);
+			this.handleMatch(newEvents[newEvents.length - 1]);
 		}
 	}
 

@@ -25,14 +25,14 @@
  * @author Thomas Everding
  */
 
-package org.n52.epos.pattern.eml.filterlogic.esper;
+package org.n52.epos.engine.esper;
 
 import java.util.Date;
 import java.util.Map;
 
+import org.n52.epos.engine.esper.util.MapEventFactory;
 import org.n52.epos.event.MapEposEvent;
 import org.n52.epos.filter.pattern.EventPattern;
-import org.n52.epos.pattern.eml.filterlogic.esper.util.MapEventFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

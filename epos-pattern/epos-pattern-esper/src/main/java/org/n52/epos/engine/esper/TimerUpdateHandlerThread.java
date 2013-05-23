@@ -20,7 +20,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.n52.epos.pattern.eml.filterlogic.esper;
+package org.n52.epos.engine.esper;
 ///**
 // * Part of the diploma thesis of Thomas Everding.
 // * @author Thomas Everding

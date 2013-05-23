@@ -25,16 +25,16 @@
  * @author Thomas Everding
  */
 
-package org.n52.epos.pattern.eml.filterlogic.esper;
+package org.n52.epos.engine.esper;
 
 
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.n52.epos.engine.esper.concurrent.ThreadPool;
+import org.n52.epos.engine.esper.util.EventModelGenerator;
 import org.n52.epos.event.MapEposEvent;
 import org.n52.epos.filter.pattern.EventPattern;
 import org.n52.epos.filter.pattern.PatternFilter;
-import org.n52.epos.pattern.eml.filterlogic.esper.util.EventModelGenerator;
 import org.n52.epos.rules.Rule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -20,7 +20,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.n52.epos.pattern.eml.filterlogic.esper;
+package org.n52.epos.engine.esper;
 /**
  * Copyright (C) 2009
  * by 52 North Initiative for Geospatial Open Source Software GmbH
