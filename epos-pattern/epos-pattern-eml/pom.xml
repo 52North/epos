@@ -29,7 +29,7 @@
 		</dependency>
 		<dependency>
 		    <groupId>${project.groupId}</groupId>
-		    <artifactId>epos-pattern-spatial</artifactId>
+		    <artifactId>epos-pattern-util</artifactId>
 		</dependency>
 		<dependency>
 		    <groupId>org.n52.sensorweb</groupId>

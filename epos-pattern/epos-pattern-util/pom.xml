@@ -9,10 +9,10 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>epos-pattern-spatial</artifactId>
+	<artifactId>epos-pattern-util</artifactId>
 
 	<packaging>jar</packaging>
-	<name>EPOS Patterns Spatial Tools</name>
+	<name>EPOS Patterns Tools</name>
 
 	<build>
 	    <plugins>

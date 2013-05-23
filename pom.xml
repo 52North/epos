@@ -166,7 +166,7 @@
 			</dependency>
 			<dependency>
 			    <groupId>${project.groupId}</groupId>
-			    <artifactId>epos-pattern-spatial</artifactId>
+			    <artifactId>epos-pattern-util</artifactId>
 			    <version>${project.version}</version>
 			</dependency>
 
