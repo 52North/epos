@@ -31,7 +31,6 @@ import java.util.HashMap;
 
 import org.n52.epos.event.MapEposEvent;
 import org.n52.epos.pattern.eml.Constants;
-import org.n52.epos.pattern.eml.EMLEventPattern;
 import org.n52.epos.pattern.eml.EMLParser;
 import org.n52.epos.pattern.eml.EMLPatternFilter;
 import org.n52.epos.pattern.functions.MethodNames;

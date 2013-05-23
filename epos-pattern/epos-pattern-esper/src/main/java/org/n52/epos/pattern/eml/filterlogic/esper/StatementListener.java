@@ -108,67 +108,6 @@ public class StatementListener implements UpdateListener {
 		instanceCount++;
 
 		this.doOutput = this.statement.createsFinalOutput() || this.statement.createsNewInternalEvent();
-
-		// register new event at esper engine
-		if (this.statement.createsNewInternalEvent()) {
-			String eventName = this.statement.getNewEventName();
-
-			// common attributes
-			// HashMap<String, Object> eventProperties = new HashMap<String,
-			// Object>();
-			// eventProperties.put(MapEvent.START_KEY, Long.class);
-			// eventProperties.put(MapEvent.END_KEY, Long.class);
-			// eventProperties.put(MapEvent.CAUSALITY_KEY, Vector.class);
-			
-			//TODO RE-IMPLEMENT! Unit test
-			
-			
-//			HashMap<String, Object> eventProperties = this.controller
-//					.getEventProperties();
-//
-//			// register every event attribute
-//			// TODO for string as result value maybe start debugging here
-//			if (sel.isSingleValueOutput()) {
-//				for (String key : sel.getDataTypes().keySet()) {
-//					if (!eventProperties.containsKey(key))
-//						eventProperties.put(key, sel.getDataTypes().get(key));
-//				}
-//			} else {
-//				// nested properties
-//				HashMap<String, Object> nestedMap = new HashMap<String, Object>();
-//				for (String key : sel.getDataTypes().keySet()) {
-//					nestedMap.put(key, sel.getDataTypes().get(key));
-//				}
-//
-//				if (nestedMap.get(MapEposEvent.VALUE_KEY) instanceof HashMap) {
-//					// get inner map
-//					nestedMap = (HashMap<String, Object>) nestedMap
-//							.get(MapEposEvent.VALUE_KEY);
-//				}
-//
-//				// add nested properties
-//				for (String key : nestedMap.keySet()) {
-//					if (key.equals(MapEposEvent.START_KEY)
-//							|| key.equals(MapEposEvent.END_KEY)
-//							|| key.equals(MapEposEvent.CAUSALITY_KEY)) {
-//						// do nothing
-//					} else {
-//						if (!eventProperties.containsKey(key))
-//							eventProperties.put(key, nestedMap.get(key));
-//					}
-//
-//				}
-//			}
-
-			// logger.info("registering event properties as outputs from statement: "
-			// + statement.getStatement());
-			//
-			// for (String key : eventProperties.keySet()) {
-			// logger.info("key '" + key + "' has the type '" +
-			// eventProperties.get(key) + "'");
-			// }
-//			this.controller.registerEvent(eventName, eventProperties);
-		}
 	}
 
 	@Override

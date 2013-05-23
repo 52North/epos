@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://www.opengis.net/eml/0.0.1 3111_XSDeml0.0.1OGC-EML-0_0_1-eml.xsd"
 	xmlns="http://www.opengis.net/eml/0.0.1">
 	<SimplePatterns>
-		<SimplePattern inputName="BAW_META" patternID="BAW_META">
+		<SimplePattern inputName="meta-input" patternID="BAW_META">
 			<SelectFunctions>
 				<SelectFunction newEventName="BAW_META">
 					<NotifyOnSelect>

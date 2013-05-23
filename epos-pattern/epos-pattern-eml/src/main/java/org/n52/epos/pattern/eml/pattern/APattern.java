@@ -30,7 +30,6 @@ package org.n52.epos.pattern.eml.pattern;
 import java.util.HashSet;
 import java.util.Vector;
 
-import org.n52.epos.filter.pattern.EventPattern;
 import org.n52.epos.pattern.eml.EMLParser;
 
 
@@ -136,6 +135,11 @@ public abstract class APattern {
 	 */
 	public HashSet<Object> getPropertyNames() {
 		return this.propertyNames;
+	}
+	
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName() +": "+this.getPatternID();
 	}
 	
 }

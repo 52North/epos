@@ -23,7 +23,6 @@
 package org.n52.epos.pattern.eml;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +46,6 @@ import org.n52.epos.pattern.eml.pattern.APattern;
 import org.n52.epos.pattern.eml.pattern.PatternComplex;
 import org.n52.epos.pattern.eml.pattern.PatternRepetitive;
 import org.n52.epos.pattern.eml.pattern.PatternSimple;
-import org.n52.epos.pattern.eml.pattern.SelFunction;
 import org.n52.epos.pattern.eml.pattern.Statement;
 import org.n52.oxf.xmlbeans.tools.XmlUtil;
 import org.slf4j.Logger;
@@ -61,11 +59,10 @@ public class EMLPatternFilter implements PatternFilter {
 	private static final Logger logger = LoggerFactory.getLogger(EMLPatternFilter.class);
 	private EML eml;
 	private EMLParser parser;
-	private String inputStreamName;
-	private Map<String, Object> eventProperties;
-	private Map<String, Map<String, Object>> registeredEvents = new HashMap<String, Map<String,Object>>();
+	private Map<String, Map<String, Object>> propertiesByEventInput = new HashMap<String, Map<String,Object>>();
 	private HashMap<String, APattern> patterns;
 	private List<EventPattern> eventPatterns = new ArrayList<EventPattern>();
+	private String externalInputStreamName;
 
 	public EMLPatternFilter(EMLDocument emlDoc) throws Exception {
 		this.eml = emlDoc.getEML();
@@ -80,8 +77,6 @@ public class EMLPatternFilter implements PatternFilter {
 			logger.debug("initializing EMLPatternFilter controller");
 		this.parser = new EMLParser(this);
 		this.parser.parseEML(eml);
-		
-		this.inputStreamName = this.parser.getInputStreamName();
 		
 		this.patterns = this.parser.getPatterns();
 		
@@ -99,20 +94,19 @@ public class EMLPatternFilter implements PatternFilter {
 		}
 		
 		//register Map as event type with registered phenomenons/types
-		this.eventProperties = new HashMap<String, Object>();
-		this.eventProperties.put(MapEposEvent.START_KEY, Long.class);
-		this.eventProperties.put(MapEposEvent.END_KEY, Long.class);
-		this.eventProperties.put(MapEposEvent.STRING_VALUE_KEY, String.class);
-		this.eventProperties.put(MapEposEvent.DOUBLE_VALUE_KEY, Double.class);
-		this.eventProperties.put(MapEposEvent.CAUSALITY_KEY, Vector.class);
-		this.eventProperties.put(MapEposEvent.GEOMETRY_KEY, Geometry.class);
-		this.eventProperties.put(MapEposEvent.SENSORID_KEY, String.class);
-		this.eventProperties.put(MapEposEvent.THIS_KEY, Map.class);
+		HashMap<String, Object> eventProperties = new HashMap<String, Object>();
+		eventProperties.put(MapEposEvent.START_KEY, Long.class);
+		eventProperties.put(MapEposEvent.END_KEY, Long.class);
+		eventProperties.put(MapEposEvent.STRING_VALUE_KEY, String.class);
+		eventProperties.put(MapEposEvent.DOUBLE_VALUE_KEY, Double.class);
+		eventProperties.put(MapEposEvent.CAUSALITY_KEY, Vector.class);
+		eventProperties.put(MapEposEvent.GEOMETRY_KEY, Geometry.class);
+		eventProperties.put(MapEposEvent.SENSORID_KEY, String.class);
+		eventProperties.put(MapEposEvent.THIS_KEY, Map.class);
 
 		/*
 		 * Get data types for phenomenons.
 		 */
-		
 		
 		//TODO: check if string as a value does work (seems not...)
 		DataTypesMap dtm = DataTypesMap.getInstance();
@@ -127,30 +121,50 @@ public class EMLPatternFilter implements PatternFilter {
 		for (String key : simplePatterns.keySet()) {
 			APattern val = simplePatterns.get(key);
 			for (Object key2 : val.getPropertyNames()) {
-				this.eventProperties.put(key2.toString(), dtm.getDataType(key2.toString()));
+				eventProperties.put(key2.toString(), dtm.getDataType(key2.toString()));
 			}
 		}
 
-		getPropertiesFromPatterns(this.eventProperties, patterns);
+		getPropertiesFromPatterns(eventProperties, patterns);
 		
 		for (String key : simplePatterns.keySet()) {
 			PatternSimple val = (PatternSimple) simplePatterns.get(key);
-//			logger.info("#### registering event for input " + val.getInputName());
 			
-//			logger.info("datatype of field '" + MapEvent.SENSORID_KEY + "' is '" + eventProperties.get(MapEvent.SENSORID_KEY) + "'");
-			
-			registerEvent(val.getInputName(), this.eventProperties);
+			registerEventInputProperties(val.getInputName(), eventProperties);
 		}
 		
 		
 		//build listeners
 		this.buildListeners(patterns);
 		
+		this.externalInputStreamName = resolveExternalInputStream();
 	}
 	
-	private void registerEvent(String inputName,
+	private String resolveExternalInputStream() {
+		List<String> candidates = new ArrayList<String>();
+		for (EventPattern ep : this.eventPatterns) {
+			if (ep.getInputName() != null) {
+				if (!candidates.contains(ep.getInputName())) {
+					candidates.add(ep.getInputName());
+				}
+			}
+		}
+		
+		if (candidates.isEmpty()) {
+			throw new IllegalStateException("Could not find an external input stream. This Filter will not work.");
+		}
+		
+		if (candidates.size() > 1) {
+			logger.warn("Multiple input streams found. Only streams with inputName = '{}' will receive events.",
+					candidates.get(0));
+		}
+		
+		return candidates.get(0);
+	}
+
+	private void registerEventInputProperties(String inputName,
 			Map<String, Object> eventProperties2) {
-		this.registeredEvents.put(inputName, new HashMap<String, Object>(eventProperties2));
+		this.propertiesByEventInput.put(inputName, new HashMap<String, Object>(eventProperties2));
 	}
 
 
@@ -161,7 +175,7 @@ public class EMLPatternFilter implements PatternFilter {
 		String curr;
 		DataTypesMap dtm = DataTypesMap.getInstance();
 		for (String key : patternMap.keySet()) {
-			 pat = patternMap.get(key);
+			pat = patternMap.get(key);
 			for (Object s : pat.getPropertyNames()) {
 				curr = s.toString();
 				
@@ -171,7 +185,9 @@ public class EMLPatternFilter implements PatternFilter {
 					curr = curr.substring(curr.indexOf(".")+1, curr.length());
 				}
 				
-				properties.put(curr, dtm.getDataType(curr));
+				if (!properties.containsKey(curr)) {
+					properties.put(curr, dtm.getDataType(curr));
+				}
 			}
 		}
 		
@@ -300,17 +316,29 @@ public class EMLPatternFilter implements PatternFilter {
 			/*
 			 * other pattern only needs one per statement
 			 */
+			Map<String, Object> properties = resolveInputPropertiesForPattern(pattern);
 			for (Statement statement : pattern.createEsperStatements()) {
-				this.eventPatterns.add(createEventPattern(pattern, statement, internalStreamNames));
+				EventPattern newPattern = createEventPattern(pattern, statement,
+						properties, statement.getSelectFunction().getDataTypes(), internalStreamNames);
+				this.eventPatterns.add(newPattern);
 			}
 		}
 	}
 	
 	
 
+	private Map<String, Object> resolveInputPropertiesForPattern(
+			APattern pattern) {
+		if (pattern instanceof PatternSimple) {
+			return this.propertiesByEventInput.get(((PatternSimple) pattern).getInputName());
+		}
+		return null;
+	}
+
 	private EventPattern createEventPattern(APattern pattern,
-			Statement statement, List<String> internalStreamNames) {
-		EMLEventPattern result = new EMLEventPattern(pattern, statement, internalStreamNames);
+			Statement statement, Map<String, Object> properties, Map<String, Object> outputs, List<String> internalStreamNames) {
+		EMLEventPattern result = new EMLEventPattern(pattern, statement,
+				properties, outputs, internalStreamNames);
 		return result;
 	}
 
@@ -376,14 +404,13 @@ public class EMLPatternFilter implements PatternFilter {
 
 	@Override
 	public String getInputStreamName() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.externalInputStreamName;
 	}
 
 	public Object getEventDatatype(String eventName) {
-		for (String registered : this.registeredEvents.keySet()) {
+		for (String registered : this.propertiesByEventInput.keySet()) {
 			if (registered.equals(eventName)) {
-				return this.registeredEvents.get(registered);
+				return this.propertiesByEventInput.get(registered);
 			}
 		}
 		return null;
@@ -436,7 +463,7 @@ public class EMLPatternFilter implements PatternFilter {
 		for (EventPattern pat : getPatterns()) {
 			if (pat.getNewEventName().equals(eventName)) {
 				// this select function defines the data type
-				return pat.getEventProperties().get(propertyName);
+				return pat.getInputProperties().get(propertyName);
 			}
 		}
 		return null;

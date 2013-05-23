@@ -53,7 +53,7 @@ public interface ILogicController {
 	 * @param eventName name of the new event type
 	 * @param eventProperties map containing the names and the types of the event properties
 	 */
-	void registerEvent(String eventName, Map<String, Object> eventProperties);
+	void registerEventWithProperties(String eventName, Map<String, Object> eventProperties);
 
 	/**
 	 * get a map containing all data types of an event

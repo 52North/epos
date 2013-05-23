@@ -32,6 +32,7 @@ import java.util.Map;
 
 import org.n52.epos.event.MapEposEvent;
 import org.n52.epos.filter.pattern.EventPattern;
+import org.n52.epos.pattern.eml.filterlogic.esper.util.MapEventFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +58,7 @@ public class UpdateHandlerThread implements Runnable {
 	
 	private EsperController controller;
 	
-	private EventPattern statement;
+	private EventPattern eventPattern;
 	
 	private EventBean bean;
 	
@@ -77,7 +78,7 @@ public class UpdateHandlerThread implements Runnable {
 		this.doOutput = listener.isDoOutput();
 		this.controller = listener.getController();
 		
-		this.statement = listener.getStatement();
+		this.eventPattern = listener.getStatement();
 		this.bean = bean;
 		this.listener = listener;
 	}
@@ -86,11 +87,8 @@ public class UpdateHandlerThread implements Runnable {
 	@Override
 	public void run() {
 		if (logger.isDebugEnabled()) {
-			logger.debug("Update received for pattern: " + this.statement);
+			logger.debug("Update received for pattern: " + this.eventPattern);
 		}
-		
-//		logger.info("bean type: " + bean.getClass().getName());
-//		logger.info("undelying type: " + bean.getUnderlying().getClass().getName());
 		
 		//build new event
 		MapEposEvent event = null;
@@ -99,12 +97,6 @@ public class UpdateHandlerThread implements Runnable {
 			MapEventBean selected = (MapEventBean) this.bean;
 			String[] propertyNames = selected.getEventType().getPropertyNames();
 			
-//			StringBuilder log = new StringBuilder();
-//			log.append("selected event properties.");
-//			for (String key : propertyNames) {
-//				log.append("\n\t" + key);
-//			}
-//			logger.info(log.toString());
 			
 			if (propertyNames.length > 1) {
 				event = createEventFromComplexSelect(selected);
@@ -113,13 +105,11 @@ public class UpdateHandlerThread implements Runnable {
 				event = createEventFromSimpleSelect(event, propertyNames[0]);
 			}
 			else {
-//				logger.info("will create event from simple select");
 				event = createEventFromSimpleSelect(event);
 			}
 			
 		}
 		else {
-//			logger.info("will create event from complex select with null event");
 			event = createEventFromSimpleSelect(event);
 		}
 		
@@ -132,7 +122,6 @@ public class UpdateHandlerThread implements Runnable {
 		 * add original message
 		 */
 		if (this.bean.getUnderlying() instanceof Map<?, ?>) {
-//			logger.info("adding original message from Map<?, ?>");
 			Map<?, ?> alert = (Map<?, ?>) this.bean.getUnderlying();
 			Object message = alert.get(MapEposEvent.ORIGNIAL_OBJECT_KEY);
 			if (message != null) {
@@ -143,8 +132,8 @@ public class UpdateHandlerThread implements Runnable {
 		
 		try {
 			//send event to esper engine for further processing
-			if (!this.statement.createsNewInternalEvent()) {
-				this.controller.sendEvent(this.statement.getNewEventName(), event);
+			if (!this.eventPattern.createsNewInternalEvent()) {
+				this.controller.sendEvent(this.eventPattern.getNewEventName(), event);
 			}
 			
 			//if output=true send event to output
@@ -185,93 +174,7 @@ public class UpdateHandlerThread implements Runnable {
 
 
 	private MapEposEvent parseEventFromMap(Map<String, Object> properties) {
-		
-		//TODO create a routine to transform a MapEventBean to MapEposEvent
-//		return MapEventFactory.parseFromMap(properties, this.statement.getSelectFunction().getCreateCausality());
-		return null;
-		
-//		StringBuilder log = new StringBuilder();
-//		log.append("parsing MapEvent from Map");
-//		log.append("\n\tproperties:");
-//		for (String key : properties.keySet()) {
-//			log.append("\n\t" + key);
-//		}
-//		this.logger.info(log.toString());
-		
-//		long start;
-//		long end;
-//		if (properties.containsKey(MapEvent.START_KEY)) {
-//			start = Long.parseLong(properties.get(MapEvent.START_KEY).toString());
-//		}
-//		else {
-//			start = new Date().getTime();
-//		}
-//		
-//		if (properties.containsKey(MapEvent.END_KEY)) {
-//			end = Long.parseLong(properties.get(MapEvent.END_KEY).toString());
-//			if (start > end) {
-//				end = start;
-//			}
-//		}
-//		else {
-//			end = start;
-//		}
-//		
-//		MapEvent event = new MapEvent(start, end);
-//		
-//		//copy content
-//		for (String key : properties.keySet()) {
-//			if (key.equals(MapEvent.START_KEY) || key.equals(MapEvent.END_KEY)) {
-//				//already copied
-//			}
-//			else if (key.equals(MapEvent.THIS_KEY)) {
-//				//ignore to prevent recursions
-//			}
-//			else if (key.equals(MapEvent.CAUSALITY_KEY)) {
-//				if (this.statement.getSelectFunction().getCreateCausality()) {
-//					//copy causality
-//					Vector<MapEvent> causality = (Vector<MapEvent>) properties.get(key);
-//					
-//					for (MapEvent ancestor : causality) {
-//						event.addCausalAncestor(ancestor);
-//					}
-//				}
-//			}
-//			else if (key.equals(MapEvent.CAUSAL_ANCESTOR_1_KEY) || key.equals(MapEvent.CAUSAL_ANCESTOR_2_KEY)) {
-//				if (this.statement.getSelectFunction().getCreateCausality()) {
-//					//add causal ancestors
-////					logger.info("causal ancestor from pattern select found. type: " + properties.get(key).getClass().getName());
-//					
-//					if (properties.get(key) instanceof HashMap<?, ?>) {
-//						MapEvent ancestorEvent = this.parseEventFromMap((Map<String, Object>) properties.get(key));
-//						event.addCausalAncestor(ancestorEvent);
-//					}
-//					else if (properties.get(key) instanceof MapEvent) {
-//						event.addCausalAncestor((MapEvent) properties.get(key));
-//					}
-//					else if (properties.get(key) instanceof MapEventBean) {
-//						MapEventBean ancestorBean = (MapEventBean) properties.get(key);
-//						event.addCausalAncestor(this.parseEventFromMap(ancestorBean.getProperties()));
-//					}
-//				}
-//			}
-//			else {
-//				if (key.equals(MapEvent.VALUE_KEY) && (properties.get(key) instanceof MapEventBean)) {
-//					/*
-//					 * select event with causality should end up here
-//					 * -> recursive call
-//					 */
-//					MapEventBean valueBean = (MapEventBean) properties.get(key);
-//					event.put(key, this.parseEventFromMap(valueBean.getProperties()));
-//				}
-//				else {
-//					//fallback / usual: just put it into the result
-//					event.put(key, properties.get(key));
-//				}
-//			}
-//		}
-////		logger.info("Event parsed from map:\n" + event);
-//		return event;
+		return MapEventFactory.parseFromMap(properties, this.eventPattern.createCausality());
 	}
 
 

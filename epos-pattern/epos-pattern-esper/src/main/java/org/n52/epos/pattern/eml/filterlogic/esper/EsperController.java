@@ -29,27 +29,22 @@ package org.n52.epos.pattern.eml.filterlogic.esper;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
-import org.apache.xmlbeans.XmlObject;
-import org.n52.epos.event.DataTypesMap;
 import org.n52.epos.event.MapEposEvent;
 import org.n52.epos.filter.pattern.EventPattern;
 import org.n52.epos.filter.pattern.ILogicController;
 import org.n52.epos.filter.pattern.PatternFilter;
+import org.n52.epos.pattern.functions.SpatialMethods;
 import org.n52.epos.rules.Rule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Element;
 
 import com.espertech.esper.client.Configuration;
 import com.espertech.esper.client.EPServiceProvider;
 import com.espertech.esper.client.EPServiceProviderManager;
 import com.espertech.esper.client.EPStatement;
 import com.espertech.esper.client.EPStatementException;
-import com.vividsolutions.jts.geom.Geometry;
 
 /**
  * central class for executing a set of esper EPL statements for a single
@@ -60,7 +55,7 @@ import com.vividsolutions.jts.geom.Geometry;
  */
 public class EsperController implements ILogicController {
 
-	private static final String CUSTOM_ESPER_FUNCTIONS_NAMESPACE = "org.n52.epos.pattern.eml.filterlogic.esper.customFunctions.*";
+	private static final String CUSTOM_ESPER_FUNCTIONS_NAMESPACE = SpatialMethods.class.getPackage().getName() +".*";
 
 	/*
 	 * Logger instance for this class
@@ -87,8 +82,6 @@ public class EsperController implements ILogicController {
 	// private EMLProcess process;
 
 	// private InputDescription[] inputDescriptions;
-
-	private HashMap<String, Object> eventProperties;
 
 	private String inputStreamName;
 
@@ -136,114 +129,14 @@ public class EsperController implements ILogicController {
 	 *            HashMap containing the data type of the HashMap value.
 	 */
 	@Override
-	public synchronized void registerEvent(String eventName,
+	public synchronized void registerEventWithProperties(String eventName,
 			Map<String, Object> properties) {
-
-		// logger.info("registering an event with following properties:");
-		// logger.info("\t event name: " + eventName);
-		//
-		// for (String key : properties.keySet()) {
-		// logger.info("\t'" + key + "' of type '" + properties.get(key) + "'");
-		// }
 
 		if (!this.config.getEventTypesNestableMapEvents()
 				.containsKey(eventName)) {
 			this.config.addEventType(eventName, properties);
 		}
 	}
-
-	/**
-	 * 
-	 * @return the event properties map
-	 */
-	public HashMap<String, Object> getEventProperties() {
-		return this.eventProperties;
-	}
-
-	// /**
-	// * Registers an event for the given {@link InputDescription}
-	// *
-	// * @param descr description of an process input
-	// */
-	// private void registerEvent(InputDescription descr) {
-	// String eventName = descr.getName();
-	// HashMap<String, Object> props = new HashMap<String, Object>();
-	//
-	// if (descr.getDataType() != SupportedDataTypes.EVENT) {
-	// /*
-	// * check data type
-	// */
-	//
-	// if (descr.getDataType().equals(SupportedDataTypes.BOOLEAN)) {
-	// //boolean
-	// props.put(MapEvent.VALUE_KEY, Boolean.class);
-	// }
-	//
-	// else if (descr.getDataType().equals(SupportedDataTypes.CATEGORY)) {
-	// //category
-	// props.put(MapEvent.VALUE_KEY, String.class);
-	// }
-	//
-	// else if (descr.getDataType().equals(SupportedDataTypes.COUNT)) {
-	// //count
-	// props.put(MapEvent.VALUE_KEY, Integer.class);
-	// }
-	//
-	// else if (descr.getDataType().equals(SupportedDataTypes.QUANTITY)) {
-	// //quantity
-	// props.put(MapEvent.VALUE_KEY, Double.class);
-	// }
-	//
-	// else if (descr.getDataType().equals(SupportedDataTypes.TEXT)) {
-	// //text
-	// props.put(MapEvent.VALUE_KEY, String.class);
-	// }
-	//
-	// else if (descr.getDataType().equals(SupportedDataTypes.TIME)) {
-	// //time
-	// props.put(MapEvent.VALUE_KEY, Long.class);
-	// }
-	// else {
-	// //unknown
-	// props.put(MapEvent.VALUE_KEY, Object.class);
-	// }
-	//
-	// //save input event data type
-	// // this.inputEventDataTypes.put(eventName,
-	// props.get(MapEvent.VALUE_KEY));
-	// }
-	// else {
-	// /*
-	// * register swe:Event
-	// */
-	// this.buildEventPropertyDataTypeMap(props, descr);
-	//
-	// //save input event data type
-	// // this.inputEventDataTypes.put(eventName, props);
-	// }
-	//
-	// //register at esper engine
-	// this.registerEvent(eventName, props);
-	// }
-
-	// /**
-	// * builds the properties map for events (swe:Event)
-	// *
-	// * @param props data type map of the input
-	// * @param description description of the connection delivering an
-	// swe:Event
-	// */
-	// private void buildEventPropertyDataTypeMap(HashMap<String, Object> props,
-	// InputDescription description) {
-	// //parse swe:Event data types from description
-	// HashMap<String, Object> dataTypes =
-	// EventDataTypeParser.parse(description);
-	//
-	// //add data types to properties
-	// for (String key : dataTypes.keySet()) {
-	// props.put(key, dataTypes.get(key));
-	// }
-	// }
 
 
 	@Override
@@ -259,72 +152,18 @@ public class EsperController implements ILogicController {
 			patterns.put(ep.getID(), ep);
 		}
 
-		/*
-		 * register standard property names
-		 */
-		this.registerStandardPropertyNames();
 
-		/*
-		 * Instantiate propertyNames for esper config
-		 */
+		for (String key : patterns.keySet()) {
+			EventPattern val = patterns.get(key);
 
-		Map<String, EventPattern> simplePatterns = new HashMap<String, EventPattern>();
-
-		for (EventPattern ep : patterns.values()) {
-			if (ep.getRelatedInputPatterns() == null || ep.getRelatedInputPatterns().isEmpty()) {
-				simplePatterns.put(ep.getID(), ep);
+			if (val.getInputName() != null){
+				registerEventWithProperties(val.getInputName(), val.getInputProperties());
+			}
+			
+			if (val.createsNewInternalEvent()) {
+				registerEventWithProperties(val.getNewEventName(), val.getOutputProperties());
 			}
 		}
-
-		// register Map as event type with registered phenomenons/types
-		this.eventProperties = new HashMap<String, Object>();
-		this.eventProperties.put(MapEposEvent.START_KEY, Long.class);
-		this.eventProperties.put(MapEposEvent.END_KEY, Long.class);
-		this.eventProperties.put(MapEposEvent.STRING_VALUE_KEY, String.class);
-		this.eventProperties.put(MapEposEvent.DOUBLE_VALUE_KEY, Double.class);
-		this.eventProperties.put(MapEposEvent.CAUSALITY_KEY, Vector.class);
-		this.eventProperties.put(MapEposEvent.GEOMETRY_KEY, Geometry.class);
-		this.eventProperties.put(MapEposEvent.SENSORID_KEY, String.class);
-		this.eventProperties.put(MapEposEvent.THIS_KEY, Map.class);
-
-		/*
-		 * Get data types for phenomenons.
-		 */
-
-		// TODO: check if string as a value does work (seems not...)
-		DataTypesMap dtm = DataTypesMap.getInstance();
-
-		/*
-		 * the following loop is needed if a simple pattern accesses an event
-		 * property which is not a standard property known by the EML parser. If
-		 * so this property has to be added to the event that is registered with
-		 * a data type.
-		 */
-//		for (String key : simplePatterns.keySet()) {
-//			EventPattern val = simplePatterns.get(key);
-//			for (Object key2 : val.getPropertyNames()) {
-//				this.eventProperties.put(key2.toString(),
-//						dtm.getDataType(key2.toString()));
-//			}
-//		}
-
-		for (String key : simplePatterns.keySet()) {
-			EventPattern val = simplePatterns.get(key);
-			// logger.info("#### registering event for input " +
-			// val.getInputName());
-
-			// logger.info("datatype of field '" + MapEvent.SENSORID_KEY +
-			// "' is '" + eventProperties.get(MapEvent.SENSORID_KEY) + "'");
-
-			registerEvent(val.getInputName(), val.getEventProperties());
-			// add to list of inputs
-			this.inputEventDataTypes.put(val.getInputName(),
-					this.eventProperties);
-		}
-
-		/*
-		 * end of (instantiate propertyNames for esper config)
-		 */
 
 		// register custom functions
 		this.registerCustomFunctions();
@@ -362,31 +201,6 @@ public class EsperController implements ILogicController {
 		this.config.addImport(CUSTOM_ESPER_FUNCTIONS_NAMESPACE);
 	}
 
-	/**
-	 * Registers the standard property names at the
-	 * data types map.
-	 */
-	private void registerStandardPropertyNames() {
-		//get data types map
-		DataTypesMap dtm = DataTypesMap.getInstance();
-		
-		//register types
-		dtm.registerNewDataType(MapEposEvent.SENSORID_KEY, String.class);
-		dtm.registerNewDataType(MapEposEvent.STRING_VALUE_KEY, String.class);
-		dtm.registerNewDataType(MapEposEvent.DOUBLE_VALUE_KEY, Double.class);
-		dtm.registerNewDataType(MapEposEvent.FOI_ID_KEY, String.class);
-		dtm.registerNewDataType(MapEposEvent.START_KEY, Long.class);
-		dtm.registerNewDataType(MapEposEvent.END_KEY, Long.class);
-		dtm.registerNewDataType(MapEposEvent.OBSERVED_PROPERTY_KEY, String.class);
-		dtm.registerNewDataType(MapEposEvent.RESERVATION_PHASE_KEY, String.class);
-		dtm.registerNewDataType(MapEposEvent.STAUS_KEY, String.class);
-		dtm.registerNewDataType(MapEposEvent.IDENTIFIER_VALUE_KEY, String.class);
-		dtm.registerNewDataType(MapEposEvent.IDENTIFIER_CODESPACE_KEY, String.class);
-		dtm.registerNewDataType(MapEposEvent.VALID_TIME_KEY, String.class);
-		dtm.registerNewDataType(MapEposEvent.LOWER_LIMIT_KEY, Double.class);
-		dtm.registerNewDataType(MapEposEvent.UPPER_LIMIT_KEY, Double.class);
-	}
-	
 	/**
 	 * logs all created statements
 	 */
@@ -657,7 +471,7 @@ public class EsperController implements ILogicController {
 		for (EventPattern pat : this.patterns.values()) {
 			if (pat.getNewEventName().equals(eventName)) {
 				// this select function defines the data type
-				return pat.getEventProperties().get(propertyName);
+				return pat.getInputProperties().get(propertyName);
 			}
 		}
 		return null;
@@ -686,7 +500,7 @@ public class EsperController implements ILogicController {
 		for (EventPattern pat : this.patterns.values()) {
 			if (pat.getNewEventName().equals(eventName)) {
 				// this select function defines the data type
-				return pat.getEventProperties();
+				return pat.getInputProperties();
 			}
 		}
 

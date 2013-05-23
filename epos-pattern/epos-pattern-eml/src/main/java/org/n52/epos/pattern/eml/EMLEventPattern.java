@@ -32,9 +32,13 @@ import org.n52.epos.pattern.eml.pattern.APattern;
 import org.n52.epos.pattern.eml.pattern.PatternComplex;
 import org.n52.epos.pattern.eml.pattern.PatternSimple;
 import org.n52.epos.pattern.eml.pattern.Statement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class EMLEventPattern implements EventPattern {
 
+	private static final Logger logger = LoggerFactory.getLogger(EMLEventPattern.class);
+	
 	private Statement statement;
 	private String id;
 	private String inputName;
@@ -42,9 +46,12 @@ public class EMLEventPattern implements EventPattern {
 	private boolean createFinalOutput;
 	private String newEventName;
 	private boolean createNewInternalEvent;
-	private Map<String, Object> eventProperties = new HashMap<String, Object>();
+	private Map<String, Object> inputProperties = new HashMap<String, Object>();
+	private Map<String, Object> outputProperties = new HashMap<String, Object>();
 
-	public EMLEventPattern(APattern pattern, Statement statement, List<String> internalStreamNames) {
+	public EMLEventPattern(APattern pattern, Statement statement,
+			Map<String, Object> inputProps, Map<String, Object> outputProps,
+			List<String> internalStreamNames) {
 		this.statement = statement;
 		if (pattern instanceof PatternComplex) {
 			initFromComplex((PatternComplex) pattern, internalStreamNames);
@@ -55,7 +62,11 @@ public class EMLEventPattern implements EventPattern {
 		
 		this.id = pattern.getPatternID();
 
-		this.eventProperties.putAll(this.statement.getSelectFunction().getDataTypes());
+		if (inputProps != null)
+			this.inputProperties.putAll(inputProps);
+		
+		if (outputProps != null)
+			this.outputProperties.putAll(outputProps);
 		
 		resolveOutputStyle();
 	}
@@ -147,8 +158,25 @@ public class EMLEventPattern implements EventPattern {
 	}
 
 	@Override
-	public Map<String, Object> getEventProperties() {
-		return this.eventProperties;
+	public Map<String, Object> getInputProperties() {
+		return this.inputProperties;
+	}
+	
+	@Override
+	public Map<String, Object> getOutputProperties() {
+		return this.outputProperties;
+	}
+	
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName() +": "+ this.getID();
+	}
+
+
+	@Override
+	public boolean createCausality() {
+		logger.warn("Event Causality is currently not supported!");
+		return false;
 	}
 
 }

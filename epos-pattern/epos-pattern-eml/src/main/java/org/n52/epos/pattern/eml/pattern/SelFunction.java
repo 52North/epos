@@ -28,6 +28,7 @@
 package org.n52.epos.pattern.eml.pattern;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import org.n52.epos.event.MapEposEvent;
@@ -83,7 +84,7 @@ public class SelFunction {
 	 * contains the data types of the resulting event or the inner (nested) types, if the resulting event contains
 	 * an event.
 	 */
-	private HashMap<String, Object> dataTypes;
+	private Map<String, Object> dataTypes;
 	
 	
 	/**
@@ -244,14 +245,19 @@ public class SelFunction {
 					if (forSimplePattern) {
 						//named not possible in simple patterns
 						this.selectString = "*";
+						Object types = this.controller.getEventDatatype(eventName);
+						if (types != null && types instanceof Map<?, ?>) {
+							this.dataTypes.putAll((Map<? extends String, ? extends Object>) types);
+						}
 					}
 					else {
 						//select specified event
 						this.selectString = "" + eventName + " as value";
+						//set data type
+						this.dataTypes.put(MapEposEvent.VALUE_KEY, this.controller.getEventDatatype(eventName));
 					}
 					
-					//set data type
-					this.dataTypes.put(MapEposEvent.VALUE_KEY, this.controller.getEventDatatype(eventName));
+					
 				}
 				else {
 					SelFunction.logger.warn("No event name given.");
@@ -607,7 +613,7 @@ public class SelFunction {
 	/**
 	 * @return the dataTypes
 	 */
-	public HashMap<String, Object> getDataTypes() {
+	public Map<String, Object> getDataTypes() {
 		return this.dataTypes;
 	}
 

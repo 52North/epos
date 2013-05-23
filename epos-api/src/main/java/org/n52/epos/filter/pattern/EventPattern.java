@@ -43,5 +43,9 @@ public interface EventPattern {
 
 	public String getInputName();
 
-	public Map<String, Object> getEventProperties();
+	public Map<String, Object> getInputProperties();
+
+	Map<String, Object> getOutputProperties();
+	
+	public boolean createCausality();
 }

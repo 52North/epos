@@ -42,7 +42,6 @@ import org.n52.epos.pattern.eml.filter.IFilterElement;
 import org.n52.oxf.xmlbeans.tools.XmlUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Element;
 
 
 /**

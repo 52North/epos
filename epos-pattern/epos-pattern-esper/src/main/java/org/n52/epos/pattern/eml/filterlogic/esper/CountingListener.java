@@ -79,7 +79,7 @@ public class CountingListener implements UpdateListener {
 		
 		//TODO hard-coded "_count" - epos-pattern-eml does not have to know that!
 		this.eventName = this.inputEventName + "_count";
-		this.controller.registerEvent(this.eventName, eventProperties);
+		this.controller.registerEventWithProperties(this.eventName, eventProperties);
 	}
 
 	@Override
