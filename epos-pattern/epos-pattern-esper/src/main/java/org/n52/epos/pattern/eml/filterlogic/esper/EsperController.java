@@ -75,17 +75,11 @@ public class EsperController implements ILogicController {
 
 	private Rule rule;
 
-	// private OutputDescription[] outputDescriptions;
-
 	private HashMap<String, Object> inputEventDataTypes;
 
-	// private EMLProcess process;
-
-	// private InputDescription[] inputDescriptions;
-
-	private String inputStreamName;
-
 	private Map<String,EventPattern> patterns;
+
+	private PatternFilter patternFilter;
 
 	/**
 	 * 
@@ -114,10 +108,10 @@ public class EsperController implements ILogicController {
 	}
 
 	@Override
-	public String getInputStreamName() {
-		return inputStreamName;
+	public PatternFilter getEventPattern() {
+		return this.patternFilter;
 	}
-
+	
 	/**
 	 * Registers an event with a name at the engine. Nestable maps are allowed.
 	 * 
@@ -145,7 +139,7 @@ public class EsperController implements ILogicController {
 		if (logger.isDebugEnabled())
 			logger.debug("initializing esper controller");
 
-		this.inputStreamName = originalFilter.getInputStreamName();
+		this.patternFilter = originalFilter;
 
 		patterns = new HashMap<String, EventPattern>();
 		for (EventPattern ep : originalFilter.getPatterns()) {

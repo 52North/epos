@@ -26,12 +26,30 @@ import java.util.List;
 
 import org.n52.epos.filter.PassiveFilter;
 
+/**
+ * A {@link PatternFilter} implementation is a specialized
+ * {@link PassiveFilter}, containing a set of patterns
+ * which incoming events shall be evaluated against.
+ * 
+ * @author matthes rieke
+ *
+ */
 public interface PatternFilter extends PassiveFilter {
 
+	/**
+	 * @return the list of {@link EventPattern}s.
+	 */
 	public List<EventPattern> getPatterns();
 	
+	/**
+	 * @return create a serialized version of this pattern
+	 */
 	public CharSequence serialize();
 
+	/**
+	 * @return the input stream name that acts as the common
+	 * external input for this pattern
+	 */
 	public String getInputStreamName();
 	
 }

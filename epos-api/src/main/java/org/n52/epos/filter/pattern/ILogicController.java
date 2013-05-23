@@ -84,8 +84,15 @@ public interface ILogicController {
 	 */
 	String getNewEventName(String patternID, int selectFunctionNumber);
 	
+	/**
+	 * an implementation shall remove itself from the underlying engine
+	 */
 	void removeFromEngine();
 
-	String getInputStreamName();
+	/**
+	 * @return the {@link PatternFilter} implementation as used in
+	 * {@link #initialize(PatternFilter)}.
+	 */
+	PatternFilter getEventPattern();
 
 }

@@ -24,8 +24,19 @@ package org.n52.epos.filter;
 
 import org.n52.epos.event.EposEvent;
 
+/**
+ * An active filter shall evaluate against event
+ * when {@link #matches(EposEvent)} is called.
+ * 
+ * @author matthes rieke
+ *
+ */
 public interface ActiveFilter extends EposFilter {
 
+	/**
+	 * @param event the event to take into consideration
+	 * @return true if the event matches this filter
+	 */
 	public boolean matches(EposEvent event);
 	
 }

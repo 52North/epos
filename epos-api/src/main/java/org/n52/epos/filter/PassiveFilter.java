@@ -23,6 +23,14 @@
 package org.n52.epos.filter;
 
 
+/**
+ * Tagging interface for filters that act passive (or in
+ * other words asynchronous), thus rely on additional
+ * logic (e.g. a stream filtering engine).
+ * 
+ * @author matthes rieke
+ *
+ */
 public interface PassiveFilter extends EposFilter  {
 
 

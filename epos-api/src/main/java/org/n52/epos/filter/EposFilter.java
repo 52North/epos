@@ -22,8 +22,13 @@
  */
 package org.n52.epos.filter;
 
+/**
+ * the super-interface of all filters
+ * used in EPOS.
+ * 
+ * @author matthes rieke
+ *
+ */
 public interface EposFilter {
-
-	
 
 }

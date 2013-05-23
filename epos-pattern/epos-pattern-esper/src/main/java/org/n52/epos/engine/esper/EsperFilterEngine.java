@@ -95,7 +95,7 @@ public class EsperFilterEngine implements PatternEngine {
 		if (message instanceof MapEposEvent) {
 			for (Rule rule : this.esperControllers.keySet()) {
 				ILogicController controller = this.esperControllers.get(rule);
-				controller.sendEvent(controller.getInputStreamName(),
+				controller.sendEvent(controller.getEventPattern().getInputStreamName(),
 						(MapEposEvent) message);
 			}		
 		}
@@ -123,7 +123,7 @@ public class EsperFilterEngine implements PatternEngine {
 
 				controller.initialize((PatternFilter) originalFilter);
 				logger.info("Registering EML Controller for external input stream '"
-						+ controller.getInputStreamName() + "'");
+						+ controller.getEventPattern().getInputStreamName() + "'");
 				this.esperControllers.put(rule, controller);
 			} catch (Exception e) {
 				logger.warn(e.getMessage(), e);

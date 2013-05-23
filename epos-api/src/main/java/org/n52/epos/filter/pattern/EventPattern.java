@@ -25,27 +25,91 @@ package org.n52.epos.filter.pattern;
 import java.util.List;
 import java.util.Map;
 
+import org.n52.epos.event.EposEvent;
+import org.n52.epos.rules.Rule;
+
+/**
+ * Representation of an event-consuming pattern
+ * (e.g. similar to an esper statement).
+ * 
+ * @author matthes rieke
+ *
+ */
 public interface EventPattern {
 
-	public List<String> getRelatedInputPatterns();
+	/**
+	 * @return true, if the causing events shall be transported
+	 * into new events (created if {@link #createsNewInternalEvent()}
+	 * as {@link #getNewEventName()}.
+	 */
+	public boolean createCausality();
 	
-	public String createStringRepresentation();
-	
+	/**
+	 * if true, the underlying engine
+	 * shall call {@link Rule#filter(org.n52.epos.event.EposEvent)} or
+	 * {@link Rule#filter(org.n52.epos.event.EposEvent, Object)} when this pattern
+	 * matches.
+	 * @return true if it creates output to be transferred outside of the engine
+	 */
 	public boolean createsFinalOutput();
 	
+	/**
+	 * if true, the underlying engine shall create a new event
+	 * using {@link #getNewEventName()} and taking {@link #getOutputProperties()}
+	 * into account.
+	 * @return true if it creates a new event for engine-internal use
+	 */
 	public boolean createsNewInternalEvent();
+	
+	/**
+	 * @return the string representation which the underlying engine
+	 * shall use to instantiate its internal representation
+	 */
+	public String createStringRepresentation();
 
-	public String getNewEventName();
-
-	public boolean usesOriginalEventAsOutput();
-
+	/**
+	 * @return the id of this pattern
+	 */
 	public String getID();
 
+	/**
+	 * @return the name of the external input this pattern
+	 * uses or null if it does require an external input
+	 */
 	public String getInputName();
 
+	/**
+	 * @return the input properties this pattern may define
+	 * rules for.
+	 */
 	public Map<String, Object> getInputProperties();
 
-	Map<String, Object> getOutputProperties();
+	/**
+	 * @return the name of the event which this pattern is
+	 * publishing to, or null if {@link #createsNewInternalEvent()} is false.
+	 */
+	public String getNewEventName();
+
+	/**
+	 * @return the event properties which are used for the events
+	 * created as {@link #getNewEventName()}.
+	 */
+	public Map<String, Object> getOutputProperties();
+
+	/**
+	 * @return a list of {@link EventPattern#getID()} references
+	 * which this pattern uses as inputs
+	 */
+	public List<String> getRelatedInputPatterns();
 	
-	public boolean createCausality();
+	/**
+	 * if true, the underlying engine shall call
+	 * {@link Rule#filter(org.n52.epos.event.EposEvent, Object)} when
+	 * this pattern matches with {@link EposEvent#getOriginalObject()} as
+	 * the second method-call argument.
+	 * 
+	 * @return if the original event shall be used as the output
+	 * outside the underlying engine (see {@link #createsFinalOutput()}.
+	 */
+	public boolean usesOriginalEventAsOutput();
 }
