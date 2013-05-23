@@ -102,7 +102,7 @@ public class EsperFilterEngine implements PatternEngine {
 	}
 
 
-	public void registerRule(Rule rule) {
+	public synchronized void registerRule(Rule rule) {
 
 		if (!rule.hasPassiveFilter()) {
 			throw new IllegalStateException("FilterEngine needs a PassiveFilter.");
@@ -141,6 +141,17 @@ public class EsperFilterEngine implements PatternEngine {
 
 	}
 
+
+	@Override
+	public synchronized void removeRule(Rule rule) {
+		ILogicController controller = this.esperControllers.get(rule);
+		if (controller != null) {
+			controller.removeFromEngine();
+		}
+		
+		this.esperControllers.remove(rule);
+	}
+	
 	public void shutdown() {
 		logger.info("Shutting down EsperFilterEngine...");
 
@@ -154,6 +165,8 @@ public class EsperFilterEngine implements PatternEngine {
 			this.esperControllers.get(espc).removeFromEngine();
 		}
 	}
+
+
 
 
 

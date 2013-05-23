@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EML xmlns="http://www.opengis.net/eml/0.0.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.opengis.net/eml/0.0.1 3111_XSDeml0.0.1OGC-EML-0_0_1-eml.xsd">
+	<SimplePatterns>
+		<SimplePattern inputName="input"
+			patternID="Overshoot_Stream">
+			<SelectFunctions>
+				<SelectFunction createCausality="false"
+					newEventName="Overshoot_Event">
+					<SelectEvent eventName="input" />
+				</SelectFunction>
+			</SelectFunctions>
+			<View>
+				<LengthView>
+					<EventCount>1</EventCount>
+				</LengthView>
+			</View>
+			<Guard>
+				<fes:Filter xmlns:fes="http://www.opengis.net/fes/2.0">
+					<fes:PropertyIsGreaterThanOrEqualTo>
+						<fes:ValueReference>input/doubleValue</fes:ValueReference>
+						<ns:Literal xmlns:ns="http://www.opengis.net/fes/2.0">
+							<ns1:Quantity xmlns:ns1="http://www.opengis.net/swe/1.0.1">
+								<ns1:uom code="cm" />
+								<ns1:value>46000.0</ns1:value>
+							</ns1:Quantity>
+						</ns:Literal>
+					</fes:PropertyIsGreaterThanOrEqualTo>
+				</fes:Filter>
+			</Guard>
+			<PropertyRestrictions>
+				<PropertyRestriction>
+					<name>observedProperty</name>
+					<value>Wasserstand</value>
+				</PropertyRestriction>
+				<PropertyRestriction>
+					<name>sensorID</name>
+					<value>Wasserstand-List_Auf_Sylt_9570070</value>
+				</PropertyRestriction>
+			</PropertyRestrictions>
+		</SimplePattern>
+		<SimplePattern inputName="input"
+			patternID="Undershoot_Stream">
+			<SelectFunctions>
+				<SelectFunction createCausality="false"
+					newEventName="Undershoot_Event">
+					<SelectEvent eventName="input" />
+				</SelectFunction>
+			</SelectFunctions>
+			<View>
+				<LengthView>
+					<EventCount>1</EventCount>
+				</LengthView>
+			</View>
+			<Guard>
+				<fes:Filter xmlns:fes="http://www.opengis.net/fes/2.0">
+					<fes:PropertyIsLessThanOrEqualTo>
+						<fes:ValueReference>input/doubleValue</fes:ValueReference>
+						<ns:Literal xmlns:ns="http://www.opengis.net/fes/2.0">
+							<ns1:Quantity xmlns:ns1="http://www.opengis.net/swe/1.0.1">
+								<ns1:uom code="dm" />
+								<ns1:value>4600.0</ns1:value>
+							</ns1:Quantity>
+						</ns:Literal>
+					</fes:PropertyIsLessThanOrEqualTo>
+				</fes:Filter>
+			</Guard>
+			<PropertyRestrictions>
+				<PropertyRestriction>
+					<name>observedProperty</name>
+					<value>Wasserstand</value>
+				</PropertyRestriction>
+				<PropertyRestriction>
+					<name>sensorID</name>
+					<value>Wasserstand-List_Auf_Sylt_9570070</value>
+				</PropertyRestriction>
+			</PropertyRestrictions>
+		</SimplePattern>
+	</SimplePatterns>
+	<ComplexPatterns>
+		<!-- Einstiegsklausel -->
+		<ComplexPattern
+			patternID="Overshoot_External_Output">
+			<SelectFunctions>
+				<SelectFunction createCausality="true"
+					newEventName="Wasserstand_LIST_AUF_SYLT_over_undershoot_overshoot_notification"
+					outputName="Wasserstand_LIST_AUF_SYLT_over_undershoot_enter">
+					<NotifyOnSelect>
+						<Message>Einstiegsklausel</Message>
+					</NotifyOnSelect>
+				</SelectFunction>
+			</SelectFunctions>
+			<StructuralOperator>
+				<BEFORE />
+			</StructuralOperator>
+			<FirstPattern>
+				<PatternReference>Undershoot_Stream
+				</PatternReference>
+				<SelectFunctionNumber>0</SelectFunctionNumber>
+			</FirstPattern>
+			<SecondPattern>
+				<PatternReference>Overshoot_Stream
+				</PatternReference>
+				<SelectFunctionNumber>0</SelectFunctionNumber>
+			</SecondPattern>
+		</ComplexPattern>
+		<ComplexPattern
+			patternID="Undershoot_External_Output">
+			<SelectFunctions>
+				<SelectFunction createCausality="true"
+					newEventName="Wasserstand_LIST_AUF_SYLT_over_undershoot_undershoot_notification_stream"
+					outputName="Wasserstand_LIST_AUF_SYLT_over_undershoot_exit">
+					<NotifyOnSelect>
+						<Message>Ausstiegsklausel</Message>
+					</NotifyOnSelect>
+				</SelectFunction>
+			</SelectFunctions>
+			<StructuralOperator>
+				<BEFORE />
+			</StructuralOperator>
+			<FirstPattern>
+				<PatternReference>Overshoot_Stream
+				</PatternReference>
+				<SelectFunctionNumber>0</SelectFunctionNumber>
+			</FirstPattern>
+			<SecondPattern>
+				<PatternReference>Undershoot_Stream
+				</PatternReference>
+				<SelectFunctionNumber>0</SelectFunctionNumber>
+			</SecondPattern>
+		</ComplexPattern>
+	</ComplexPatterns>
+	<TimerPatterns />
+	<RepetitivePatterns />
+</EML>

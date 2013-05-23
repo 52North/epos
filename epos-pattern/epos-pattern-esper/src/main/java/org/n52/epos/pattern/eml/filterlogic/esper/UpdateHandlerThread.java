@@ -62,8 +62,6 @@ public class UpdateHandlerThread implements Runnable {
 	
 	private EventBean bean;
 	
-	private boolean doOutput;
-	
 	private StatementListener listener;
 	
 	
@@ -75,10 +73,9 @@ public class UpdateHandlerThread implements Runnable {
 	 * @param bean the received update
 	 */
 	public UpdateHandlerThread(StatementListener listener, EventBean bean) {
-		this.doOutput = listener.isDoOutput();
 		this.controller = listener.getController();
 		
-		this.eventPattern = listener.getStatement();
+		this.eventPattern = listener.getEventPattern();
 		this.bean = bean;
 		this.listener = listener;
 	}
@@ -132,12 +129,12 @@ public class UpdateHandlerThread implements Runnable {
 		
 		try {
 			//send event to esper engine for further processing
-			if (!this.eventPattern.createsNewInternalEvent()) {
+			if (this.eventPattern.createsNewInternalEvent()) {
 				this.controller.sendEvent(this.eventPattern.getNewEventName(), event);
 			}
 			
 			//if output=true send event to output
-			if (this.doOutput) {
+			if (this.eventPattern.createsFinalOutput()) {
 				if (logger.isDebugEnabled())
 					logger.debug("performing output for this match");
 				this.listener.doOutput(event);

@@ -3,10 +3,10 @@
 	xsi:schemaLocation="http://www.opengis.net/eml/0.0.1 3111_XSDeml0.0.1OGC-EML-0_0_1-eml.xsd">
 	<SimplePatterns>
 		<SimplePattern inputName="input"
-			patternID="Wasserstand_LIST_AUF_SYLT_over_undershoot_overshoot_stream">
+			patternID="Overshoot_Stream">
 			<SelectFunctions>
 				<SelectFunction createCausality="false"
-					newEventName="Wasserstand_LIST_AUF_SYLT_over_undershoot_overshoot">
+					newEventName="Overshoot_Event">
 					<SelectEvent eventName="input" />
 				</SelectFunction>
 			</SelectFunctions>
@@ -35,10 +35,10 @@
 			</PropertyRestrictions>
 		</SimplePattern>
 		<SimplePattern inputName="input"
-			patternID="Wasserstand_LIST_AUF_SYLT_over_undershoot_undershoot_stream">
+			patternID="Undershoot_Stream">
 			<SelectFunctions>
 				<SelectFunction createCausality="false"
-					newEventName="Wasserstand_LIST_AUF_SYLT_over_undershoot_undershoot">
+					newEventName="Undershoot_Event">
 					<SelectEvent eventName="input" />
 				</SelectFunction>
 			</SelectFunctions>
@@ -70,7 +70,7 @@
 	<ComplexPatterns>
 		<!-- Einstiegsklausel -->
 		<ComplexPattern
-			patternID="Wasserstand_LIST_AUF_SYLT_over_undershoot_overshoot_notification_stream">
+			patternID="Overshoot_External_Output">
 			<SelectFunctions>
 				<SelectFunction createCausality="true"
 					newEventName="Wasserstand_LIST_AUF_SYLT_over_undershoot_overshoot_notification"
@@ -84,18 +84,18 @@
 				<BEFORE />
 			</StructuralOperator>
 			<FirstPattern>
-				<PatternReference>Wasserstand_LIST_AUF_SYLT_over_undershoot_undershoot_stream
+				<PatternReference>Undershoot_Stream
 				</PatternReference>
 				<SelectFunctionNumber>0</SelectFunctionNumber>
 			</FirstPattern>
 			<SecondPattern>
-				<PatternReference>Wasserstand_LIST_AUF_SYLT_over_undershoot_overshoot_stream
+				<PatternReference>Overshoot_Stream
 				</PatternReference>
 				<SelectFunctionNumber>0</SelectFunctionNumber>
 			</SecondPattern>
 		</ComplexPattern>
 		<ComplexPattern
-			patternID="Wasserstand_LIST_AUF_SYLT_over_undershoot_undershoot_notification">
+			patternID="Undershoot_External_Output">
 			<SelectFunctions>
 				<SelectFunction createCausality="true"
 					newEventName="Wasserstand_LIST_AUF_SYLT_over_undershoot_undershoot_notification_stream"
@@ -109,12 +109,12 @@
 				<BEFORE />
 			</StructuralOperator>
 			<FirstPattern>
-				<PatternReference>Wasserstand_LIST_AUF_SYLT_over_undershoot_overshoot_stream
+				<PatternReference>Overshoot_Stream
 				</PatternReference>
 				<SelectFunctionNumber>0</SelectFunctionNumber>
 			</FirstPattern>
 			<SecondPattern>
-				<PatternReference>Wasserstand_LIST_AUF_SYLT_over_undershoot_undershoot_stream
+				<PatternReference>Undershoot_Stream
 				</PatternReference>
 				<SelectFunctionNumber>0</SelectFunctionNumber>
 			</SecondPattern>

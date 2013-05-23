@@ -357,8 +357,7 @@ public class EMLPatternFilter implements PatternFilter {
 
 	@Override
 	public CharSequence serialize() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.eml.xmlText();
 	}
 	
 	/**

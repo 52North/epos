@@ -121,6 +121,14 @@ public class EposEngine {
 	}
 
 	
+	public synchronized void unregisterRule(Rule rule) {
+		this.rules.remove(rule);
+		
+		if (rule.hasPassiveFilter() && this.patternEngine != null) {
+			this.patternEngine.removeRule(rule);
+		}
+	}
+	
 	/**
 	 * release all resources
 	 */
@@ -128,5 +136,5 @@ public class EposEngine {
 		if (this.patternEngine != null)
 			this.patternEngine.shutdown();
 	}
-	
+
 }

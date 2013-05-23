@@ -204,7 +204,8 @@ public class EsperController implements ILogicController {
 			sb.append("Statements:");
 
 			for (String key : this.listeners.keySet()) {
-				sb.append("\n\t" + key);
+				sb.append("\n\t" + this.listeners.get(key).getEventPattern().getID()
+						+": "+ key);
 			}
 
 			for (String key : this.countingListeners.keySet()) {

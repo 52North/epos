@@ -47,30 +47,77 @@ import org.slf4j.LoggerFactory;
 public class OvershootUndershootRuleIT {
 
 	private static final Logger logger = LoggerFactory.getLogger(OvershootUndershootRuleIT.class);
+	private static final long waitTime = 5000;
 	protected Object mutex = new Object();
 	protected EposEvent result;
-
 
 	@Test
 	public void shouldCompleteRoundtripForNotification() throws XmlException, IOException,
 			InterruptedException, PassiveFilterAlreadyPresentException, FilterInstantiationException, TransformationException {
 		RuleListener notificationReceiver = initializeConsumer();
 		
-		subscribe(notificationReceiver);
+		Rule rule = subscribe(notificationReceiver, "Overshoot_Rule1.xml");
 		
 		notification();
 		
 		synchronized (mutex) {
 			if (result == null) {
-				mutex.wait(5000);
+				mutex.wait(waitTime);
 			}	
 		}
-
+		
 		Assert.assertNotNull("Did not receive result back!", result);
 		logger.info("Received event back: {}", result);
+		
+		unsubscribe(rule);
+		
+		result = null;
+		notification();
+		
+		synchronized (mutex) {
+			if (result == null) {
+				mutex.wait(waitTime);
+			}	
+		}
+		
+		Assert.assertNull("Received a result. But the Rule should have been removed!", result);
 	}
 
+	private void unsubscribe(Rule rule) {
+		EposEngine.getInstance().unregisterRule(rule);
+	}
 
+	@Test
+	public void shouldCompleteRoundtripForNotificationWithUOM() throws XmlException, IOException,
+			InterruptedException, PassiveFilterAlreadyPresentException, FilterInstantiationException, TransformationException {
+		RuleListener notificationReceiver = initializeConsumer();
+		
+		Rule rule = subscribe(notificationReceiver, "Overshoot_Rule2.xml");
+		
+		notification();
+		
+		synchronized (mutex) {
+			if (result == null) {
+				mutex.wait(waitTime);
+			}	
+		}
+		
+		Assert.assertNotNull("Did not receive result back!", result);
+		logger.info("Received event back: {}", result);
+		
+		unsubscribe(rule);
+		
+		result = null;
+		notification();
+		
+		synchronized (mutex) {
+			if (result == null) {
+				mutex.wait(waitTime);
+			}	
+		}
+		
+		Assert.assertNull("Received a result. But the Rule should have been removed!", result);
+	}
 
 	private void notification() throws XmlException, TransformationException, IOException {
 		List<XmlObject> notis = readNotifications();
@@ -105,10 +152,10 @@ public class OvershootUndershootRuleIT {
 		};
 	}
 
-	private Rule subscribe(RuleListener notificationReceiver) throws PassiveFilterAlreadyPresentException, FilterInstantiationException, XmlException, IOException {
+	private Rule subscribe(RuleListener notificationReceiver, String file) throws PassiveFilterAlreadyPresentException, FilterInstantiationException, XmlException, IOException {
 		RuleInstance rule = new RuleInstance(notificationReceiver);
 		rule.setPassiveFilter((PassiveFilter)
-				FilterInstantiationRepository.Instance.instantiate(readSubscription()));
+				FilterInstantiationRepository.Instance.instantiate(readSubscription(file)));
 		EposEngine.getInstance().registerRule(rule);
 		return rule;
 	}
@@ -127,8 +174,8 @@ public class OvershootUndershootRuleIT {
 
 
 
-	public XmlObject readSubscription() throws XmlException, IOException {
-		return readXmlContent("Overshoot_Subscribe1.xml");
+	public XmlObject readSubscription(String file) throws XmlException, IOException {
+		return readXmlContent(file);
 	}
 
 

@@ -43,18 +43,16 @@ import com.espertech.esper.client.UpdateListener;
 import com.espertech.esper.client.EventBean;
 
 /**
- * listener for a single esper statement
+ * listener for a single esper pattern
  * 
  * @author Thomas Everding
  * 
  */
 public class StatementListener implements UpdateListener {
 
-	private EventPattern statement;
+	private EventPattern pattern;
 
 	private EsperController controller;
-
-	private boolean doOutput;
 
 	private Rule rule;
 
@@ -69,13 +67,13 @@ public class StatementListener implements UpdateListener {
 	 * 
 	 * Constructor
 	 * 
-	 * @param statement
+	 * @param pattern
 	 *            one {@link Statement}, used to configure this listener
 	 * @param controller
 	 *            the esper controller with the esper engine
 	 */
 	public StatementListener(EventPattern statement, EsperController controller) {
-		this.statement = statement;
+		this.pattern = statement;
 		this.controller = controller;
 
 		this.initialize();
@@ -85,8 +83,8 @@ public class StatementListener implements UpdateListener {
 	 * 
 	 * Constructor
 	 * 
-	 * @param statement
-	 *            statement one {@link Statement}, used to configure this
+	 * @param pattern
+	 *            pattern one {@link Statement}, used to configure this
 	 *            listener
 	 * @param controller
 	 *            the esper controller with the esper engine
@@ -106,8 +104,6 @@ public class StatementListener implements UpdateListener {
 		// set instance number
 		this.instanceNumber = instanceCount;
 		instanceCount++;
-
-		this.doOutput = this.statement.createsFinalOutput() || this.statement.createsNewInternalEvent();
 	}
 
 	@Override
@@ -183,14 +179,14 @@ public class StatementListener implements UpdateListener {
 	 */
 	public synchronized void doOutput(MapEposEvent resultEvent) {
 		if (logger.isDebugEnabled())
-			logger.debug("performing output for statement:\n"
-					+ this.statement);
+			logger.debug("performing output for pattern:\n"
+					+ this.pattern);
 
 		boolean sent = false;
 
 		// check if it is allowed to use the original message.
 		// check also if it is used for GENESIS
-		if (this.statement.usesOriginalEventAsOutput()) {
+		if (this.pattern.usesOriginalEventAsOutput()) {
 			// get original message
 			Object origMessage = resultEvent.getOriginalObject();
 			if (origMessage != null) {
@@ -237,10 +233,10 @@ public class StatementListener implements UpdateListener {
 	}
 
 	/**
-	 * @return the statement
+	 * @return the pattern
 	 */
-	public EventPattern getStatement() {
-		return this.statement;
+	public EventPattern getEventPattern() {
+		return this.pattern;
 	}
 
 	/**
@@ -248,13 +244,6 @@ public class StatementListener implements UpdateListener {
 	 */
 	public EsperController getController() {
 		return this.controller;
-	}
-
-	/**
-	 * @return the doOutput
-	 */
-	public boolean isDoOutput() {
-		return this.doOutput;
 	}
 
 	/**

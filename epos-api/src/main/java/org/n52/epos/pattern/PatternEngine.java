@@ -50,6 +50,15 @@ public interface PatternEngine {
 	 */
 	public void registerRule(Rule rule) throws NoPassiveFilterPresentException;
 
+
+	/**
+	 * An implementation shall remove the given rule.
+	 * It shall not be taken into consideration after this
+	 * method call.
+	 * 
+	 * @param rule the rule to be removed
+	 */
+	public void removeRule(Rule rule);
 	
 	/**
 	 * an implementation shall free all resources to avoid memory leaks.
