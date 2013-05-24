@@ -73,11 +73,8 @@
 			patternID="Overshoot_External_Output">
 			<SelectFunctions>
 				<SelectFunction createCausality="true"
-					newEventName="Wasserstand_LIST_AUF_SYLT_over_undershoot_overshoot_notification"
-					outputName="Wasserstand_LIST_AUF_SYLT_over_undershoot_enter">
-					<NotifyOnSelect>
-						<Message>Einstiegsklausel</Message>
-					</NotifyOnSelect>
+					newEventName="Overshoot_External_Output" outputName="Overshoot_External_Output_Exit">
+					<SelectEvent eventName="Overshoot_Event" />
 				</SelectFunction>
 			</SelectFunctions>
 			<StructuralOperator>
@@ -98,11 +95,8 @@
 			patternID="Undershoot_External_Output">
 			<SelectFunctions>
 				<SelectFunction createCausality="true"
-					newEventName="Wasserstand_LIST_AUF_SYLT_over_undershoot_undershoot_notification_stream"
-					outputName="Wasserstand_LIST_AUF_SYLT_over_undershoot_exit">
-					<NotifyOnSelect>
-						<Message>Ausstiegsklausel</Message>
-					</NotifyOnSelect>
+					newEventName="Undershoot_External_Output" outputName="Undershoot_External_Output_Exit">
+					<SelectEvent eventName="Undershoot_Event" />
 				</SelectFunction>
 			</SelectFunctions>
 			<StructuralOperator>

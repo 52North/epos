@@ -182,26 +182,19 @@ public class StatementListener implements UpdateListener {
 			logger.debug("performing output for pattern:\n"
 					+ this.pattern);
 
-		boolean sent = false;
-
 		// check if it is allowed to use the original message.
 		// check also if it is used for GENESIS
 		if (this.pattern.usesOriginalEventAsOutput()) {
 			// get original message
 			Object origMessage = resultEvent.getOriginalObject();
 			if (origMessage != null) {
-				try {
-					// get message and forward to SESSubscriptionManager
-					StatementListener.logger.info("sending original message");
-					this.rule.filter(resultEvent);
-					sent = true;
-				} catch (Throwable t) {
-					// any other exception occurred, sent is false -> do nothing
-				}
+				// get message and forward to SESSubscriptionManager
+				StatementListener.logger.info("sending original message");
+				this.rule.filter(resultEvent);
 			}
 		}
 
-		if (!sent) {
+		else {
 			XmlObject eventDoc = null;
 
 			// generate Event model
@@ -223,12 +216,6 @@ public class StatementListener implements UpdateListener {
 			}
 
 			this.rule.filter(resultEvent, eventDoc);
-		}
-
-		if (!sent) {
-			StatementListener.logger
-					.warn("An error occured while sending a NotificationMessage"
-							+ " with the SubscriptionManager. It was not sent.");
 		}
 	}
 

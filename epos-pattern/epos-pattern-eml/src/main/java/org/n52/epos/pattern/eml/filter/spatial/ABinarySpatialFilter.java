@@ -107,6 +107,7 @@ public abstract class ABinarySpatialFilter extends ASpatialFilter {
 		sb.append(MethodNames.SPATIAL_METHODS_PREFIX);
 		sb.append(methodName+ "(");
 		//create WKT from corners
+		//TODO actually resolve the property name from the ValueReference?!
 		sb.append(MapEposEvent.GEOMETRY_KEY );
 		sb.append(", ");
 		sb.append(MethodNames.SPATIAL_METHODS_PREFIX);

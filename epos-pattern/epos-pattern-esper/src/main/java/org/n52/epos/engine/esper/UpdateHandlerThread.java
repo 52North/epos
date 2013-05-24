@@ -119,8 +119,8 @@ public class UpdateHandlerThread implements Runnable {
 		 * add original message
 		 */
 		if (this.bean.getUnderlying() instanceof Map<?, ?>) {
-			Map<?, ?> alert = (Map<?, ?>) this.bean.getUnderlying();
-			Object message = alert.get(MapEposEvent.ORIGNIAL_OBJECT_KEY);
+			Map<?, ?> underlyingEvent = (Map<?, ?>) this.bean.getUnderlying();
+			Object message = resolveOriginalObject(underlyingEvent);
 			if (message != null) {
 				event.put(MapEposEvent.ORIGNIAL_OBJECT_KEY, message);
 			}
@@ -155,6 +155,29 @@ public class UpdateHandlerThread implements Runnable {
 			//forward exception
 			throw new RuntimeException(e);
 		}
+	}
+
+
+	private Object resolveOriginalObject(Map<?, ?> alert) {
+		Object result = alert.get(MapEposEvent.ORIGNIAL_OBJECT_KEY);
+		if (result != null)
+			return result;
+		
+		String[] potentialKeys = new String[] {MapEposEvent.VALUE_KEY};
+		
+		for (String string : potentialKeys) {
+			Object value = alert.get(string);
+			if (value != null && value instanceof MapEventBean) {
+				Object underlying = ((MapEventBean) value).getUnderlying();
+				if (underlying instanceof Map<?, ?>) {
+					result = ((Map<?, ?>) underlying).get(MapEposEvent.ORIGNIAL_OBJECT_KEY);
+				}
+			}
+			if (result != null) 
+				return result;
+		}
+		
+		return null;
 	}
 
 

@@ -48,7 +48,9 @@ public class RegisterRuleIT {
 	@Test
 	public void registerRule() throws XPathExpressionException {
 		EposEngine engine = EposEngine.getInstance();
-		engine.registerRule(createRule());
+		Rule rule = createRule();
+		engine.registerRule(rule);
+		engine.unregisterRule(rule);
 	}
 
 	private Rule createRule() throws XPathExpressionException {

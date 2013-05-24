@@ -357,7 +357,9 @@ public class EMLPatternFilter implements PatternFilter {
 
 	@Override
 	public CharSequence serialize() {
-		return this.eml.xmlText();
+		EMLDocument doc = EMLDocument.Factory.newInstance();
+		doc.setEML(this.eml);
+		return doc.xmlText();
 	}
 	
 	/**

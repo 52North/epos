@@ -30,20 +30,17 @@ import org.apache.xmlbeans.XmlException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.n52.epos.engine.EposEngine;
-import org.n52.epos.engine.rules.RuleInstance;
+import org.n52.epos.engine.filter.XPathFilter;
 import org.n52.epos.event.EposEvent;
 import org.n52.epos.rules.Rule;
-import org.n52.epos.rules.RuleListener;
 import org.n52.epos.test.EventFactory;
 import org.n52.epos.transform.TransformationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class XPathFilterIT {
+public class XPathFilterIT extends EventWorkflowBase {
 	
 	private static final Logger logger = LoggerFactory.getLogger(XPathFilterIT.class);
-	private Object mutex = new Object();
-	private EposEvent result;
 
 	@Test
 	public void eventShouldMatchXPathFilter()
@@ -54,39 +51,39 @@ public class XPathFilterIT {
 		EposEvent inputEvent = EventFactory.createOMEvent();
 		EposEngine.getInstance().filterEvent(inputEvent);
 		
-		synchronized (this.mutex) {
-			if (this.result == null) {
-				this.mutex.wait(5000);
-			}
-		}
+		EposEvent result = waitForFirstResult();
 		
-		Assert.assertNotNull("Did not receive expected Event back!", this.result);
-		logger.info("Received Event back: {}", this.result);
-		Assert.assertTrue("Received event is not the original one!", this.result == inputEvent);
+		EposEngine.getInstance().unregisterRule(rule);
+		
+		Assert.assertNotNull("Did not receive expected Event back!", result);
+		logger.info("Received Event back: {}", result);
+		Assert.assertTrue("Received event is not the original one!", result == inputEvent);
+	}
+	
+	@Test
+	public void eventShouldFailXPathFilter()
+			throws XPathExpressionException, XmlException,
+			IOException, TransformationException, InterruptedException {
+		Rule rule = createBasicRule();
+		XPathFilter xpath = FilterFactory.createXPathFilter();
+		rule.addActiveFilter(xpath);
+		xpath.setExpression("//om:observedProperty[@xlink:href='http://fail.to']");
+		EposEngine.getInstance().registerRule(rule);
+		EposEvent inputEvent = EventFactory.createOMEvent();
+		EposEngine.getInstance().filterEvent(inputEvent);
+		
+		EposEvent result = waitForFirstResult();
+		
+		EposEngine.getInstance().unregisterRule(rule);
+		
+		Assert.assertNull("Expected no result!", result);
 	}
 
 	private Rule createRule() throws XPathExpressionException {
-		Rule result = new RuleInstance(new TestRuleListener());
+		Rule result = createBasicRule();
 		result.addActiveFilter(FilterFactory.createXPathFilter());
 		return result;
 	}
 	
-	private class TestRuleListener implements RuleListener  {
-
-		@Override
-		public void onMatchingEvent(EposEvent event) {
-			onMatchingEvent(event, null);
-		}
-
-		@Override
-		public void onMatchingEvent(EposEvent event,
-				Object desiredOutputToConsumer) {
-			synchronized (mutex) {
-				result = event;
-				mutex.notifyAll();
-			}			
-		}
-		
-	}
 	
 }

@@ -53,18 +53,26 @@ public class XPathFilter implements ActiveFilter {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(XPathFilter.class);
-
 	private static XPathFactory factory = javax.xml.xpath.XPathFactory
 			.newInstance();
+	
 	private XPathExpression expression;
+	private XPath xpath;
 
 	public XPathFilter(String exp, Map<String, String> namespacePrefixes)
 			throws XPathExpressionException {
-		XPath xpath = factory.newXPath();
+		setNamespacePrefixes(namespacePrefixes);
+		setExpression(exp);
+	}
+
+	public void setExpression(String exp) throws XPathExpressionException {
+		expression = xpath.compile(exp);		
+	}
+
+	public void setNamespacePrefixes(Map<String, String> namespacePrefixes) {
+		xpath = factory.newXPath();
 		xpath.setNamespaceContext(createNamespaceContext(
 				xpath.getNamespaceContext(), namespacePrefixes));
-
-		expression = xpath.compile(exp);
 	}
 
 	/**

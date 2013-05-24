@@ -250,21 +250,11 @@ public class EventModelGenerator {
 						if (((MapEposEvent) object).containsKey(MapEposEvent.ORIGNIAL_OBJECT_KEY)) {
 							//TODO: seems kind of dirty, as this class should not know NotficiationMessage, but INotificationMessage
 							//XXX WTF, dude?!
-//							NotificationMessage notify = (NotificationMessage)
-//									((INotificationMessage)((MapEvent) object).get(MapEvent.ORIGNIAL_MESSAGE_KEY)).getNotificationMessage();
-//							
-//							Collection<?> contents = notify.getMessageContentNames();
-//							//TODO handle multiple contents
-//							if (contents.iterator().hasNext()) {
-//								try {
-//									XmlObject xobj = XmlObject.Factory.parse(notify.getMessageContent(
-//											(QName) contents.iterator().next()));
-//									eventRelation.addNewTarget().set(xobj);
-//								} catch (XmlException e) {
-//									logger.warn(e.getMessage(), e);
-//								}
-//							}
-
+							Object notify = ((MapEposEvent) object).get(MapEposEvent.ORIGNIAL_OBJECT_KEY);
+							
+							if (notify instanceof XmlObject) {
+								eventRelation.addNewTarget().set((XmlObject) notify);
+							}
 
 						}
 						/*

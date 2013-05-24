@@ -7,7 +7,7 @@
 			<gml:Polygon gml:id="aoi_01">
 				<gml:exterior>
 					<gml:LinearRing>
-						<gml:posList>58.0 3.0 40.0 3.0 40.0 -1.0 58.0 -1.0</gml:posList>
+						<gml:posList>58.0 3.0 40.0 3.0 40.0 -1.0 58.0 3.0</gml:posList>
 					</gml:LinearRing>
 				</gml:exterior>
 			</gml:Polygon>

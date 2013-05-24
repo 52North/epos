@@ -32,13 +32,9 @@ import org.n52.epos.pattern.eml.pattern.APattern;
 import org.n52.epos.pattern.eml.pattern.PatternComplex;
 import org.n52.epos.pattern.eml.pattern.PatternSimple;
 import org.n52.epos.pattern.eml.pattern.Statement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class EMLEventPattern implements EventPattern {
 
-	private static final Logger logger = LoggerFactory.getLogger(EMLEventPattern.class);
-	
 	private Statement statement;
 	private String id;
 	private String inputName;
@@ -172,11 +168,9 @@ public class EMLEventPattern implements EventPattern {
 		return this.getClass().getSimpleName() +": "+ this.getID();
 	}
 
-
 	@Override
 	public boolean createCausality() {
-		logger.warn("Event Causality is currently not supported!");
-		return false;
+		return this.statement.getSelectFunction().getCreateCausality();
 	}
 
 }

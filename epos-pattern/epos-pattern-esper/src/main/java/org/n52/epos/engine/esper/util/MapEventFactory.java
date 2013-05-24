@@ -23,11 +23,12 @@
 package org.n52.epos.engine.esper.util;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
 import org.n52.epos.event.MapEposEvent;
+
+import com.espertech.esper.event.map.MapEventBean;
 
 
 /**
@@ -102,12 +103,16 @@ public class MapEventFactory {
 			else if (key.equals(MapEposEvent.CAUSAL_ANCESTOR_1_KEY) || key.equals(MapEposEvent.CAUSAL_ANCESTOR_2_KEY)) {
 				if (createCausality) {
 					//add causal ancestors
-					if (map.get(key) instanceof HashMap<?, ?>) {
+					if (map.get(key) instanceof Map<?, ?>) {
 						MapEposEvent ancestorEvent = parseFromMap((Map<String, Object>) map.get(key), createCausality);
 						event.addCausalAncestor(ancestorEvent);
 					}
 					else if (map.get(key) instanceof MapEposEvent) {
 						event.addCausalAncestor((MapEposEvent) map.get(key));
+					}
+					else if (map.get(key) instanceof MapEventBean) {
+						MapEventBean ancestorBean = (MapEventBean) map.get(key);
+						event.addCausalAncestor(parseFromMap(ancestorBean.getProperties(), createCausality));
 					}
 				}
 			}
