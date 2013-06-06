@@ -20,7 +20,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.n52.epos.transform.xmlbeans;
+package org.n52.epos.transform.xmlbeans.om20;
+
+import java.util.ArrayList;
+import java.util.ServiceLoader;
 
 import net.opengis.gml.x32.AbstractTimeObjectType;
 import net.opengis.gml.x32.FeaturePropertyType;
@@ -28,11 +31,13 @@ import net.opengis.gml.x32.ReferenceType;
 import net.opengis.gml.x32.TimeInstantType;
 import net.opengis.gml.x32.TimePeriodType;
 import net.opengis.gml.x32.TimePositionType;
+import net.opengis.om.x20.NamedValuePropertyType;
 import net.opengis.om.x20.OMObservationDocument;
 import net.opengis.om.x20.OMObservationType;
 import net.opengis.om.x20.OMProcessPropertyType;
 import net.opengis.om.x20.TimeObjectPropertyType;
 
+import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.impl.values.XmlAnyTypeImpl;
 import org.joda.time.DateTime;
@@ -50,6 +55,16 @@ import org.n52.oxf.xmlbeans.tools.XmlUtil;
  */
 public class OM20Transformer implements EposTransformer {
 
+	private static ArrayList<NamedParameterParser> namedParametersParsers;
+
+	static {
+		namedParametersParsers = new ArrayList<NamedParameterParser>();
+		ServiceLoader<NamedParameterParser> loader = ServiceLoader.load(NamedParameterParser.class);
+		for (NamedParameterParser npp : loader) {
+			namedParametersParsers.add(npp);
+		}
+	}
+	
 	@Override
 	public EposEvent transform(Object input) throws TransformationException {
 		MapEposEvent result = null;
@@ -96,6 +111,8 @@ public class OM20Transformer implements EposTransformer {
 		
 		parseProcedure(obs.getProcedure(), result);
 		
+		parseParameters(obs.getParameterArray(), result);
+		
 		parseObservedProperty(obs.getObservedProperty(), result);
 		
 		parseFeatureOfInterest(obs.getFeatureOfInterest(), result);
@@ -103,6 +120,21 @@ public class OM20Transformer implements EposTransformer {
 		parseResult(obs.getResult(), result);
 		
 		return result;
+	}
+
+	private void parseParameters(NamedValuePropertyType[] parameterArray,
+			MapEposEvent result) {
+		for (NamedValuePropertyType namedValue : parameterArray) {
+			for (NamedParameterParser npp : namedParametersParsers) {
+				if (npp.supportsName(namedValue.getNamedValue().getName().getHref().trim())) {
+					XmlObject value = namedValue.getNamedValue().getValue();
+					XmlCursor cur = value.newCursor();
+					if (cur.toFirstChild()) {
+						npp.parseValue(cur.getObject(), result);
+					}
+				}
+			}
+		}
 	}
 
 	private void parseResult(XmlObject object, MapEposEvent result) {
