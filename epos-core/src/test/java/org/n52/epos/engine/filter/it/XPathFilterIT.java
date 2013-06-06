@@ -32,6 +32,7 @@ import org.junit.Test;
 import org.n52.epos.engine.EposEngine;
 import org.n52.epos.engine.filter.XPathFilter;
 import org.n52.epos.event.EposEvent;
+import org.n52.epos.filter.FilterInstantiationException;
 import org.n52.epos.rules.Rule;
 import org.n52.epos.test.EventFactory;
 import org.n52.epos.transform.TransformationException;
@@ -44,7 +45,7 @@ public class XPathFilterIT extends EventWorkflowBase {
 
 	@Test
 	public void eventShouldMatchXPathFilter()
-			throws XPathExpressionException, XmlException,
+			throws FilterInstantiationException, XmlException,
 			IOException, TransformationException, InterruptedException {
 		Rule rule = createRule();
 		EposEngine.getInstance().registerRule(rule);
@@ -62,8 +63,8 @@ public class XPathFilterIT extends EventWorkflowBase {
 	
 	@Test
 	public void eventShouldFailXPathFilter()
-			throws XPathExpressionException, XmlException,
-			IOException, TransformationException, InterruptedException {
+			throws FilterInstantiationException, XmlException,
+			IOException, TransformationException, InterruptedException, XPathExpressionException {
 		Rule rule = createBasicRule();
 		XPathFilter xpath = FilterFactory.createXPathFilter();
 		rule.addActiveFilter(xpath);
@@ -79,7 +80,7 @@ public class XPathFilterIT extends EventWorkflowBase {
 		Assert.assertNull("Expected no result!", result);
 	}
 
-	private Rule createRule() throws XPathExpressionException {
+	private Rule createRule() throws FilterInstantiationException {
 		Rule result = createBasicRule();
 		result.addActiveFilter(FilterFactory.createXPathFilter());
 		return result;

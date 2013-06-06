@@ -1,20 +1,31 @@
-<ns:OM_Observation ns1:id="o_1367225946546"
-	xmlns:ns="http://www.opengis.net/om/2.0" xmlns:ns1="http://www.opengis.net/gml/3.2">
-	<ns:type
+<om:OM_Observation gml:id="o_1367225946546"
+	xmlns:om="http://www.opengis.net/om/2.0" xmlns:gml="http://www.opengis.net/gml/3.2">
+	<om:type
 		xlin:href="http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement"
 		xmlns:xlin="http://www.w3.org/1999/xlink" />
-	<ns:phenomenonTime>
-		<ns1:TimeInstant ns1:id="phenomenonTime">
-			<ns1:timePosition>2013-07-31T17:45:15.000Z</ns1:timePosition>
-		</ns1:TimeInstant>
-	</ns:phenomenonTime>
-	<ns:resultTime xlin:href="#phenomenonTime" xmlns:xlin="http://www.w3.org/1999/xlink" />
-	<ns:procedure xlin:href="Wasserstand-List_Auf_Sylt_9570070"
+	<om:phenomenonTime>
+		<gml:TimeInstant gml:id="phenomenonTime">
+			<gml:timePosition>2013-07-31T17:45:15.000Z</gml:timePosition>
+		</gml:TimeInstant>
+	</om:phenomenonTime>
+	<om:resultTime xlin:href="#phenomenonTime" xmlns:xlin="http://www.w3.org/1999/xlink" />
+	<om:procedure xlin:href="Wasserstand-List_Auf_Sylt_9570070"
 		xmlns:xlin="http://www.w3.org/1999/xlink" />
-	<ns:observedProperty xlin:href="Wasserstand"
+	<om:parameter>
+		<om:NamedValue>
+			<om:name
+				xlin:href="http://www.opengis.net/def/param‐name/OGC‐OM/2.0/samplingGeometry"
+				xmlns:xlin="http://www.w3.org/1999/xlink" />
+			<om:value>
+				<gml:Point gml:id="SamplingPoint">
+					<gml:pos srsName="urn:ogc:def:crs:EPSG:4326">50.0 1.0</gml:pos>
+				</gml:Point>
+			</om:value>
+		</om:NamedValue>
+	</om:parameter>
+	<om:observedProperty xlin:href="Wasserstand"
 		xmlns:xlin="http://www.w3.org/1999/xlink" />
-	<ns:featureOfInterest xlin:href="#ssf_test_feature_7_3"
+	<om:featureOfInterest xlin:href="#ssf_test_feature_7_3"
 		xmlns:xlin="http://www.w3.org/1999/xlink" />
-	<ns2:result uom="test_unit_7_3"
-		xmlns:ns="http://www.opengis.net/gml/3.2" xmlns:ns2="http://www.opengis.net/om/2.0">450</ns2:result>
-</ns:OM_Observation>
+	<om:result uom="test_unit_7_3">450</om:result>
+</om:OM_Observation>

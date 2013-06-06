@@ -52,6 +52,7 @@ public class FESWithXPathIT extends EventWorkflowBase {
 				.instantiate(readXmlContent("FESFilter.xml")));
 
 		XPathFilter xpath = FilterFactory.createXPathFilter();
+		xpath.setExpression("//om:observedProperty[@xlink:href='Wasserstand']");
 		rule.addActiveFilter(xpath);
 
 		EposEngine.getInstance().registerRule(rule);
@@ -60,7 +61,10 @@ public class FESWithXPathIT extends EventWorkflowBase {
 
 		EposEvent result = waitForFirstResult();
 
-		Assert.assertTrue("Not the expected result!", result == inputs.get(0));
+		System.out.println(result);
+		
+		Assert.assertNotNull("No result received!", result);
+		Assert.assertTrue("Not the expected result!", result.getOriginalObject() == inputs.get(0).getOriginalObject());
 
 		EposEngine.getInstance().unregisterRule(rule);
 	}

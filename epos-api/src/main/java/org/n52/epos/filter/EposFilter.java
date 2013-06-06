@@ -31,4 +31,9 @@ package org.n52.epos.filter;
  */
 public interface EposFilter {
 
+	/**
+	 * @return create a serialized version of this pattern
+	 */
+	public CharSequence serialize();
+	
 }

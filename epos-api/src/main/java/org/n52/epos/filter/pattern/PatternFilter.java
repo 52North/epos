@@ -41,10 +41,6 @@ public interface PatternFilter extends PassiveFilter {
 	 */
 	public List<EventPattern> getPatterns();
 	
-	/**
-	 * @return create a serialized version of this pattern
-	 */
-	public CharSequence serialize();
 
 	/**
 	 * @return the input stream name that acts as the common

@@ -23,8 +23,6 @@
 package org.n52.epos.engine.filter.it;
 
 
-import javax.xml.xpath.XPathExpressionException;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -32,6 +30,7 @@ import org.mockito.MockitoAnnotations;
 import org.n52.epos.engine.EposEngine;
 import org.n52.epos.engine.rules.RuleInstance;
 import org.n52.epos.filter.ActiveFilter;
+import org.n52.epos.filter.FilterInstantiationException;
 import org.n52.epos.rules.Rule;
 import org.n52.epos.rules.RuleListener;
 
@@ -46,14 +45,14 @@ public class RegisterRuleIT {
 	}
 	
 	@Test
-	public void registerRule() throws XPathExpressionException {
+	public void registerRule() throws FilterInstantiationException {
 		EposEngine engine = EposEngine.getInstance();
 		Rule rule = createRule();
 		engine.registerRule(rule);
 		engine.unregisterRule(rule);
 	}
 
-	private Rule createRule() throws XPathExpressionException {
+	private Rule createRule() throws FilterInstantiationException {
 		ActiveFilter xpath = FilterFactory.createXPathFilter();
 		RuleInstance result = new RuleInstance(listener);
 		result.addActiveFilter(xpath);
