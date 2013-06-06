@@ -30,6 +30,7 @@ import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +38,12 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.n52.epos.event.EposEvent;
 import org.n52.epos.filter.ActiveFilter;
+import org.n52.epos.filter.EposFilter;
+import org.n52.epos.filter.FilterInstantiationException;
+import org.n52.epos.filter.FilterInstantiationRepository;
 import org.mockito.Mockito;
+
+import static org.hamcrest.CoreMatchers.*;
 
 public class XPathFilterTest {
 
@@ -50,14 +56,20 @@ public class XPathFilterTest {
 	}
 	
 	@Test
-	public void shouldPassXPathFilter() throws XmlException, IOException, XPathExpressionException {
+	public void shouldPassXPathFilter() throws XmlException, IOException, XPathExpressionException,
+				FilterInstantiationException {
 		Mockito.when(eventObject.getOriginalObject()).thenReturn(readXmlObject());
 		
 		Map<String,String> map = new HashMap<String, String>();
 		map.put("fes20", "http://www.opengis.net/fes/2.0");
-		ActiveFilter filter = new XPathFilter("//fes20:Literal", map);
+		XPathConfiguration conf = new XPathConfiguration("//fes20:Literal", map);
+		EposFilter filter = FilterInstantiationRepository.Instance.instantiate(conf);
 		
-		Assert.assertTrue("Filter did not match!", filter.matches(eventObject));
+		Assert.assertThat(filter, is(instanceOf(XPathFilter.class)));
+		
+		XPathFilter xpf = (XPathFilter) filter;
+		
+		Assert.assertTrue("Filter did not match!", xpf.matches(eventObject));
 	}
 	
 	@Test

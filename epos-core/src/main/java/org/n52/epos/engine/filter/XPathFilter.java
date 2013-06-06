@@ -185,4 +185,9 @@ public class XPathFilter implements ActiveFilter {
 
 	}
 
+	@Override
+	public CharSequence serialize() {
+		return this.expression.toString();
+	}
+
 }
