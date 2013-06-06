@@ -39,7 +39,8 @@ public class RuleInstance implements Rule {
 
 	private static final Logger logger = LoggerFactory.getLogger(RuleInstance.class);
 	
-	private List<EposFilter> filters = new ArrayList<EposFilter>();
+	private List<EposFilter> activeFilters = new ArrayList<EposFilter>();
+	private PassiveFilter passiveFilter;
 	private RuleListener listener;
 
 	public RuleInstance(RuleListener listener) {
@@ -48,7 +49,7 @@ public class RuleInstance implements Rule {
 	
 	@Override
 	public void addActiveFilter(ActiveFilter f) {
-		this.filters.add(f);
+		this.activeFilters.add(f);
 	}
 	
 	@Override
@@ -58,24 +59,16 @@ public class RuleInstance implements Rule {
 					"Only one PassiveFilter per RuleInstance instance allowed.");
 		}
 		
-		this.filters.add(f);
+		this.passiveFilter = f;
 	}
 	
 	@Override
 	public boolean hasPassiveFilter() {
-		return findPassiveFilter() != null;
-	}
-
-	private PassiveFilter findPassiveFilter() {
-		for (EposFilter ef : this.filters) {
-			if (ef instanceof PassiveFilter)
-				return (PassiveFilter) ef;
-		}
-		return null;
+		return this.passiveFilter != null;
 	}
 	
 	private void onAllFiltersMatch(EposEvent event, Object desiredOutputToConsumer) {
-		logger.debug("All filters matched. Calling listener.");
+		logger.debug("All activeFilters matched. Calling listener.");
 		this.listener.onMatchingEvent(event, desiredOutputToConsumer);
 	}
 
@@ -86,8 +79,8 @@ public class RuleInstance implements Rule {
 	
 	@Override
 	public void filter(EposEvent event, Object desiredOutputToConsumer) {
-		logger.debug("Received Event, evaluating filters...");
-		for (EposFilter filter : this.filters) {
+		logger.debug("Received Event, evaluating activeFilters...");
+		for (EposFilter filter : this.activeFilters) {
 			if (filter instanceof ActiveFilter) {
 				if (!((ActiveFilter) filter).matches(event)) {
 					logger.debug("Filter {} did not match, disregarding event.", filter);
@@ -101,12 +94,22 @@ public class RuleInstance implements Rule {
 
 	@Override
 	public PassiveFilter getPassiveFilter() {
-		return findPassiveFilter();
+		return this.passiveFilter;
 	}
 
 	@Override
 	public RuleListener getRuleListener() {
 		return this.listener;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[RuleInstance] ActiveFilters: ");
+		sb.append(this.activeFilters);
+		sb.append("; PassiveFilter: ");
+		sb.append(this.passiveFilter);
+		return sb.toString();
 	}
 	
 }

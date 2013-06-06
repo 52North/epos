@@ -22,27 +22,8 @@
  */
 package org.n52.epos.filter;
 
-/**
- * the super-interface of all filters
- * used in EPOS.
- * 
- * @author matthes rieke
- *
- */
-public interface EposFilter {
+public interface FilterSerialization {
+	
+	public CharSequence serializeFilter(EposFilter filter);
 
-	/**
-	 * @param serializer if not null, the filter shall use the
-	 * {@link FilterSerialization#serializeFilter(EposFilter)} method
-	 * to create the representation. Otherwise it shall return the same
-	 * value as {@link #serialize()}
-	 * @return create a serialized version of this pattern
-	 */
-	public CharSequence serialize(FilterSerialization serializer);
-	
-	/**
-	 * @return create a serialized version of this pattern
-	 */
-	public CharSequence serialize();
-	
 }

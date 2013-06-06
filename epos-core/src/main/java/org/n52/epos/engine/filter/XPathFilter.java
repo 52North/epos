@@ -38,6 +38,7 @@ import javax.xml.xpath.XPathFactory;
 import org.apache.xmlbeans.XmlObject;
 import org.n52.epos.event.EposEvent;
 import org.n52.epos.filter.ActiveFilter;
+import org.n52.epos.filter.FilterSerialization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -58,9 +59,13 @@ public class XPathFilter implements ActiveFilter {
 	
 	private XPathExpression expression;
 	private XPath xpath;
+	private String rawExpression;
+	private Map<String, String> namespaces;
 
 	public XPathFilter(String exp, Map<String, String> namespacePrefixes)
 			throws XPathExpressionException {
+		this.rawExpression = exp;
+		this.namespaces = namespacePrefixes;
 		setNamespacePrefixes(namespacePrefixes);
 		setExpression(exp);
 	}
@@ -73,6 +78,16 @@ public class XPathFilter implements ActiveFilter {
 		xpath = factory.newXPath();
 		xpath.setNamespaceContext(createNamespaceContext(
 				xpath.getNamespaceContext(), namespacePrefixes));
+	}
+	
+	
+
+	public String getRawExpression() {
+		return rawExpression;
+	}
+
+	public Map<String, String> getNamespaces() {
+		return namespaces;
 	}
 
 	/**
@@ -186,8 +201,15 @@ public class XPathFilter implements ActiveFilter {
 	}
 
 	@Override
-	public CharSequence serialize() {
+	public CharSequence serialize(FilterSerialization serializer) {
+		if (serializer != null) {
+			return serializer.serializeFilter(this);
+		}
 		return this.expression.toString();
+	}
+	
+	public CharSequence serialize() {
+		return serialize(new WSNXPathSerialization());
 	}
 
 }

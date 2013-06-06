@@ -118,6 +118,8 @@ public class EposEngine {
 				logger.warn(e.getMessage(), e);
 			}
 		}
+		
+		logger.debug("Added new Rule: {}", newRule);
 	}
 
 	
@@ -127,6 +129,8 @@ public class EposEngine {
 		if (rule.hasPassiveFilter() && this.patternEngine != null) {
 			this.patternEngine.removeRule(rule);
 		}
+		
+		logger.debug("Removed Rule: {}", rule);
 	}
 	
 	/**

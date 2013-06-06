@@ -92,6 +92,7 @@ public class EsperFilterEngine implements PatternEngine {
 
 
 	public void insertEvent(EposEvent message) {
+		logger.info("Inserting Event: {}", message);
 		if (message instanceof MapEposEvent) {
 			for (Rule rule : this.esperControllers.keySet()) {
 				ILogicController controller = this.esperControllers.get(rule);

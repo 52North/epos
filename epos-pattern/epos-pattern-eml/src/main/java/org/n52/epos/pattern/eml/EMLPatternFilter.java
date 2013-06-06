@@ -40,6 +40,7 @@ import org.apache.xmlbeans.XmlObject;
 import org.n52.epos.event.DataTypesMap;
 import org.n52.epos.event.EposEvent;
 import org.n52.epos.event.MapEposEvent;
+import org.n52.epos.filter.FilterSerialization;
 import org.n52.epos.filter.pattern.EventPattern;
 import org.n52.epos.filter.pattern.PatternFilter;
 import org.n52.epos.pattern.eml.pattern.APattern;
@@ -356,10 +357,17 @@ public class EMLPatternFilter implements PatternFilter {
 	}
 
 	@Override
-	public CharSequence serialize() {
+	public CharSequence serialize(FilterSerialization serializer) {
+		if (serializer != null) {
+			return serializer.serializeFilter(this);
+		}
 		EMLDocument doc = EMLDocument.Factory.newInstance();
 		doc.setEML(this.eml);
 		return doc.xmlText();
+	}
+	
+	public CharSequence serialize() {
+		return serialize(null);
 	}
 	
 	/**
