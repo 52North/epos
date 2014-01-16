@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.n52.epos.event.EposEvent;
+import org.n52.epos.pattern.CustomStatementEvent;
 import org.n52.epos.rules.Rule;
 
 /**
@@ -112,4 +113,8 @@ public interface EventPattern {
 	 * outside the underlying engine (see {@link #createsFinalOutput()}.
 	 */
 	public boolean usesOriginalEventAsOutput();
+
+	public boolean hasCustomStatementEvents();
+
+	public List<CustomStatementEvent> getCustomStatementEvents();
 }

@@ -23,7 +23,11 @@
 package org.n52.epos.pattern.eml.filter.spatial;
 
 
+import java.util.List;
+
+import org.n52.epos.pattern.CustomStatementEvent;
 import org.n52.epos.pattern.eml.filter.IFilterElement;
+
 
 
 /**
@@ -37,6 +41,10 @@ public abstract class ASpatialFilter implements IFilterElement {
 	 * Factory to build new comparison filters.
 	 */
 	public static final SpatialFilterFactory FACTORY = new SpatialFilterFactory();
-	
+
+	@Override
+	public List<CustomStatementEvent> getCustomStatementEvents() {
+		return null;
+	}
 
 }

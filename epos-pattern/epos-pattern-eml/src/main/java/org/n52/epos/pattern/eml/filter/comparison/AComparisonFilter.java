@@ -28,6 +28,9 @@
 
 package org.n52.epos.pattern.eml.filter.comparison;
 
+import java.util.List;
+
+import org.n52.epos.pattern.CustomStatementEvent;
 import org.n52.epos.pattern.eml.filter.IFilterElement;
 
 /**
@@ -36,7 +39,7 @@ import org.n52.epos.pattern.eml.filter.IFilterElement;
  * @author Thomas Everding
  *
  */
-public abstract class AComparisonFilter implements IFilterElement{
+public abstract class AComparisonFilter implements IFilterElement {
 	
 	/**
 	 * Factory to build new comparison filters.
@@ -52,5 +55,10 @@ public abstract class AComparisonFilter implements IFilterElement{
 	@Override
 	public void setUsedProperty(String nodeValue) {
 		this.usedProperty = nodeValue;
+	}
+	
+	@Override
+	public List<CustomStatementEvent> getCustomStatementEvents() {
+		return null;
 	}
 }

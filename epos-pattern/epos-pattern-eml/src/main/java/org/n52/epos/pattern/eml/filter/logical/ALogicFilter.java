@@ -27,6 +27,9 @@
 
 package org.n52.epos.pattern.eml.filter.logical;
 
+import java.util.List;
+
+import org.n52.epos.pattern.CustomStatementEvent;
 import org.n52.epos.pattern.eml.filter.IFilterElement;
 
 /**
@@ -50,5 +53,11 @@ public abstract class ALogicFilter implements IFilterElement {
 	@Override
 	public void setUsedProperty(String nodeValue) {
 		this.usedProperty = nodeValue;
+	}
+	
+
+	@Override
+	public List<CustomStatementEvent> getCustomStatementEvents() {
+		return null;
 	}
 }

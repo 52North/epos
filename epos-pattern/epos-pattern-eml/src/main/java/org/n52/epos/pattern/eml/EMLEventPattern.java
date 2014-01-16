@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.n52.epos.filter.pattern.EventPattern;
+import org.n52.epos.pattern.CustomStatementEvent;
 import org.n52.epos.pattern.eml.pattern.APattern;
 import org.n52.epos.pattern.eml.pattern.PatternComplex;
 import org.n52.epos.pattern.eml.pattern.PatternSimple;
@@ -171,6 +172,18 @@ public class EMLEventPattern implements EventPattern {
 	@Override
 	public boolean createCausality() {
 		return this.statement.getSelectFunction().getCreateCausality();
+	}
+
+
+	@Override
+	public boolean hasCustomStatementEvents() {
+		return this.statement.hasCustomStatementEvents();
+	}
+
+
+	@Override
+	public List<CustomStatementEvent> getCustomStatementEvents() {
+		return this.statement.getCustomStatementEvents();
 	}
 
 }

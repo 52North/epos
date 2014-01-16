@@ -27,6 +27,9 @@
 
 package org.n52.epos.pattern.eml.filter.expression;
 
+import java.util.List;
+
+import org.n52.epos.pattern.CustomStatementEvent;
 import org.n52.epos.pattern.eml.filter.IFilterElement;
 
 /**
@@ -60,5 +63,10 @@ public abstract class AFilterExpression implements IFilterElement{
 		this.usedProperty = usedProperty;
 	}
 
+
+	@Override
+	public List<CustomStatementEvent> getCustomStatementEvents() {
+		return null;
+	}
 
 }

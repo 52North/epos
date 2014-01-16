@@ -27,9 +27,17 @@
 
 package org.n52.epos.pattern.eml.filter;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.ServiceLoader;
+import java.util.Set;
 
+import org.n52.epos.pattern.CustomStatementEvent;
+import org.n52.epos.pattern.eml.Constants;
 import org.n52.epos.pattern.eml.filter.comparison.AComparisonFilter;
+import org.n52.epos.pattern.eml.filter.custom.CustomGuardFactory;
+import org.n52.epos.pattern.eml.filter.custom.CustomGuardFilter;
 import org.n52.epos.pattern.eml.filter.logical.ALogicFilter;
 import org.n52.epos.pattern.eml.filter.spatial.ASpatialFilter;
 import org.n52.epos.pattern.eml.filter.temporal.ATemporalFilter;
@@ -53,12 +61,24 @@ public class StatementFilter implements IFilterElement {
 	private static final Logger logger = LoggerFactory
 			.getLogger(StatementFilter.class);
 
+	private static ArrayList<CustomGuardFactory> customGuardFactories;
+
 	private IFilterElement child;
 
 	/**
 	 * the used property of this Filter
 	 */
 	protected String usedProperty = null;
+	
+	static {
+		ServiceLoader<CustomGuardFactory> loader = ServiceLoader.load(CustomGuardFactory.class);
+		
+		customGuardFactories = new ArrayList<CustomGuardFactory>();
+		
+		for (CustomGuardFactory customGuardFactory : loader) {
+			customGuardFactories.add(customGuardFactory);
+		}
+	}
 
 
 	/**
@@ -79,6 +99,10 @@ public class StatementFilter implements IFilterElement {
 	 *            Filter definition
 	 */
 	private void initialize(FilterType filter, HashSet<Object> propertyNames) {
+		this.child = findCustomGuardFilter(filter, propertyNames);
+		
+		if (this.child != null) return;
+		
 		if (filter.isSetLogicOps()) {
 			// parse logic operator
 			this.child = ALogicFilter.FACTORY.buildLogicFilter(filter
@@ -99,14 +123,39 @@ public class StatementFilter implements IFilterElement {
 		}
 	}
 
+	private IFilterElement findCustomGuardFilter(FilterType filter,
+			Set<Object> propertyNames) {
+		for (CustomGuardFactory cgf : customGuardFactories) {
+			if (cgf.supports(filter, propertyNames)) {
+				return cgf.createInstance(filter, propertyNames);
+			}
+		}
+		return null;
+	}
+
 	@Override
 	public String createExpressionString(boolean complexPatternGuard) {
-		return this.child.createExpressionString(complexPatternGuard);
+		StringBuilder sb = new StringBuilder();
+		sb.append(" ");
+		if (this.child instanceof CustomGuardFilter) {
+			CustomGuardFilter custom = (CustomGuardFilter) this.child;
+			sb.append(custom.getEPLClauseOperator());
+//		} else {
+//			sb.append(Constants.EPL_WHERE);
+		}
+		sb.append(" ");
+		sb.append(this.child.createExpressionString(complexPatternGuard));
+		return sb.toString();
 	}
 	
 	@Override
 	public void setUsedProperty(String nodeValue) {
 		this.usedProperty = nodeValue;
+	}
+
+	@Override
+	public List<CustomStatementEvent> getCustomStatementEvents() {
+		return this.child == null ? null : this.child.getCustomStatementEvents();
 	}
 
 }

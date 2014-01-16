@@ -22,6 +22,9 @@
  */
 package org.n52.epos.pattern.eml.filter.temporal;
 
+import java.util.Collections;
+import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import net.opengis.fes.x20.BinaryTemporalOpType;
@@ -30,6 +33,7 @@ import net.opengis.fes.x20.TemporalOpsType;
 import org.apache.xmlbeans.XmlObject;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
+import org.n52.epos.pattern.CustomStatementEvent;
 import org.n52.epos.pattern.eml.filter.IFilterElement;
 import org.n52.oxf.xmlbeans.tools.XmlUtil;
 import org.w3c.dom.Node;
@@ -265,4 +269,9 @@ public abstract class ATemporalFilter implements IFilterElement {
 		return null;
 	}
 
+	@Override
+	public List<CustomStatementEvent> getCustomStatementEvents() {
+		return Collections.emptyList();
+	}	
+	
 }

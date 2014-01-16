@@ -22,6 +22,7 @@
  */
 package org.n52.epos.pattern.eml.filter.temporal;
 
+
 import net.opengis.fes.x20.TemporalOpsType;
 
 import org.apache.xmlbeans.XmlObject;
@@ -79,5 +80,6 @@ public class AfterFilter extends ATemporalFilter {
 	public void setUsedProperty(String nodeValue) {
 		/*empty*/
 	}
+
 
 }

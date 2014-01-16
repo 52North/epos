@@ -490,7 +490,7 @@ public class EMLParser {
 		
 		//set output name
 		if (selectFunction.isSetOutputName()) {
-			result.setOutputName(selectFunction.getOutputName().toString());
+			result.setOutputName(selectFunction.getOutputName().trim());
 		}
 		
 		//set create causality

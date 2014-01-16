@@ -27,6 +27,11 @@
 
 package org.n52.epos.pattern.eml.filter;
 
+import java.util.List;
+
+import org.n52.epos.pattern.CustomStatementEvent;
+
+
 /**
  * Standard methods for all filter elements
  * 
@@ -49,5 +54,10 @@ public interface IFilterElement {
 	 * 
 	 * @param nodeValue the property name
 	 */
-	public void setUsedProperty(String nodeValue);	
+	public void setUsedProperty(String nodeValue);
+
+	/**
+	 * @return a list of custom events to be triggered when this filter element finds a match
+	 */
+	List<CustomStatementEvent> getCustomStatementEvents();	
 }

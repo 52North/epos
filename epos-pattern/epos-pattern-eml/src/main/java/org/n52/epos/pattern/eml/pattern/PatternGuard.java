@@ -28,9 +28,11 @@
 package org.n52.epos.pattern.eml.pattern;
 
 import java.util.HashSet;
+import java.util.List;
 
 import net.opengis.fes.x20.FilterType;
 
+import org.n52.epos.pattern.CustomStatementEvent;
 import org.n52.epos.pattern.eml.Constants;
 import org.n52.epos.pattern.eml.filter.StatementFilter;
 
@@ -97,9 +99,13 @@ public class PatternGuard {
 //			this.statement += "(" + MethodNames.PROPERTY_EXISTS_NAME + "("+ usedEvent +"this, \"" + usedField + "\")) AND "; 
 //		
 //		}
-		this.statement += this.filter.createExpressionString(complexPatternGuard);
 		
-		return this.statement;
+		return this.statement.concat(this.filter.createExpressionString(complexPatternGuard));
+	}
+
+
+	public List<CustomStatementEvent> getCustomStatementEvents() {
+		return this.filter.getCustomStatementEvents();
 	}
 
 
