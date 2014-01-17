@@ -102,12 +102,13 @@ public interface TransformationRepository<O> {
 		 * @return the transformed object as a type of outputClass
 		 * @throws Exception if no matching transformer is available
 		 */
-		public static Object transform(Object input, Class<?> outputClass)
+		public static <T> T transform(Object input, Class<? extends T> outputClass)
 				throws TransformationException {
 			List<TransformationRepository<?>> repos = getRepositories(outputClass);
 			for (TransformationRepository<?> t : repos) {
 				if (t.supportsInput(input)) {
-					return t.transform(input);
+					Object result = t.transform(input);
+					return (T) result;
 				}
 
 			}

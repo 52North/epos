@@ -124,5 +124,10 @@ public class EventWorkflowBase {
 			}
 		}
 
+		@Override
+		public Object getEndpointReference() {
+			return null;
+		}
+
 	}
 }

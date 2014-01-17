@@ -83,8 +83,8 @@ public class PatternGuard {
 //		}
 		
 		//create statement for simple patterns
-		this.statement = Constants.EPL_WHERE
-						 + " ";
+//		this.statement = Constants.EPL_WHERE
+//						 + " ";
 		
 //		if (propertyName != null) {
 //			String usedEvent = "";

@@ -46,5 +46,7 @@ public interface RuleListener {
 	 * to the final consumer
 	 */
 	public void onMatchingEvent(EposEvent event, Object desiredOutputToConsumer);
+
+	public Object getEndpointReference();
 	
 }

@@ -145,9 +145,13 @@ public class EMLPatternFilter implements PatternFilter {
 		List<String> candidates = new ArrayList<String>();
 		for (EventPattern ep : this.eventPatterns) {
 			if (ep.getInputName() != null) {
-				if (!candidates.contains(ep.getInputName())) {
-					candidates.add(ep.getInputName());
+				if (candidates.contains(ep.getInputName())) {
+					/*
+					 * we want to preserve the original order
+					 */
+					candidates.remove(ep.getInputName());
 				}
+				candidates.add(ep.getInputName());
 			}
 		}
 		
@@ -157,10 +161,10 @@ public class EMLPatternFilter implements PatternFilter {
 		
 		if (candidates.size() > 1) {
 			logger.warn("Multiple input streams found. Only streams with inputName = '{}' will receive events.",
-					candidates.get(0));
+					candidates.get(candidates.size()-1));
 		}
 		
-		return candidates.get(0);
+		return candidates.get(candidates.size()-1);
 	}
 
 	private void registerEventInputProperties(String inputName,

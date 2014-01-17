@@ -136,7 +136,7 @@ public class UpdateHandlerThread implements Runnable {
 			//if output=true send event to output
 			if (this.eventPattern.createsFinalOutput()) {
 				if (logger.isDebugEnabled())
-					logger.debug("performing output for this match");
+					logger.debug("performing output for statement: {}", this.eventPattern.createStringRepresentation());
 				this.listener.doOutput(event);
 			}
 		}

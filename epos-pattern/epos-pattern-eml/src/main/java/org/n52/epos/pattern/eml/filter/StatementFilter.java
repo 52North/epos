@@ -140,8 +140,8 @@ public class StatementFilter implements IFilterElement {
 		if (this.child instanceof CustomGuardFilter) {
 			CustomGuardFilter custom = (CustomGuardFilter) this.child;
 			sb.append(custom.getEPLClauseOperator());
-//		} else {
-//			sb.append(Constants.EPL_WHERE);
+		} else {
+			sb.append(Constants.EPL_WHERE);
 		}
 		sb.append(" ");
 		sb.append(this.child.createExpressionString(complexPatternGuard));
