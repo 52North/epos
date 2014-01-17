@@ -69,7 +69,16 @@ public class RuleInstance implements Rule {
 	
 	private void onAllFiltersMatch(EposEvent event, Object desiredOutputToConsumer) {
 		logger.debug("All activeFilters matched. Calling listener.");
-		this.listener.onMatchingEvent(event, desiredOutputToConsumer);
+		
+		Object output = null;
+		if (desiredOutputToConsumer == null) {
+			output = event.getOriginalObject();
+		}
+		else {
+			output = desiredOutputToConsumer;
+		}
+		
+		this.listener.onMatchingEvent(event, output);
 	}
 
 	@Override
