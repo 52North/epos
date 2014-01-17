@@ -26,11 +26,15 @@ import java.util.HashSet;
 import java.util.ServiceLoader;
 import java.util.Set;
 
+import org.joda.time.DateTime;
 import org.n52.epos.event.EposEvent;
+import org.n52.epos.event.MapEposEvent;
 import org.n52.epos.transform.EposTransformer;
 import org.n52.epos.transform.MessageTransformer;
 import org.n52.epos.transform.TransformationException;
 import org.n52.epos.transform.TransformationRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class holds all ({@link ServiceLoader}-registered)
@@ -40,6 +44,7 @@ import org.n52.epos.transform.TransformationRepository;
  */
 public class TransformationToEposEventRepository implements TransformationRepository<EposEvent> {
 	
+	private static final Logger logger = LoggerFactory.getLogger(TransformationToEposEventRepository.class);
 	private Set<EposTransformer> transformers = new HashSet<EposTransformer>();
 	
 	public TransformationToEposEventRepository() {
@@ -54,7 +59,18 @@ public class TransformationToEposEventRepository implements TransformationReposi
 	public EposEvent transform(Object input) throws TransformationException {
 		MessageTransformer<EposEvent> trans = findTransformers(input);
 		
-		return trans.transform(input);
+		EposEvent result = trans.transform(input);
+		
+		if (result == null) {
+			logger.warn("The resolved transformer ({}) was not able to create an event. Trying to at least provide "
+					+ "the original object", trans);
+			
+			DateTime now = new DateTime();
+			result = new MapEposEvent(now.getMillis(), now.getMillis());
+			result.setValue(MapEposEvent.ORIGNIAL_OBJECT_KEY, input);
+		}
+		
+		return result;
 	}
 	
 	private MessageTransformer<EposEvent> findTransformers(Object input) throws TransformationException {

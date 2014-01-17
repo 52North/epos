@@ -137,7 +137,9 @@ public class AIXMParser implements EposTransformer {
 
 	@Override
 	public EposEvent transform(Object message) {
-		return parseAIXM((XmlObject) message).get(0);
+		List<MapEposEvent> result = parseAIXM((XmlObject) message);
+				
+		return (result != null && result.size() > 0) ? result.get(0) : null;
 	}
 
 	/**
