@@ -27,8 +27,8 @@ The stream processing and pattern matching features are heavily based on
 
 EPOS provides two interfaces which allow easy extension of the framework
 
- 1 org.n52.epos.transform.EposTransformer
- 1 org.n52.epos.filter.FilterInstantiationRepository
+ * org.n52.epos.transform.EposTransformer
+ * org.n52.epos.filter.FilterInstantiationRepository
  
 The `EposTransformer` interface provides methods for transformation of
 every kind of input into an EposEvent instance. A realization shall
