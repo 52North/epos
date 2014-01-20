@@ -1,4 +1,4 @@
-# 52°North EPOS
+# 52°North EPOS [![Build Status](https://travis-ci.org/52North/epos.png?branch=master)](https://travis-ci.org/52North/epos)
 
 EPOS provides event stream processing components using a powerful and
 extensible encoding/decoding architecture.
