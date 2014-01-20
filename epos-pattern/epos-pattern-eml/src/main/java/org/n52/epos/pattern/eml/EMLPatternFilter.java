@@ -8,17 +8,18 @@
  * 48155 Muenster, Germany
  * info@52north.org
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This program is free software; you can redistribute and/or modify it under
+ * the terms of the GNU General Public License version 2 as published by the
+ * Free Software Foundation.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed WITHOUT ANY WARRANTY; even without the implied
+ * WARRANTY OF MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * You should have received a copy of the GNU General Public License along with
+ * this program (see gnu-gpl v2.txt). If not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA or
+ * visit the Free Software Foundation web page, http://www.fsf.org.
  */
 package org.n52.epos.pattern.eml;
 
@@ -145,9 +146,13 @@ public class EMLPatternFilter implements PatternFilter {
 		List<String> candidates = new ArrayList<String>();
 		for (EventPattern ep : this.eventPatterns) {
 			if (ep.getInputName() != null) {
-				if (!candidates.contains(ep.getInputName())) {
-					candidates.add(ep.getInputName());
+				if (candidates.contains(ep.getInputName())) {
+					/*
+					 * we want to preserve the original order
+					 */
+					candidates.remove(ep.getInputName());
 				}
+				candidates.add(ep.getInputName());
 			}
 		}
 		
@@ -157,10 +162,10 @@ public class EMLPatternFilter implements PatternFilter {
 		
 		if (candidates.size() > 1) {
 			logger.warn("Multiple input streams found. Only streams with inputName = '{}' will receive events.",
-					candidates.get(0));
+					candidates.get(candidates.size()-1));
 		}
 		
-		return candidates.get(0);
+		return candidates.get(candidates.size()-1);
 	}
 
 	private void registerEventInputProperties(String inputName,

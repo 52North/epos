@@ -39,6 +39,21 @@
 			<version>1.1.4</version>
 		</dependency>
 		<dependency>
+			<groupId>org.n52.sensorweb</groupId>
+			<artifactId>52n-xml-om-v100</artifactId>
+			<version>1.1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.n52.sensorweb</groupId>
+			<artifactId>52n-xml-sampling-v100</artifactId>
+			<version>1.1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.n52.sensorweb</groupId>
+			<artifactId>52n-xml-aixm-v511</artifactId>
+			<version>1.1.4</version>
+		</dependency>
+		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
 		</dependency>

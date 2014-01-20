@@ -8,17 +8,18 @@
  * 48155 Muenster, Germany
  * info@52north.org
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This program is free software; you can redistribute and/or modify it under
+ * the terms of the GNU General Public License version 2 as published by the
+ * Free Software Foundation.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed WITHOUT ANY WARRANTY; even without the implied
+ * WARRANTY OF MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * You should have received a copy of the GNU General Public License along with
+ * this program (see gnu-gpl v2.txt). If not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA or
+ * visit the Free Software Foundation web page, http://www.fsf.org.
  */
 /**
  * Part of the diploma thesis of Thomas Everding.
@@ -27,9 +28,17 @@
 
 package org.n52.epos.pattern.eml.filter;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.ServiceLoader;
+import java.util.Set;
 
+import org.n52.epos.pattern.CustomStatementEvent;
+import org.n52.epos.pattern.eml.Constants;
 import org.n52.epos.pattern.eml.filter.comparison.AComparisonFilter;
+import org.n52.epos.pattern.eml.filter.custom.CustomGuardFactory;
+import org.n52.epos.pattern.eml.filter.custom.CustomGuardFilter;
 import org.n52.epos.pattern.eml.filter.logical.ALogicFilter;
 import org.n52.epos.pattern.eml.filter.spatial.ASpatialFilter;
 import org.n52.epos.pattern.eml.filter.temporal.ATemporalFilter;
@@ -53,12 +62,24 @@ public class StatementFilter implements IFilterElement {
 	private static final Logger logger = LoggerFactory
 			.getLogger(StatementFilter.class);
 
+	private static ArrayList<CustomGuardFactory> customGuardFactories;
+
 	private IFilterElement child;
 
 	/**
 	 * the used property of this Filter
 	 */
 	protected String usedProperty = null;
+	
+	static {
+		ServiceLoader<CustomGuardFactory> loader = ServiceLoader.load(CustomGuardFactory.class);
+		
+		customGuardFactories = new ArrayList<CustomGuardFactory>();
+		
+		for (CustomGuardFactory customGuardFactory : loader) {
+			customGuardFactories.add(customGuardFactory);
+		}
+	}
 
 
 	/**
@@ -79,6 +100,10 @@ public class StatementFilter implements IFilterElement {
 	 *            Filter definition
 	 */
 	private void initialize(FilterType filter, HashSet<Object> propertyNames) {
+		this.child = findCustomGuardFilter(filter, propertyNames);
+		
+		if (this.child != null) return;
+		
 		if (filter.isSetLogicOps()) {
 			// parse logic operator
 			this.child = ALogicFilter.FACTORY.buildLogicFilter(filter
@@ -99,14 +124,39 @@ public class StatementFilter implements IFilterElement {
 		}
 	}
 
+	private IFilterElement findCustomGuardFilter(FilterType filter,
+			Set<Object> propertyNames) {
+		for (CustomGuardFactory cgf : customGuardFactories) {
+			if (cgf.supports(filter, propertyNames)) {
+				return cgf.createInstance(filter, propertyNames);
+			}
+		}
+		return null;
+	}
+
 	@Override
 	public String createExpressionString(boolean complexPatternGuard) {
-		return this.child.createExpressionString(complexPatternGuard);
+		StringBuilder sb = new StringBuilder();
+		sb.append(" ");
+		if (this.child instanceof CustomGuardFilter) {
+			CustomGuardFilter custom = (CustomGuardFilter) this.child;
+			sb.append(custom.getEPLClauseOperator());
+		} else {
+			sb.append(Constants.EPL_WHERE);
+		}
+		sb.append(" ");
+		sb.append(this.child.createExpressionString(complexPatternGuard));
+		return sb.toString();
 	}
 	
 	@Override
 	public void setUsedProperty(String nodeValue) {
 		this.usedProperty = nodeValue;
+	}
+
+	@Override
+	public List<CustomStatementEvent> getCustomStatementEvents() {
+		return this.child == null ? null : this.child.getCustomStatementEvents();
 	}
 
 }

@@ -8,17 +8,18 @@
  * 48155 Muenster, Germany
  * info@52north.org
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This program is free software; you can redistribute and/or modify it under
+ * the terms of the GNU General Public License version 2 as published by the
+ * Free Software Foundation.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed WITHOUT ANY WARRANTY; even without the implied
+ * WARRANTY OF MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * You should have received a copy of the GNU General Public License along with
+ * this program (see gnu-gpl v2.txt). If not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA or
+ * visit the Free Software Foundation web page, http://www.fsf.org.
  */
 /**
  * Part of the diploma thesis of Thomas Everding.
@@ -30,6 +31,7 @@ package org.n52.epos.engine.esper;
 
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
+import org.n52.epos.pattern.CustomStatementEvent;
 import org.n52.epos.engine.esper.concurrent.ThreadPool;
 import org.n52.epos.engine.esper.util.EventModelGenerator;
 import org.n52.epos.event.MapEposEvent;
@@ -113,9 +115,15 @@ public class StatementListener implements UpdateListener {
 		 * 
 		 * handle every match
 		 */
-		if (newEvents != null) {
+		if (newEvents != null && newEvents.length > 0) {
 			for (EventBean newEvent : newEvents) {
 				this.handleMatch(newEvent);
+			}
+			
+			if (this.pattern.hasCustomStatementEvents()) {
+				for (CustomStatementEvent cse : this.pattern.getCustomStatementEvents()) {
+					cse.eventFired(newEvents, this.rule);
+				}
 			}
 		}
 	}
@@ -127,50 +135,54 @@ public class StatementListener implements UpdateListener {
 	 *            the EventBean representing the match
 	 */
 	protected synchronized void handleMatch(EventBean newEvent) {
+		
+		logger.debug("Statement {} matched for Event '{}'",
+				this.pattern, newEvent.getUnderlying().toString());
+		
 		UpdateHandlerThread handler = new UpdateHandlerThread(this, newEvent);
-
-		// handle match in its own thread using a ThreadPool
+		
+		//handle match in its own thread using a ThreadPool
 		ThreadPool tp = ThreadPool.getInstance();
 		tp.execute(handler);
 	}
-
-	// /**
-	// * Sends the received result to the controller for output
-	// *
-	// * @param resultEvent the result to send
-	// */
-	// public synchronized void doOutput(MapEvent resultEvent) {
-	// String outputName = this.statement.getSelectFunction().getOutputName();
-	//
-	// //load output description
-	// if (this.outDescription == null) {
-	// if (this.getOutDescriptionPerformed) {
-	// //output description not found
-	// return;
-	// }
-	//
-	// //try to find output description
-	// this.outDescription = this.controller.getOutputDescription(outputName);
-	// this.getOutDescriptionPerformed = true;
-	//
-	// if (this.outDescription == null) {
-	// //not found
-	// return;
-	// }
-	// }
-	//
-	// //send output (the whole event or only the value)
-	// if (this.outDescription.getDataType().equals(SupportedDataTypes.EVENT)) {
-	// //send event
-	// this.controller.doOutput(outputName, resultEvent);
-	// }
-	// else {
-	// //send only value
-	// this.controller.doOutput(outputName,
-	// resultEvent.get(MapEvent.VALUE_KEY));
-	// }
-	// }
-
+	
+	
+//	/**
+//	 * Sends the received result to the controller for output
+//	 * 
+//	 * @param resultEvent the result to send
+//	 */
+//	public synchronized void doOutput(MapEvent resultEvent) {
+//		String outputName = this.statement.getSelectFunction().getOutputName();
+//		
+//		//load output description
+//		if (this.outDescription == null) {
+//			if (this.getOutDescriptionPerformed) {
+//				//output description not found
+//				return;
+//			}
+//			
+//			//try to find output description
+//			this.outDescription = this.controller.getOutputDescription(outputName);
+//			this.getOutDescriptionPerformed = true;
+//			
+//			if (this.outDescription == null) {
+//				//not found
+//				return;
+//			}
+//		}
+//		
+//		//send output (the whole event or only the value)
+//		if (this.outDescription.getDataType().equals(SupportedDataTypes.EVENT)) {
+//			//send event
+//			this.controller.doOutput(outputName, resultEvent);
+//		}
+//		else {
+//			//send only value
+//			this.controller.doOutput(outputName, resultEvent.get(MapEvent.VALUE_KEY));
+//		}
+//	}
+	
 	/**
 	 * Sends the received result to the controller for output
 	 * 
@@ -185,12 +197,16 @@ public class StatementListener implements UpdateListener {
 		// check if it is allowed to use the original message.
 		// check also if it is used for GENESIS
 		if (this.pattern.usesOriginalEventAsOutput()) {
+			StatementListener.logger.info("trying to send original message as output");
 			// get original message
 			Object origMessage = resultEvent.getOriginalObject();
 			if (origMessage != null) {
 				// get message and forward to SESSubscriptionManager
 				StatementListener.logger.info("sending original message");
 				this.rule.filter(resultEvent);
+			}
+			else {
+				logger.warn("Event did not contain the original message!");
 			}
 		}
 
@@ -214,6 +230,8 @@ public class StatementListener implements UpdateListener {
 			if (eventDoc == null) {
 				eventDoc = eventGen.generateEventDocument();
 			}
+			
+			resultEvent.setOriginalObject(eventDoc);
 
 			this.rule.filter(resultEvent, eventDoc);
 		}

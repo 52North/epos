@@ -8,17 +8,18 @@
  * 48155 Muenster, Germany
  * info@52north.org
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This program is free software; you can redistribute and/or modify it under
+ * the terms of the GNU General Public License version 2 as published by the
+ * Free Software Foundation.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed WITHOUT ANY WARRANTY; even without the implied
+ * WARRANTY OF MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * You should have received a copy of the GNU General Public License along with
+ * this program (see gnu-gpl v2.txt). If not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA or
+ * visit the Free Software Foundation web page, http://www.fsf.org.
  */
 /**
  * Part of the diploma thesis of Thomas Everding.
@@ -115,6 +116,7 @@ public class PatternSimple extends AGuardedViewPattern {
 		 * one statement per select function is built
 		 */
 
+		Statement[] result;
 		if (this.selectFunctions.size() <= 0) {
 			//no select function specified
 			String statement = Constants.EPL_SELECT 
@@ -132,43 +134,53 @@ public class PatternSimple extends AGuardedViewPattern {
 			
 			s.setSelectFunction(sel);
 			
-			return new Statement[] { s };
+			result = new Statement[] { s };
+		}
+		else {
+			this.statements = new Statement[this.selectFunctions.size()];
+			
+			//get from and where clause first, they do not change
+			String fromClause = this.createFromClause();
+			String whereClause = this.createWhereClause(false);
+			
+			//get insert and select clause for every select function
+			String statement;
+			Statement s;
+			SelFunction sel;
+			for (int i = 0; i < this.statements.length; i++) {
+				sel = this.selectFunctions.get(i);
+				
+				//			//insert into
+				//			statement = this.createInsertClause(sel);
+				
+				//select
+				statement = this.createSelectClause(sel);
+				
+				//from
+				statement += " " + fromClause;
+				
+				//where
+				statement += " " + whereClause;
+				
+				//add to list
+				s = new Statement();
+				s.setSelectFunction(sel);
+				s.setStatement(statement);
+				s.setView(this.view);
+				this.statements[i] = s;
+			}
+			
+			result = this.statements;
 		}
 		
-		this.statements = new Statement[this.selectFunctions.size()];
-		
-		//get from and where clause first, they do not change
-		String fromClause = this.createFromClause();
-		String whereClause = this.createWhereClause(false);
-		
-		//get insert and select clause for every select function
-		String statement;
-		Statement s;
-		SelFunction sel;
-		for (int i = 0; i < this.statements.length; i++) {
-			sel = this.selectFunctions.get(i);
-			
-			//			//insert into
-			//			statement = this.createInsertClause(sel);
-			
-			//select
-			statement = this.createSelectClause(sel);
-			
-			//from
-			statement += " " + fromClause;
-			
-			//where
-			statement += " " + whereClause;
-			
-			//add to list
-			s = new Statement();
-			s.setSelectFunction(sel);
-			s.setStatement(statement);
-			s.setView(this.view);
-			this.statements[i] = s;
+		/*
+		 * Workaround to include the CustomStatementEvents (e.g. persistent XML manipulation)
+		 */
+		if (result != null && result.length > 0 && this.guard != null) {
+			result[0].setCustomStatementEvents(this.guard.getCustomStatementEvents());
 		}
 		
-		return this.statements;
+		return result;
 	}
 	
 
