@@ -166,7 +166,7 @@ public class EMLEventPattern implements EventPattern {
 	
 	@Override
 	public String toString() {
-		return this.getClass().getSimpleName() +": "+ this.getID();
+		return this.getClass().getSimpleName() +": "+ this.statement.getStatement();
 	}
 
 	@Override

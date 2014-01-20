@@ -196,6 +196,7 @@ public class StatementListener implements UpdateListener {
 		// check if it is allowed to use the original message.
 		// check also if it is used for GENESIS
 		if (this.pattern.usesOriginalEventAsOutput()) {
+			StatementListener.logger.info("trying to send original message as output");
 			// get original message
 			Object origMessage = resultEvent.getOriginalObject();
 			if (origMessage != null) {
