@@ -1,0 +1,78 @@
+Copyright (C) 2013 52 North Initiative for Geospatial Open Source Software GmbH
+
+Contact: Andreas Wytzisk
+52 North Initiative for Geospatial Open Source Software GmbH
+Martin-Luther-King-Weg 24
+48155 Muenster, Germany
+info@52north.org
+
+This program is free software; you can redistribute and/or modify it under 
+the terms of the GNU General Public License version 2 as published by the 
+Free Software Foundation.
+
+This program is distributed WITHOUT ANY WARRANTY; even without the implied
+WARRANTY OF MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+this program (see gnu-gpl v2.txt). If not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA or
+visit the Free Software Foundation web page, http://www.fsf.org.
+
+This project includes:
+  52North OxFramework Xmlbeans Handling under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  52°North EPOS Event Processor under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  52°North OXF Conversion module under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  AIXM 5.1 schemas (adjusted to support metadata by reference) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  Antlr 3 Runtime under BSD License
+  AntLR Parser Generator under BSD License
+  ANTLR StringTemplate under BSD licence
+  Apache Log4j under The Apache Software License, Version 2.0
+  Code Generation Library under ASF 2.0
+  Commons Logging under The Apache Software License, Version 2.0
+  EPOS All-inclusion bundle Module under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  EPOS API module under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  EPOS Core module under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  EPOS EML Patterns under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  EPOS Esper Pattern Engine under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  EPOS Pattern Modules under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  EPOS Patterns Tools under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  EPOS Test module under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  EPOS Transform module for XMLBeans bindings under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  EPOS Transformation Modules under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  Esper under GNU General Public License Version 2
+  Event Model schema version 0.2.0 under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  Hamcrest Core under New BSD License
+  Joda time under Apache 2
+  JTS Topology Suite under Lesser General Public License (LGPL)
+  JUnit under Common Public License Version 1.0
+  Logback Classic Module under Eclipse Public License - v 1.0 or GNU Lesser General Public License
+  Logback Core Module under Eclipse Public License - v 1.0 or GNU Lesser General Public License
+  Mockito under The MIT License
+  OASIS WS-N specification schemas - including WS-BrokeredNotification (v1.3) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  OASIS WS-Resources specification schemas v1.2 under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  OGC EML schema 0.0.1 (OGC Discussion Paper 08-132) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  OGC Filter schema (spec. v2.0) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  OGC GML schema (spec. v3.1.1) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  OGC GML schema (spec. v3.2.1) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  OGC O&M schema (spec. v1.0.0) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  OGC O&M schema (spec. v2.0) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  OGC OWS schema (spec. v1.1.0) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  OGC Sampling schema (spec. v1.0.0) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  OGC SensorML schema (spec. v1.0.1) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  OGC SWECommon schema (spec. v1.0.1) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  OGC SWES schema (spec. v2.0) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  Saxon-HE under Mozilla Public License Version 1.0
+  SLF4J API Module under MIT License
+  StAX API under The Apache Software License, Version 2.0
+  swe-common-data-framework under Mozilla Public License version 1.1
+  vecmath under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  W3C SOAP specification recommondation (v1.2 part 1) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  W3C WS-Addressing specification schemas (v1.0) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  W3C xlink schema (spec. v1.1.0) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  Xerces2 Java Parser under The Apache Software License, Version 2.0
+  xercesImpl under The Apache Software License, Version 2.0
+  XML Commons External Components XML APIs under The Apache Software License, Version 2.0
+  XmlBeans under The Apache Software License, Version 2.0
+  XmlBeansXPath under The Apache Software License, Version 2.0
+
