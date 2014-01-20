@@ -26,6 +26,35 @@
 			<artifactId>epos-api</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.xmlbeans</groupId>
+			<artifactId>xmlbeans</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>epos-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+		<!-- used via ServiceLoader -->
+		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>epos-transform-xmlbeans</artifactId>
 			<scope>test</scope>
@@ -38,15 +67,6 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>epos-pattern-eml</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.n52.sensorweb</groupId>
-			<artifactId>52n-oxf-xmlbeans</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>epos-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -63,6 +83,7 @@
 			<build>
 				<plugins>
 					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-failsafe-plugin</artifactId>
 						<executions>
 							<execution>

@@ -36,8 +36,20 @@
 		    <artifactId>epos-pattern-util</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+		</dependency>
+		<dependency>
 		    <groupId>org.n52.sensorweb</groupId>
 		    <artifactId>52n-xml-em-v020</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.xmlbeans</groupId>
+			<artifactId>xmlbeans</artifactId>
 		</dependency>
 <!-- 		<dependency> -->
 <!-- 		    <groupId>${project.groupId}</groupId> -->
