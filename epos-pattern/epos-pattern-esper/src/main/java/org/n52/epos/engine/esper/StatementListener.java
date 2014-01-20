@@ -204,6 +204,9 @@ public class StatementListener implements UpdateListener {
 				StatementListener.logger.info("sending original message");
 				this.rule.filter(resultEvent);
 			}
+			else {
+				logger.warn("Event did not contain the original message!");
+			}
 		}
 
 		else {
@@ -226,6 +229,8 @@ public class StatementListener implements UpdateListener {
 			if (eventDoc == null) {
 				eventDoc = eventGen.generateEventDocument();
 			}
+			
+			resultEvent.setOriginalObject(eventDoc);
 
 			this.rule.filter(resultEvent, eventDoc);
 		}

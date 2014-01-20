@@ -107,6 +107,8 @@ public class XPathFilter implements ActiveFilter {
 	 */
 	@Override
 	public boolean matches(EposEvent event) {
+		logger.debug("Evaluating XPath expression '{}' against object: {}", rawExpression, event.getOriginalObject());
+		
 		if (event.getOriginalObject() instanceof Document) {
 			try {
 				return (Boolean) expression.evaluate(event.getOriginalObject(),
