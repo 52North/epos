@@ -491,4 +491,9 @@ public class MapEposEvent implements EposEvent, Map<String, Object> {
 		
 		return sb.toString();
 	}
+
+	@Override
+	public void setOriginalObject(Object input) {
+		setValue(MapEposEvent.ORIGNIAL_OBJECT_KEY, input);		
+	}
 }

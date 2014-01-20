@@ -67,4 +67,10 @@ public interface EposEvent {
 	 */
 	public void addCausalAncestor(EposEvent event);
 
+	
+	/**
+	 * @param input the original basis for this event
+	 */
+	public void setOriginalObject(Object input);
+
 }

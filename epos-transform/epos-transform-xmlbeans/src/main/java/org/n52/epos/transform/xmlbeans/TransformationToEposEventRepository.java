@@ -69,6 +69,15 @@ public class TransformationToEposEventRepository implements TransformationReposi
 			result = new MapEposEvent(now.getMillis(), now.getMillis());
 			result.setValue(MapEposEvent.ORIGNIAL_OBJECT_KEY, input);
 		}
+		else {
+			if (result.getOriginalObject() == null) {
+				
+				/*
+				 * add original object
+				 */
+				result.setOriginalObject(input);
+			}
+		}
 		
 		return result;
 	}
