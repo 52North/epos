@@ -30,8 +30,8 @@
 
 	<licenses>
 		<license>
-			<name>Apache License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+			<name>GNU GENERAL PUBLIC LICENSE Version 2, June 1991</name>
+			<url>http://www.gnu.org/licenses/gpl-2.0.html</url>
 		</license>
 	</licenses>
 
@@ -47,8 +47,8 @@
 		<esper.version>4.5.0</esper.version>
 		<slf4j.version>1.7.5</slf4j.version>
 		<logback.version>1.0.11</logback.version>
-		<oxf.version>2.0.0-alpha.3-SNAPSHOT</oxf.version>
-		<n52.xml.version>1.1.5-SNAPSHOT</n52.xml.version>
+		<oxf.version>2.0.0-alpha.3</oxf.version>
+		<n52.xml.version>1.1.4</n52.xml.version>
 	</properties>
 
 	<build>
