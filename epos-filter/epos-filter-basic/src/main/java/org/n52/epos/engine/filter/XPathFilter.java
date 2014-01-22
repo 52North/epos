@@ -43,6 +43,7 @@ import org.n52.epos.filter.FilterSerialization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.xml.sax.InputSource;
 
 /**
@@ -110,7 +111,7 @@ public class XPathFilter implements ActiveFilter {
 	public boolean matches(EposEvent event) {
 		logger.debug("Evaluating XPath expression '{}' against object: {}", rawExpression, event.getOriginalObject());
 		
-		if (event.getOriginalObject() instanceof Document) {
+		if (event.getOriginalObject() instanceof Document || event.getOriginalObject() instanceof Element) {
 			try {
 				return (Boolean) expression.evaluate(event.getOriginalObject(),
 						XPathConstants.BOOLEAN);
