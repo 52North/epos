@@ -84,14 +84,14 @@ public class EposEngine {
 		logger.debug("Received new Event: {}", event);
 		boolean insertIntoPatternEngineRequired = false;
 		
-		List<Rule> tmpRules = createRuleCopies();
-		
-		for (Rule rule : tmpRules) {
-			if (!rule.hasPassiveFilter()) {
-				rule.filter(event);
-			} else {
-				insertIntoPatternEngineRequired = true;
-			}
+		synchronized (this) {
+			for (Rule rule : this.rules) {
+				if (!rule.hasPassiveFilter()) {
+					rule.filter(event);
+				} else {
+					insertIntoPatternEngineRequired = true;
+				}
+			}	
 		}
 		
 		if (insertIntoPatternEngineRequired && this.patternEngine != null) {
@@ -100,9 +100,6 @@ public class EposEngine {
 		}
 	}
 
-	private synchronized List<Rule> createRuleCopies() {
-		return new ArrayList<Rule>(this.rules);
-	}
 
 	/**
 	 * Add a new rule to the engine.
