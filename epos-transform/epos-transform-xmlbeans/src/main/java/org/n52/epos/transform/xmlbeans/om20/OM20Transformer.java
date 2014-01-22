@@ -69,7 +69,7 @@ public class OM20Transformer extends AbstractXmlBeansTransformer {
 	}
 	
 	@Override
-	public EposEvent transform(Object input) throws TransformationException {
+	protected EposEvent transformXmlBeans(XmlObject input) throws TransformationException {
 		MapEposEvent result = null;
 		
 		if (input instanceof OMObservationDocument) {
@@ -93,19 +93,6 @@ public class OM20Transformer extends AbstractXmlBeansTransformer {
 	
 	private MapEposEvent transformFrom(OMObservationType input) {
 		return parseObservation(input);
-	}
-
-	@Override
-	public boolean supportsInput(Object input) {
-		if (input == null)
-			return false;
-		
-		if (input instanceof OMObservationDocument ||
-				input instanceof OMObservationType) {
-			return true;
-		}
-		
-		return false;
 	}
 	
 	@Override

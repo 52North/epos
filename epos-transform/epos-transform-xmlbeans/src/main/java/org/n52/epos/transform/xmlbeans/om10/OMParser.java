@@ -1035,7 +1035,7 @@ public class OMParser extends AbstractXmlBeansTransformer {
 
 
 	@Override
-	public EposEvent transform(Object message) throws TransformationException {
+	protected EposEvent transformXmlBeans(XmlObject message) throws TransformationException {
 		if (message instanceof ObservationDocument) {
 			try {
 				return this.parseOM((ObservationDocument) message);

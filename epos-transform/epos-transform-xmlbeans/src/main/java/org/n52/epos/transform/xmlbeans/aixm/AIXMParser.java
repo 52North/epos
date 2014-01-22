@@ -137,7 +137,7 @@ public class AIXMParser extends AbstractXmlBeansTransformer {
 
 
 	@Override
-	public EposEvent transform(Object message) {
+	protected EposEvent transformXmlBeans(XmlObject message) {
 		List<MapEposEvent> result = parseAIXM((XmlObject) message);
 				
 		return (result != null && result.size() > 0) ? result.get(0) : null;

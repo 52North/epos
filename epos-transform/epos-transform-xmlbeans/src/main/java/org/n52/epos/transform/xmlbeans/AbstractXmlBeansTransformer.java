@@ -27,7 +27,9 @@ import javax.xml.namespace.QName;
 
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
+import org.n52.epos.event.EposEvent;
 import org.n52.epos.transform.EposTransformer;
+import org.n52.epos.transform.TransformationException;
 import org.w3c.dom.Element;
 
 public abstract class AbstractXmlBeansTransformer implements EposTransformer {
@@ -51,10 +53,29 @@ public abstract class AbstractXmlBeansTransformer implements EposTransformer {
 				elem.getNamespaceURI().equals(qn.getNamespaceURI());
 	}
 	
+	@Override
+	public EposEvent transform(Object input) throws TransformationException {
+		XmlObject xo = null;
+		if (input instanceof Element) {
+			try {
+				xo = parseToXmlObject((Element) input);
+			} catch (XmlException e) {
+				throw new TransformationException(e);
+			}
+		}
+		else if (input instanceof XmlObject) {
+			xo = (XmlObject) input;
+		}
+		
+		return transformXmlBeans(xo);
+	}
+	
 	protected XmlObject parseToXmlObject(Element elem) throws XmlException {
 		return XmlObject.Factory.parse(elem);
 	}
 
+	protected abstract EposEvent transformXmlBeans(XmlObject xo) throws TransformationException;
+	
 	protected abstract boolean supportsXmlBeansInput(XmlObject input);
 	
 	protected abstract QName getSupportedQName();

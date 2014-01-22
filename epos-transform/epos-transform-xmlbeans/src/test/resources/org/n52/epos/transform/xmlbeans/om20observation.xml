@@ -16,5 +16,5 @@
 	<ns:featureOfInterest xlin:href="#ssf_test_feature_7_3"
 		xmlns:xlin="http://www.w3.org/1999/xlink" />
 	<ns2:result uom="test_unit_7_3" xmlns:ns="http://www.opengis.net/gml/3.2"
-		xmlns:ns2="http://www.opengis.net/om/2.0" xsi:type="ns:MeasureType">0.28</ns2:result>
+		xmlns:ns2="http://www.opengis.net/om/2.0">0.28</ns2:result>
 </ns:OM_Observation>

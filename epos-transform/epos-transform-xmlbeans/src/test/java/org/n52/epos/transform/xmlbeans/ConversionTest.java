@@ -24,12 +24,20 @@
 package org.n52.epos.transform.xmlbeans;
 
 
+import java.io.IOException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.xmlbeans.XmlObject;
 import org.junit.Assert;
 import org.n52.epos.event.EposEvent;
 import org.n52.epos.transform.TransformationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 public class ConversionTest {
 	
@@ -43,6 +51,19 @@ public class ConversionTest {
 		Object result = TransformationRepository.Instance.transform(XmlObject.Factory.parse(
 				getClass().getResourceAsStream(OM_DOCUMENT)), processorInputClass);
 		process(result);
+	}
+	
+	@org.junit.Test
+	public void testConversionOfElement() throws Exception {
+		Class<?> processorInputClass = resolveProcesserInputClass();
+		Object result = TransformationRepository.Instance.transform(readElement(), processorInputClass);
+		process(result);
+	}
+
+	private Element readElement() throws SAXException, IOException, ParserConfigurationException {
+		DocumentBuilderFactory fac = DocumentBuilderFactory.newInstance();
+		fac.setNamespaceAware(true);
+		return fac.newDocumentBuilder().parse(getClass().getResourceAsStream(OM_DOCUMENT)).getDocumentElement();
 	}
 
 	private static void process(Object cast) {
