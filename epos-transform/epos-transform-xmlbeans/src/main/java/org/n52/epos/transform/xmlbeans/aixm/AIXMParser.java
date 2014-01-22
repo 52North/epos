@@ -33,7 +33,7 @@ import org.apache.xmlbeans.XmlObject;
 import org.joda.time.DateTime;
 import org.n52.epos.event.EposEvent;
 import org.n52.epos.event.MapEposEvent;
-import org.n52.epos.transform.EposTransformer;
+import org.n52.epos.transform.xmlbeans.AbstractXmlBeansTransformer;
 import org.n52.oxf.conversion.gml32.xmlbeans.jts.GMLGeometryFactory;
 import org.n52.oxf.xmlbeans.tools.XmlUtil;
 import org.slf4j.Logger;
@@ -49,7 +49,7 @@ import com.vividsolutions.jts.io.ParseException;
  * Parser for notifications encoded in AIXM.
  *
  */
-public class AIXMParser implements EposTransformer {
+public class AIXMParser extends AbstractXmlBeansTransformer {
 	
 	/**
 	 * namespace used for parsing dNOTAMs
@@ -496,8 +496,13 @@ public class AIXMParser implements EposTransformer {
 	}
 
 	@Override
-	public boolean supportsInput(Object input) {
+	protected boolean supportsXmlBeansInput(XmlObject input) {
 		return input instanceof AIXMBasicMessageDocument;
+	}
+
+	@Override
+	protected QName getSupportedQName() {
+		return AIXMBasicMessageDocument.type.getDocumentElementName();
 	}
 
 }

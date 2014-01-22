@@ -26,6 +26,8 @@ package org.n52.epos.transform.xmlbeans.om20;
 import java.util.ArrayList;
 import java.util.ServiceLoader;
 
+import javax.xml.namespace.QName;
+
 import net.opengis.gml.x32.AbstractTimeObjectType;
 import net.opengis.gml.x32.FeaturePropertyType;
 import net.opengis.gml.x32.ReferenceType;
@@ -44,8 +46,8 @@ import org.apache.xmlbeans.impl.values.XmlAnyTypeImpl;
 import org.joda.time.DateTime;
 import org.n52.epos.event.EposEvent;
 import org.n52.epos.event.MapEposEvent;
-import org.n52.epos.transform.EposTransformer;
 import org.n52.epos.transform.TransformationException;
+import org.n52.epos.transform.xmlbeans.AbstractXmlBeansTransformer;
 import org.n52.oxf.xmlbeans.tools.XmlUtil;
 
 /**
@@ -54,7 +56,7 @@ import org.n52.oxf.xmlbeans.tools.XmlUtil;
  * @author matthes rieke
  *
  */
-public class OM20Transformer implements EposTransformer {
+public class OM20Transformer extends AbstractXmlBeansTransformer {
 
 	private static ArrayList<NamedParameterParser> namedParametersParsers;
 
@@ -104,6 +106,24 @@ public class OM20Transformer implements EposTransformer {
 		}
 		
 		return false;
+	}
+	
+	@Override
+	protected boolean supportsXmlBeansInput(XmlObject input) {
+		if (input == null)
+			return false;
+		
+		if (input instanceof OMObservationDocument ||
+				input instanceof OMObservationType) {
+			return true;
+		}
+		
+		return false;
+	}
+
+	@Override
+	protected QName getSupportedQName() {
+		return OMObservationDocument.type.getDocumentElementName();
 	}
 
 

@@ -77,8 +77,8 @@ import org.apache.xmlbeans.impl.values.XmlAnyTypeImpl;
 import org.joda.time.DateTime;
 import org.n52.epos.event.EposEvent;
 import org.n52.epos.event.MapEposEvent;
-import org.n52.epos.transform.EposTransformer;
 import org.n52.epos.transform.TransformationException;
+import org.n52.epos.transform.xmlbeans.AbstractXmlBeansTransformer;
 import org.n52.oxf.conversion.unit.CustomUnitConverter;
 import org.n52.oxf.conversion.unit.NumberWithUOM;
 import org.n52.oxf.conversion.unit.UOMTools;
@@ -97,7 +97,7 @@ import com.vividsolutions.jts.io.WKTReader;
  * Parses OGC O&M documents as events
  *
  */
-public class OMParser implements EposTransformer {
+public class OMParser extends AbstractXmlBeansTransformer {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(OMParser.class);
@@ -1047,10 +1047,14 @@ public class OMParser implements EposTransformer {
 		return null;
 	}
 
-
 	@Override
-	public boolean supportsInput(Object input) {
+	protected boolean supportsXmlBeansInput(XmlObject input) {
 		return input instanceof ObservationDocument;
 	}
 
+	@Override
+	protected QName getSupportedQName() {
+		return ObservationDocument.type.getDocumentElementName();
+	}
+	
 }
