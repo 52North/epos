@@ -32,9 +32,11 @@ This project includes:
   Commons Logging under The Apache Software License, Version 2.0
   EPOS All-inclusion bundle Module under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
   EPOS API module under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  EPOS Basic filters module under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
   EPOS Core module under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
   EPOS EML Patterns under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
   EPOS Esper Pattern Engine under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  EPOS Filter module under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
   EPOS Pattern Modules under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
   EPOS Patterns Tools under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
   EPOS Test module under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
