@@ -27,8 +27,8 @@ The stream processing and pattern matching features are heavily based on
 
 EPOS provides two interfaces which allow easy extension of the framework
 
- 1 org.n52.epos.transform.EposTransformer
- 1 org.n52.epos.filter.FilterInstantiationRepository
+ * org.n52.epos.transform.EposTransformer
+ * org.n52.epos.filter.FilterInstantiationRepository
  
 The `EposTransformer` interface provides methods for transformation of
 every kind of input into an EposEvent instance. A realization shall
@@ -47,7 +47,11 @@ a `Rule`:
 A realization of `FilterInstantiationRepository` can be considered as a
 transformer of a Filter representation (e.g. an XPath configuration)
 into the internal `EposFilter` instance. An example is the
-`org.n52.epos.engine.filter.XPathFilterRepository`. 
+`org.n52.epos.engine.filter.XPathFilterRepository`.
+
+Implementations of the above described interfaces need to be exposed via
+Java's ServiceLoader pattern (`META-INF/services/"interface-as-filename"`,
+e.g. see [this example](epos-transform/epos-transform-xmlbeans/src/main/resources/META-INF/services/org.n52.epos.transform.EposTransformer)).
 
 ## Building
 
