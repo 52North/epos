@@ -35,6 +35,7 @@ import net.opengis.em.x020.EventEventRelationshipType;
 import net.opengis.em.x020.EventType;
 import net.opengis.em.x020.EventType.EventTime;
 import net.opengis.em.x020.NamedValueType;
+import net.opengis.eml.x001.EMLDocument;
 import net.opengis.eml.x001.EMLDocument.EML;
 import net.opengis.gml.FeaturePropertyType;
 import net.opengis.gml.TimeInstantDocument;
@@ -316,7 +317,10 @@ public class EventModelGenerator implements OutputGenerator {
 			this.resultDerivedEventType = this.resultDerivedEventDoc.addNewDerivedEvent();
 		}
 		
-		return generateEventDocument(eml);
+		EMLDocument emlDoc = EMLDocument.Factory.newInstance();
+		emlDoc.setEML(eml);
+		
+		return generateEventDocument(emlDoc);
 	}
 
 
