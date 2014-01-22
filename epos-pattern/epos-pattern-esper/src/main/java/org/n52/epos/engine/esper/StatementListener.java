@@ -29,14 +29,10 @@
 package org.n52.epos.engine.esper;
 
 
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
 import org.n52.epos.pattern.CustomStatementEvent;
 import org.n52.epos.engine.esper.concurrent.ThreadPool;
-import org.n52.epos.engine.esper.util.EventModelGenerator;
 import org.n52.epos.event.MapEposEvent;
 import org.n52.epos.filter.pattern.EventPattern;
-import org.n52.epos.filter.pattern.PatternFilter;
 import org.n52.epos.rules.Rule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -211,26 +207,7 @@ public class StatementListener implements UpdateListener {
 		}
 
 		else {
-			XmlObject eventDoc = null;
-
-			// generate Event model
-			StatementListener.logger.info("generating OGC Event model output");
-			EventModelGenerator eventGen = new EventModelGenerator(resultEvent);
-
-			if (this.rule.getPassiveFilter() instanceof PatternFilter) {
-				XmlObject xo;
-				try {
-					xo = XmlObject.Factory.parse(((PatternFilter) this.rule.getPassiveFilter()).serialize().toString());
-					eventDoc = eventGen.generateEventDocument(xo);
-				} catch (XmlException e) {
-					logger.warn(e.getMessage(), e);
-				}
-			}
-			
-			if (eventDoc == null) {
-				eventDoc = eventGen.generateEventDocument();
-			}
-			
+			Object eventDoc = this.pattern.getOutputGenerator().generateOutput(resultEvent);
 			resultEvent.setOriginalObject(eventDoc);
 
 			this.rule.filter(resultEvent, eventDoc);

@@ -21,7 +21,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA or
  * visit the Free Software Foundation web page, http://www.fsf.org.
  */
-package org.n52.epos.engine.esper.util;
+package org.n52.epos.pattern.eml.util;
 
 import java.util.Map;
 import java.util.Vector;
@@ -35,6 +35,7 @@ import net.opengis.em.x020.EventEventRelationshipType;
 import net.opengis.em.x020.EventType;
 import net.opengis.em.x020.EventType.EventTime;
 import net.opengis.em.x020.NamedValueType;
+import net.opengis.eml.x001.EMLDocument.EML;
 import net.opengis.gml.FeaturePropertyType;
 import net.opengis.gml.TimeInstantDocument;
 import net.opengis.gml.TimeInstantType;
@@ -45,6 +46,7 @@ import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
 import org.joda.time.DateTime;
 import org.n52.epos.event.MapEposEvent;
+import org.n52.epos.filter.pattern.OutputGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Text;
@@ -55,7 +57,7 @@ import org.w3c.dom.Text;
  * Output generator using the OGC Event Model
  *
  */
-public class EventModelGenerator {
+public class EventModelGenerator implements OutputGenerator {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(EventModelGenerator.class);
@@ -73,20 +75,13 @@ public class EventModelGenerator {
 	
 	private boolean firstRecursion = true;
 
-	/**
-	 * @param resultEvent MapEvent to generate the model from
-	 */
-	public EventModelGenerator(MapEposEvent resultEvent) {
-		this.eventMap = resultEvent;
+	private EML eml;
 
-		if (this.eventMap.containsKey(MapEposEvent.ORIGNIAL_OBJECT_KEY)) {
-			this.resultEventDoc = EventDocument.Factory.newInstance();
-			this.resultEventType = this.resultEventDoc.addNewEvent();
-		}
-		else {
-			this.resultDerivedEventDoc = DerivedEventDocument.Factory.newInstance();
-			this.resultDerivedEventType = this.resultDerivedEventDoc.addNewDerivedEvent();
-		}
+	/**
+	 * @param eml MapEvent to generate the model from
+	 */
+	public EventModelGenerator(EML eml) {
+		this.eml = eml;
 	}
 	
 
@@ -305,6 +300,23 @@ public class EventModelGenerator {
 			this.resultDerivedEventType.addNewProcedure();
 		}
 		return this.resultDerivedEventDoc;
+	}
+
+
+	@Override
+	public Object generateOutput(MapEposEvent resultEvent) {
+		this.eventMap = resultEvent;
+		
+		if (this.eventMap.containsKey(MapEposEvent.ORIGNIAL_OBJECT_KEY)) {
+			this.resultEventDoc = EventDocument.Factory.newInstance();
+			this.resultEventType = this.resultEventDoc.addNewEvent();
+		}
+		else {
+			this.resultDerivedEventDoc = DerivedEventDocument.Factory.newInstance();
+			this.resultDerivedEventType = this.resultDerivedEventDoc.addNewDerivedEvent();
+		}
+		
+		return generateEventDocument(eml);
 	}
 
 

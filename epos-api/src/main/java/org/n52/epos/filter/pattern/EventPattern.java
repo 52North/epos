@@ -118,4 +118,6 @@ public interface EventPattern {
 	public boolean hasCustomStatementEvents();
 
 	public List<CustomStatementEvent> getCustomStatementEvents();
+
+	public OutputGenerator getOutputGenerator();
 }

@@ -49,6 +49,7 @@ import org.n52.epos.pattern.eml.pattern.PatternComplex;
 import org.n52.epos.pattern.eml.pattern.PatternRepetitive;
 import org.n52.epos.pattern.eml.pattern.PatternSimple;
 import org.n52.epos.pattern.eml.pattern.Statement;
+import org.n52.epos.pattern.eml.util.EventModelGenerator;
 import org.n52.oxf.xmlbeans.tools.XmlUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -345,6 +346,7 @@ public class EMLPatternFilter implements PatternFilter {
 			Statement statement, Map<String, Object> properties, Map<String, Object> outputs, List<String> internalStreamNames) {
 		EMLEventPattern result = new EMLEventPattern(pattern, statement,
 				properties, outputs, internalStreamNames);
+		result.setOutputGenerator(new EventModelGenerator(eml));
 		return result;
 	}
 

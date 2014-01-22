@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.n52.epos.filter.pattern.EventPattern;
+import org.n52.epos.filter.pattern.OutputGenerator;
 import org.n52.epos.pattern.CustomStatementEvent;
 import org.n52.epos.pattern.eml.pattern.APattern;
 import org.n52.epos.pattern.eml.pattern.PatternComplex;
@@ -46,6 +47,7 @@ public class EMLEventPattern implements EventPattern {
 	private boolean createNewInternalEvent;
 	private Map<String, Object> inputProperties = new HashMap<String, Object>();
 	private Map<String, Object> outputProperties = new HashMap<String, Object>();
+	private OutputGenerator generator;
 
 	public EMLEventPattern(APattern pattern, Statement statement,
 			Map<String, Object> inputProps, Map<String, Object> outputProps,
@@ -186,5 +188,16 @@ public class EMLEventPattern implements EventPattern {
 	public List<CustomStatementEvent> getCustomStatementEvents() {
 		return this.statement.getCustomStatementEvents();
 	}
+
+
+	@Override
+	public OutputGenerator getOutputGenerator() {
+		return this.generator;
+	}
+
+	public void setOutputGenerator(OutputGenerator generator) {
+		this.generator = generator;
+	}
+	
 
 }
