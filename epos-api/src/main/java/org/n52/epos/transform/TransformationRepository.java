@@ -28,6 +28,9 @@ import java.util.List;
 import java.util.ServiceLoader;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * {@link ServiceLoader}-enabled interface for providing
  * implementations of {@link MessageTransformer} repositories
@@ -69,6 +72,7 @@ public interface TransformationRepository<O> {
 	 */
 	public static class Instance {
 
+		private static final Logger logger = LoggerFactory.getLogger(Instance.class);
 		private static List<TransformationRepository<?>> repos;
 
 		static {
@@ -108,6 +112,7 @@ public interface TransformationRepository<O> {
 			List<TransformationRepository<?>> repos = getRepositories(outputClass);
 			for (TransformationRepository<?> t : repos) {
 				if (t.supportsInput(input)) {
+					logger.debug("Using {} TransformationRepository", t.getClass().getName());
 					Object result = t.transform(input);
 					return (T) result;
 				}

@@ -60,6 +60,8 @@ public class TransformationToEposEventRepository implements TransformationReposi
 	public EposEvent transform(Object input) throws TransformationException {
 		MessageTransformer<EposEvent> trans = findTransformers(input);
 		
+		logger.debug("Using transformer {}", trans.getClass().getName());
+		
 		EposEvent result = trans.transform(input);
 		
 		if (result == null) {
