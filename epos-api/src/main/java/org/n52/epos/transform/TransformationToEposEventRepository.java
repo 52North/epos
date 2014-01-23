@@ -23,7 +23,11 @@
  */
 package org.n52.epos.transform;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.ServiceLoader;
 import java.util.Set;
 
@@ -47,6 +51,7 @@ public class TransformationToEposEventRepository implements TransformationReposi
 	
 	private static final Logger logger = LoggerFactory.getLogger(TransformationToEposEventRepository.class);
 	private Set<EposTransformer> transformers = new HashSet<EposTransformer>();
+	private Comparator<? super MessageTransformer<EposEvent>> comparator = new PriorityComparator();
 	
 	public TransformationToEposEventRepository() {
 		ServiceLoader<EposTransformer> loader = ServiceLoader.load(EposTransformer.class);
@@ -86,10 +91,18 @@ public class TransformationToEposEventRepository implements TransformationReposi
 	}
 	
 	private MessageTransformer<EposEvent> findTransformers(Object input) throws TransformationException {
+		List<MessageTransformer<EposEvent>> candidates = new ArrayList<MessageTransformer<EposEvent>>(transformers.size());
 		for (MessageTransformer<EposEvent> t : transformers) {
 			if (t.supportsInput(input)) {
-				return t;
+				candidates.add(t);
 			}
+		}
+		
+		if (!candidates.isEmpty()) {
+			if (candidates.size() > 1) {
+				Collections.sort(candidates, comparator);
+			}
+			return candidates.get(0);
 		}
 		
 		throw new TransformationException("Could not find Transformer for Input "+ input.getClass());
@@ -110,6 +123,16 @@ public class TransformationToEposEventRepository implements TransformationReposi
 			}
 		}
 		return false;
+	}
+	
+	private static class PriorityComparator implements Comparator<MessageTransformer<EposEvent>> {
+
+		@Override
+		public int compare(MessageTransformer<EposEvent> o1,
+				MessageTransformer<EposEvent> o2) {
+			return (o1.getPriority() - o2.getPriority());
+		}
+		
 	}
 
 }

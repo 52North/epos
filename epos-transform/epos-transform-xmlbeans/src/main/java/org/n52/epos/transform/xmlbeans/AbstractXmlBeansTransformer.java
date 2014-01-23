@@ -73,6 +73,14 @@ public abstract class AbstractXmlBeansTransformer implements EposTransformer {
 	protected XmlObject parseToXmlObject(Element elem) throws XmlException {
 		return XmlObject.Factory.parse(elem);
 	}
+	
+	@Override
+	public short getPriority() {
+		/*
+		 * provide a medium priority by default
+		 */
+		return 0;
+	}
 
 	protected abstract EposEvent transformXmlBeans(XmlObject xo) throws TransformationException;
 	

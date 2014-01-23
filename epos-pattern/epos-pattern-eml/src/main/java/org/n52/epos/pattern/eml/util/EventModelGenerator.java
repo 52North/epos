@@ -44,12 +44,14 @@ import net.opengis.gml.TimePeriodDocument;
 import net.opengis.gml.TimePeriodType;
 
 import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.joda.time.DateTime;
 import org.n52.epos.event.MapEposEvent;
 import org.n52.epos.filter.pattern.OutputGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Node;
 import org.w3c.dom.Text;
 
 /**
@@ -182,7 +184,15 @@ public class EventModelGenerator implements OutputGenerator {
 				Object origMess = ((Map<?, ?>)recursiveEvent.get(key)).get(MapEposEvent.ORIGNIAL_OBJECT_KEY);
 				
 				try {
-					XmlObject xo = XmlObject.Factory.parse(origMess.toString());
+					XmlObject xo = null;
+					if (origMess instanceof XmlObject) {
+						logger.debug("original object is an XmlObject");
+						xo = (XmlObject) origMess;
+					}
+					else if (origMess instanceof Node) {
+						logger.debug("original object is a DOM Node");
+						xo = XmlObject.Factory.parse(((Node) origMess).getOwnerDocument());
+					}
 					
 					if (xo != null) {
 						NamedValueType namedVal = preEvent.addNewAttribute().addNewNamedValue();
@@ -249,8 +259,17 @@ public class EventModelGenerator implements OutputGenerator {
 							//XXX WTF, dude?!
 							Object notify = ((MapEposEvent) object).get(MapEposEvent.ORIGNIAL_OBJECT_KEY);
 							
+							logger.debug("Found original object: {}", notify);
+							
 							if (notify instanceof XmlObject) {
 								eventRelation.addNewTarget().set((XmlObject) notify);
+							}
+							else if (notify instanceof Node) {
+								try {
+									eventRelation.addNewTarget().set(XmlObject.Factory.parse(((Node) notify).getOwnerDocument()));
+								} catch (XmlException e) {
+									logger.warn("Could not generate XmlObject from node '{}'", notify);
+								}
 							}
 
 						}

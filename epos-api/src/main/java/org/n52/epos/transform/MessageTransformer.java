@@ -35,5 +35,16 @@ public interface MessageTransformer<O> {
 	O transform(Object input) throws TransformationException;
 
 	boolean supportsInput(Object input);
+	
+	/**
+	 * An implementation shall provide a priority, ranging from
+	 * -20 to 19 (similar to linux' nice value).
+	 * 
+	 * If multiple transformers support one input, the higher
+	 * prioritized (= smaller number) is called.
+	 * 
+	 * @return the priority
+	 */
+	short getPriority();
 
 }
