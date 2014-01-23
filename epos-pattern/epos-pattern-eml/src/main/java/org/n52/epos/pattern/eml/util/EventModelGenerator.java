@@ -191,7 +191,7 @@ public class EventModelGenerator implements OutputGenerator {
 					}
 					else if (origMess instanceof Node) {
 						logger.debug("original object is a DOM Node");
-						xo = XmlObject.Factory.parse(((Node) origMess).getOwnerDocument());
+						xo = XmlObject.Factory.parse((Node) origMess);
 					}
 					
 					if (xo != null) {
@@ -266,7 +266,7 @@ public class EventModelGenerator implements OutputGenerator {
 							}
 							else if (notify instanceof Node) {
 								try {
-									eventRelation.addNewTarget().set(XmlObject.Factory.parse(((Node) notify).getOwnerDocument()));
+									eventRelation.addNewTarget().set(XmlObject.Factory.parse((Node) notify));
 								} catch (XmlException e) {
 									logger.warn("Could not generate XmlObject from node '{}'", notify);
 								}
