@@ -51,6 +51,9 @@
 		<oxf.version>2.0.0-alpha.3</oxf.version>
 		<n52.xml.version>1.1.4</n52.xml.version>
 		<xmlbeans.version>2.6.0</xmlbeans.version>
+		<currentYear>2014</currentYear> <!-- manual setting -->
+		<maven.build.timestamp.format>yyyy</maven.build.timestamp.format>
+		<currentYearDynamic>${maven.build.timestamp}</currentYearDynamic>
 	</properties>
 
 	<build>
@@ -66,7 +69,9 @@
 						<include>**/*.java</include>
 					</includes>
 					<properties>
-						<year>${project.inceptionYear}</year>
+						<inceptionYear>${project.inceptionYear}</inceptionYear>
+						<latestYearOfContribution>${currentYear}</latestYearOfContribution>
+						<!-- <latestYearOfContribution>${currentYearDynamic}</latestYearOfContribution> -->
 					</properties>
 					<strictCheck>true</strictCheck>
 				</configuration>
