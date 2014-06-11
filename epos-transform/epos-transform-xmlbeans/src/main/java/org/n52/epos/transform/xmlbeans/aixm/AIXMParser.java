@@ -69,15 +69,18 @@ public class AIXMParser extends AbstractXmlBeansTransformer {
 	/*
 	 * Event Qnames
 	 */
-	private static final QName EVENT = new QName(DNOTAM_NAMESPACE, "Event");
+//	private static final QName EVENT = new QName(DNOTAM_NAMESPACE, "Event");
 	private static final QName EVENT_NAME = new QName(DNOTAM_NAMESPACE, "name");
 //	private static final QName EVENT_DESCRIPTION = new QName(EVENT_NAMESPACE, "description");
 	private static final QName EVENT_TYPE = new QName(DNOTAM_NAMESPACE, "type");
-	private static final QName EVENT_HAS_MEMBER = new QName(DNOTAM_NAMESPACE, "hasMember");
+	
 
 	/*
 	 * AIXM Qnames
 	 */
+	private static final QName AIXM_BASIC_MESSAGE = new QName(AIXM_MESSAGE_NAMESPACE, "AIXMBasicMessage");
+	private static final QName MESSAGE_HAS_MEMBER = new QName(AIXM_MESSAGE_NAMESPACE, "hasMember");
+	
 	private static final QName AIXM_NAVAID = new QName(AIXM_NAMESPACE, "Navaid");
 	private static final QName AIXM_TIME_SLICE = new QName(AIXM_NAMESPACE, "timeSlice");
 	private static final QName AIXM_NAVAID_TIME_SLICE = new QName(AIXM_NAMESPACE, "NavaidTimeSlice");
@@ -160,7 +163,7 @@ public class AIXMParser extends AbstractXmlBeansTransformer {
 		/*
 		 * get all Events
 		 */
-		XmlObject[] events = doc.selectChildren(EVENT);
+		XmlObject[] events = doc.selectChildren(AIXM_BASIC_MESSAGE);
 		if (events != null && events.length > 0) {
 			for (XmlObject event : events) {
 
@@ -168,7 +171,7 @@ public class AIXMParser extends AbstractXmlBeansTransformer {
 //				String eventDesc = XmlUtil.stripText(event.selectChildren(EVENT_DESCRIPTION));
 				String eventType = XmlUtil.stripText(event.selectChildren(EVENT_TYPE));
 
-				XmlObject[] hasMember = event.selectChildren(EVENT_HAS_MEMBER);
+				XmlObject[] hasMember = event.selectChildren(MESSAGE_HAS_MEMBER);
 				/*
 				 * get the hasMember
 				 */
@@ -436,6 +439,8 @@ public class AIXMParser extends AbstractXmlBeansTransformer {
 						newEvent.put(AERO_FEATURE_KEY, identifier);
 					}
 					
+					newEvent.put("aixmType", "aixm:Navaid");
+					
 					newEvents.add(newEvent);
 				}
 			}
@@ -475,13 +480,13 @@ public class AIXMParser extends AbstractXmlBeansTransformer {
 				 * construct time in millis. for "unknown" set the MAX_VALUE
 				 */
 				long beginPosMs, endPosMs = 0L;
-				if (beginPos.equals("unknown")) {
+				if (beginPos.isEmpty() || beginPos.equals("unknown")) {
 					beginPosMs = Long.MAX_VALUE;
 				} else {
 					beginPosMs = new DateTime(beginPos).getMillis();
 				}
 
-				if (endPos.equals("unknown")) {
+				if (endPos.isEmpty() || endPos.equals("unknown")) {
 					endPosMs = Long.MAX_VALUE;
 				} else {
 					endPosMs = new DateTime(endPos).getMillis();
