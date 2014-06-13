@@ -557,7 +557,12 @@ public class OMParser extends AbstractXmlBeansTransformer {
 
 				if ((Boolean) pum.get(IS_UCUM_BOOLEAN_KEY)) {
 					//got value for conversion
-					current.replaceAll(decimalS, ".");
+					
+					//TODO is this required? it did not do anything at all,
+					//as it was done on an immutable without re-assigning
+//					current.replaceAll(decimalS, ".");
+					current = current.replaceAll(decimalS, ".");
+					
 					Double value = Double.NaN;
 					try {
 						value = Double.parseDouble(current);
@@ -734,7 +739,7 @@ public class OMParser extends AbstractXmlBeansTransformer {
 						//convert
 						doubleValue = (Double) UCUMTools.convert(uom.getCode(), doubleValue).getValue();
 					}
-					catch (Throwable t) {
+					catch (Exception t) {
 						OMParser.logger.info("could not convert uom '" + uom + "' to base unit, reason: " + t.getMessage());
 					}
 				}
@@ -823,7 +828,7 @@ public class OMParser extends AbstractXmlBeansTransformer {
 					//convert
 					value = (Double) UCUMTools.convert(uom, value).getValue();
 				}
-				catch (Throwable t) {
+				catch (Exception t) {
 					OMParser.logger.info("could not convert uom '" + uom + "' to base unit, reason: " + t.getMessage());
 				}
 			}

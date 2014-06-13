@@ -228,7 +228,7 @@ public class LiteralExpression extends AFilterExpression{
 						doubleValue *= 1000;
 					}
 				}
-				catch (Throwable t) {
+				catch (Exception t) {
 					logger.warn("Could not convert uom '" + uom.xmlText(new XmlOptions().setSaveOuter()) +
 							"' to base unit, reason: " + t.getMessage());
 					if (t instanceof RuntimeException) throw (RuntimeException) t;

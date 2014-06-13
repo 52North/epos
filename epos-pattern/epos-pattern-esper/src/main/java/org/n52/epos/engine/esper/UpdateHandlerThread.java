@@ -146,7 +146,7 @@ public class UpdateHandlerThread implements Runnable {
 				this.listener.doOutput(event);
 			}
 		}
-		catch (Throwable e) {
+		catch (Exception e) {
 			//log exception
 			UpdateHandlerThread.logger.warn(e.getMessage());
 			
@@ -251,7 +251,7 @@ public class UpdateHandlerThread implements Runnable {
 			//no event property name value found
 			UpdateHandlerThread.logger.warn(ex.getMessage());
 		}
-		catch (Throwable t) {
+		catch (Exception t) {
 			UpdateHandlerThread.logger.warn(t.getMessage());
 		}
 		return result;

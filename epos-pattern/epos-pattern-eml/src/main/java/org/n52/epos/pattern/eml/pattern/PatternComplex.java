@@ -226,7 +226,7 @@ public class PatternComplex extends AGuardedViewPattern {
 					pName = params.get(Constants.SELECT_PARAM_PROPERTY_NAME).toString();
 				}
 			}
-			catch (Throwable t) {
+			catch (Exception t) {
 				PatternComplex.logger.warn("could not load parameters from select function");
 			}
 			whereClause = this.guard.createStatement(true);

@@ -198,7 +198,7 @@ public class EMLHelper {
 						sweQ.getQuantity().getUom().setCode(result.getUom());
 						et.set(sweQ);		
 					}
-					catch (Throwable t) {
+					catch (Exception t) {
 						logger.warn("Could not convert uom '" + uom.xmlText(new XmlOptions().setSaveOuter()) +
 								"' to base unit, reason: " + t.getMessage());
 						if (t instanceof RuntimeException) throw (RuntimeException) t;

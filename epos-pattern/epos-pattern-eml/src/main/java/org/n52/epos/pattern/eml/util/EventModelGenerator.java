@@ -205,7 +205,7 @@ public class EventModelGenerator implements OutputGenerator {
 						namedVal.addNewValue().set(xo);
 					}
 				}
-				catch (Throwable e) {
+				catch (Exception e) {
 					//log exception
 					logger.warn(e.getMessage(), e);
 					
@@ -228,7 +228,7 @@ public class EventModelGenerator implements OutputGenerator {
 					namedVal.addNewName().setStringValue(key);
 					namedVal.addNewValue().set(xo);
 				}
-				catch (Throwable e) {
+				catch (Exception e) {
 					logger.warn(e.getMessage(), e);
 					
 					//forward exception

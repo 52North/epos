@@ -71,7 +71,7 @@ public class DebugListener implements StatementAwareUpdateListener{
 					Object obj = newEvents[i].get("value");
 					DebugListener.logger.debug("\t\tvalue: " + obj);
 				}
-				catch (Throwable t) {/*empty*/}
+				catch (Exception t) {/*empty*/}
 			}
 		}
 		else {
