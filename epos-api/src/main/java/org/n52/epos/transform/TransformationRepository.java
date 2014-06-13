@@ -110,7 +110,7 @@ public interface TransformationRepository<O> {
 		 * @param input the input object
 		 * @param outputClass the desired output class type
 		 * @return the transformed object as a type of outputClass
-		 * @throws Exception if no matching transformer is available
+		 * @throws TransformationException if no matching transformer is available
 		 */
 		public static <T> T transform(Object input, Class<? extends T> outputClass)
 				throws TransformationException {
