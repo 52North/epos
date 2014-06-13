@@ -560,8 +560,9 @@ public class OMParser extends AbstractXmlBeansTransformer {
 					
 					//TODO is this required? it did not do anything at all,
 					//as it was done on an immutable without re-assigning
-//					current.replaceAll(decimalS, ".");
-					current = current.replaceAll(decimalS, ".");
+					if (!decimalS.equals(".")) {
+						current = current.replace(decimalS, ".");
+					}
 					
 					Double value = Double.NaN;
 					try {
