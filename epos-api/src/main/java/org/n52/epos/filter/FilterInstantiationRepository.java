@@ -39,7 +39,6 @@ import org.slf4j.LoggerFactory;
 /**
  * @author matthes rieke
  *
- * @param <I> the input type (=encoding) of the rule
  */
 public interface FilterInstantiationRepository {
 
@@ -70,6 +69,8 @@ public interface FilterInstantiationRepository {
 			repos = new ArrayList<FilterInstantiationRepository>();
 			for (FilterInstantiationRepository filterRepo : loader) {
 				repos.add(filterRepo);
+                                logger.info("New FilterInstantiationRepository: {}, supportedInput={}",
+                                        filterRepo.getClass().getCanonicalName(), filterRepo.getSupportedInput());
 			}
 		}
 
@@ -92,7 +93,7 @@ public interface FilterInstantiationRepository {
 		/**
 		 * @param input the input object
 		 * @return the {@link EposFilter} instance
-		 * @throws Exception if no matching transformer is available
+		 * @throws FilterInstantiationException if no matching transformer is available
 		 */
 		public static EposFilter instantiate(Object input)
 				throws FilterInstantiationException {
@@ -102,7 +103,7 @@ public interface FilterInstantiationRepository {
 					return t.instantiateFrom(input);
 				} catch (Exception e) {
 					logger.warn(e.getMessage(), e);
-					logger.warn("Skipping FilterInstnationRepository: "+ t.getClass().getName());
+					logger.warn("Skipping FilterInstantiationRepository: "+ t.getClass().getName());
 				}
 			}
 
