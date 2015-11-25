@@ -35,6 +35,7 @@ import javax.xml.namespace.QName;
 
 import net.opengis.gml.x32.AbstractTimeObjectType;
 import net.opengis.gml.x32.FeaturePropertyType;
+import net.opengis.gml.x32.MeasureType;
 import net.opengis.gml.x32.ReferenceType;
 import net.opengis.gml.x32.TimeInstantType;
 import net.opengis.gml.x32.TimePeriodType;
@@ -151,24 +152,31 @@ public class OM20Transformer extends AbstractXmlBeansTransformer {
 	}
 
 	private void parseResult(XmlObject object, MapEposEvent result) {
-		if (object instanceof XmlAnyTypeImpl) {
-			String value = XmlUtil.stripText(object);
-			Double asDouble = parseAsDouble(value);
-			if (asDouble != null) {
-				result.put(MapEposEvent.DOUBLE_VALUE_KEY, asDouble.doubleValue());
-				if (result.get(MapEposEvent.OBSERVED_PROPERTY_KEY) != null) {
-					result.put(result.get(MapEposEvent.OBSERVED_PROPERTY_KEY).toString(), asDouble.doubleValue());
-				}
-			}
-			else {
-				if (result.get(MapEposEvent.OBSERVED_PROPERTY_KEY) != null) {
-					result.put(result.get(MapEposEvent.OBSERVED_PROPERTY_KEY).toString(), value);
-				}
-			}
-			
-			result.put(MapEposEvent.STRING_VALUE_KEY, value);
+		String value = null;
+                if (object instanceof XmlAnyTypeImpl) {
+			value = XmlUtil.stripText(object);
 			
 		}
+                else if (object instanceof MeasureType) {
+                    value = ((MeasureType) object).getStringValue();
+                }
+                
+                if (value != null) {
+                    Double asDouble = parseAsDouble(value);
+                    if (asDouble != null) {
+                            result.put(MapEposEvent.DOUBLE_VALUE_KEY, asDouble.doubleValue());
+                            if (result.get(MapEposEvent.OBSERVED_PROPERTY_KEY) != null) {
+                                    result.put(result.get(MapEposEvent.OBSERVED_PROPERTY_KEY).toString(), asDouble.doubleValue());
+                            }
+                    }
+                    else {
+                            if (result.get(MapEposEvent.OBSERVED_PROPERTY_KEY) != null) {
+                                    result.put(result.get(MapEposEvent.OBSERVED_PROPERTY_KEY).toString(), value);
+                            }
+                    }
+
+                    result.put(MapEposEvent.STRING_VALUE_KEY, value);
+                }
 	}
 
 	private Double parseAsDouble(String value) {
