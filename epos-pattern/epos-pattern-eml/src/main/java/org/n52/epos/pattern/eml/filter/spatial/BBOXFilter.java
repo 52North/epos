@@ -42,6 +42,8 @@ import net.opengis.gml.x32.EnvelopeType;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.ParseException;
+import net.opengis.gml.x32.EnvelopeDocument;
+import org.apache.xmlbeans.XmlObject;
 
 
 /**
@@ -74,30 +76,21 @@ public class BBOXFilter extends ASpatialFilter {
 	public String createExpressionString(boolean complexPatternGuard) {
 		Geometry geom = null;
 		try {
-			//get Envelope
-			Node bbNode = this.bboxOperator.getDomNode();
-			NodeList nodes = bbNode.getChildNodes();
-			Node envNode = null;
-			
-			for (int i = 0; i < nodes.getLength(); i++) {
-				if (!nodes.item(i).getNamespaceURI().equals(GML_NAMESPACE)) {
-					continue;
-				}
-				if (!nodes.item(i).getLocalName().equals(ENVELOPE_NAME)) {
-					continue;
-				}
-				//envelope found
-				envNode = nodes.item(i);
-			}
+                        //get Envelope
+                        EnvelopeType envelope;
+                        XmlObject[] envelopes = this.bboxOperator.selectChildren(EnvelopeDocument.type.getDocumentElementName());
+                        if (envelopes != null && envelopes.length > 0) {
+                            envelope = (EnvelopeType) envelopes[0];
+                        }
+                        else {
+                            logger.warn("could not find envelope from elem: "+this.bboxOperator);
+                            return "";
+                        }
 			
 			//parse Envelope
-			EnvelopeType envelope = EnvelopeType.Factory.parse(envNode);
 			geom = GMLGeometryFactory.parseGeometry(envelope);
 		} catch (ParseException e) {
 			logger.warn(e.getMessage(), e);
-		}
-		catch (XmlException e) {
-			logger.warn("could not parse the envelope: " + e.getMessage());
 		}
 		
 		if (geom == null) {

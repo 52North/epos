@@ -23,7 +23,7 @@ This project includes:
   52North OxFramework Xmlbeans Handling under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
   52°North EPOS Event Processor under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
   52°North OXF Conversion module under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
-  AIXM 5.1 schemas (adjusted to support metadata by reference) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  AIXM 5.1 schemas (adjusted to support metadata by reference) under The Apache Software License, Version 2.0
   Antlr 3 Runtime under BSD License
   AntLR Parser Generator under BSD License
   ANTLR StringTemplate under BSD licence
@@ -43,7 +43,7 @@ This project includes:
   EPOS Transform module for XMLBeans bindings under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
   EPOS Transformation Modules under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
   Esper under GNU General Public License Version 2
-  Event Model schema version 0.2.0 under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  Event Model schema version 0.2.0 under The Apache Software License, Version 2.0
   Hamcrest Core under New BSD License
   Joda time under Apache 2
   JTS Topology Suite under Lesser General Public License (LGPL)
@@ -53,16 +53,16 @@ This project includes:
   Mockito under The MIT License
   OASIS WS-N specification schemas - including WS-BrokeredNotification (v1.3) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
   OASIS WS-Resources specification schemas v1.2 under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
-  OGC EML schema 0.0.1 (OGC Discussion Paper 08-132) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
-  OGC Filter schema (spec. v2.0) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
-  OGC GML schema (spec. v3.1.1) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
-  OGC GML schema (spec. v3.2.1) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
-  OGC O&M schema (spec. v1.0.0) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
-  OGC O&M schema (spec. v2.0) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
-  OGC OWS schema (spec. v1.1.0) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
-  OGC Sampling schema (spec. v1.0.0) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
-  OGC SensorML schema (spec. v1.0.1) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
-  OGC SWECommon schema (spec. v1.0.1) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  OGC EML schema 0.0.1 (OGC Discussion Paper 08-132) under The Apache Software License, Version 2.0
+  OGC Filter schema (spec. v2.0) under The Apache Software License, Version 2.0
+  OGC GML schema (spec. v3.1.1) under The Apache Software License, Version 2.0
+  OGC GML schema (spec. v3.2.1) under The Apache Software License, Version 2.0
+  OGC O&M schema (spec. v1.0.0) under The Apache Software License, Version 2.0
+  OGC O&M schema (spec. v2.0) under The Apache Software License, Version 2.0
+  OGC OWS schema (spec. v1.1.0) under The Apache Software License, Version 2.0
+  OGC Sampling schema (spec. v1.0.0) under The Apache Software License, Version 2.0
+  OGC SensorML schema (spec. v1.0.1) under The Apache Software License, Version 2.0
+  OGC SWECommon schema (spec. v1.0.1) under The Apache Software License, Version 2.0
   OGC SWES schema (spec. v2.0) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
   Saxon-HE under Mozilla Public License Version 1.0
   SLF4J API Module under MIT License
@@ -71,7 +71,7 @@ This project includes:
   vecmath under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
   W3C SOAP specification recommondation (v1.2 part 1) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
   W3C WS-Addressing specification schemas (v1.0) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
-  W3C xlink schema (spec. v1.1.0) under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  W3C xlink schema (spec. v1.1.0) under The Apache Software License, Version 2.0
   Xerces2 Java Parser under The Apache Software License, Version 2.0
   xercesImpl under The Apache Software License, Version 2.0
   XML Commons External Components XML APIs under The Apache Software License, Version 2.0
