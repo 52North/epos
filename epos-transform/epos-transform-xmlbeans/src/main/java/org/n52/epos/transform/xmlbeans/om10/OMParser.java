@@ -1054,13 +1054,18 @@ public class OMParser extends AbstractXmlBeansTransformer {
 				throw new TransformationException(e);
 			}
 		}
+                else if (message instanceof ObservationType) {
+                    ObservationDocument doc = ObservationDocument.Factory.newInstance();
+                    doc.setObservation((ObservationType) message);
+                    return transformXmlBeans(doc);
+                }
 		
 		return null;
 	}
 
 	@Override
 	protected boolean supportsXmlBeansInput(XmlObject input) {
-		return input instanceof ObservationDocument;
+		return input instanceof ObservationDocument || input instanceof ObservationType;
 	}
 
 	@Override

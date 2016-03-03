@@ -45,6 +45,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import aero.aixm.schema.x51.message.AIXMBasicMessageDocument;
+import aero.aixm.schema.x51.message.AIXMBasicMessageType;
 
 import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.io.ParseException;
@@ -146,7 +147,17 @@ public class AIXMParser extends AbstractXmlBeansTransformer {
 
 	@Override
 	protected EposEvent transformXmlBeans(XmlObject message) {
-		List<MapEposEvent> result = parseAIXM((XmlObject) message);
+                XmlObject xo;
+                if (message instanceof AIXMBasicMessageType) {
+                    AIXMBasicMessageDocument doc = AIXMBasicMessageDocument.Factory.newInstance();
+                    doc.setAIXMBasicMessage((AIXMBasicMessageType) message);
+                    xo = doc;
+                }
+                else {
+                    xo = message;
+                }
+            
+		List<MapEposEvent> result = parseAIXM((XmlObject) xo);
 				
 		return (result != null && result.size() > 0) ? result.get(0) : null;
 	}
@@ -507,7 +518,7 @@ public class AIXMParser extends AbstractXmlBeansTransformer {
 
 	@Override
 	protected boolean supportsXmlBeansInput(XmlObject input) {
-		return input instanceof AIXMBasicMessageDocument;
+		return input instanceof AIXMBasicMessageDocument || input instanceof AIXMBasicMessageType;
 	}
 
 	@Override
