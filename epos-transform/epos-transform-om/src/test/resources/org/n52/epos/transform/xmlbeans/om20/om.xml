@@ -1,0 +1,15 @@
+<om:OM_Observation gml:id="o_2ABBFA8BFFB7A2AD7F2D0410AB83B835A1EF80D5" xmlns:sos="http://www.opengis.net/sos/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:om="http://www.opengis.net/om/2.0" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <gml:description>test description for this observation</gml:description>
+    <gml:identifier codeSpace="http://www.opengis.net/def/nil/OGC/0/unknown">"UM/Chemical/observation/09/1448413838878"</gml:identifier>
+    <om:type xlink:href="http://www.opengis.net/def/observationType/OGC-OM/2.0/OM_Measurement"/>
+    <om:phenomenonTime>
+        <gml:TimeInstant gml:id="phenomenonTime_29461">
+            <gml:timePosition>2015-11-25T01:10:38.878Z</gml:timePosition>
+        </gml:TimeInstant>
+    </om:phenomenonTime>
+    <om:resultTime xlink:href="#phenomenonTime_29461"/>
+    <om:procedure xlink:href="ws2500"/>
+    <om:observedProperty xlink:href="AirTemperature"/>
+    <om:featureOfInterest xlink:href="UM/featureOfInterest/9" xlink:title="UM"/>
+    <om:result uom="ppm" xsi:type="ns:MeasureType" xmlns:ns="http://www.opengis.net/gml/3.2">29.0</om:result>
+</om:OM_Observation>

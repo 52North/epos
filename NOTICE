@@ -40,6 +40,9 @@ This project includes:
   EPOS Pattern Modules under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
   EPOS Patterns Tools under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
   EPOS Test module under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  EPOS Transform module for AIXM using simple XPath under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  EPOS Transform module for AIXM XMLBeans bindings under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
+  EPOS Transform module for OM XMLBeans bindings under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
   EPOS Transform module for XMLBeans bindings under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
   EPOS Transformation Modules under GNU GENERAL PUBLIC LICENSE Version 2, June 1991
   Esper under GNU General Public License Version 2

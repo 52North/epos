@@ -333,6 +333,7 @@ public class EMLPatternFilter implements PatternFilter {
 				EventPattern newPattern = createEventPattern(pattern, statement,
 						properties, statement.getSelectFunction().getDataTypes(), internalStreamNames);
 				this.eventPatterns.add(newPattern);
+                                logger.debug("Pattern {} with statement: {}", newPattern.getID(), statement.getStatement());
 			}
 		}
 	}

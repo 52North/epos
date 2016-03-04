@@ -15,7 +15,9 @@
 	<name>EPOS Transformation Modules</name>
 
 	<modules>
-		<module>epos-transform-xmlbeans</module>
+		<module>epos-transform-om</module>
+                <module>epos-transform-aixm-xmlbeans</module>
+                <module>epos-transform-aixm-xpath</module>
 	</modules>
 
 </project>
