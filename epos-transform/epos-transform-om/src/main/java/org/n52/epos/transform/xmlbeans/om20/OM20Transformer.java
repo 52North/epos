@@ -76,21 +76,25 @@ public class OM20Transformer extends AbstractOMTransformer {
 	
 	@Override
 	protected EposEvent transformXmlBeans(XmlObject input) throws TransformationException {
-		MapEposEvent result = null;
-		
-		if (input instanceof OMObservationDocument) {
-			result = transformFrom((OMObservationDocument) input);
-		}
-		else if (input instanceof OMObservationType) {
-			result = transformFrom((OMObservationType) input);
-		}
-		
-		if (result == null) {
-			throw new IllegalStateException("Should never reach here!");
-		}
-		
-		result.put(MapEposEvent.ORIGNIAL_OBJECT_KEY, input);
-		return result;
+            MapEposEvent result = null;
+
+            if (input instanceof OMObservationDocument) {
+                result = transformFrom((OMObservationDocument) input);
+                result.put(MapEposEvent.ORIGNIAL_OBJECT_KEY, input);
+            }
+            else if (input instanceof OMObservationType) {
+                OMObservationDocument doc = OMObservationDocument.Factory.newInstance();
+                doc.setOMObservation((OMObservationType) input);
+                result = transformFrom(doc);
+                result.put(MapEposEvent.ORIGNIAL_OBJECT_KEY, doc);
+            }
+
+            if (result == null) {
+                throw new IllegalStateException("Should never reach here!");
+            }
+
+            result.put(MapEposEvent.ORIGNIAL_OBJECT_KEY, input);
+            return result;
 	}
 
 	private MapEposEvent transformFrom(OMObservationDocument input) {

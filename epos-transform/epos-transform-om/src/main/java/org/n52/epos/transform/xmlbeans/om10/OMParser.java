@@ -273,17 +273,6 @@ public class OMParser extends AbstractOMTransformer {
 			sensorId = proc.getHref();
 		}
 
-		/*
-		 * put sensor-id and procedure
-		 */
-		for (MapEposEvent me : events) {
-			me.put(MapEposEvent.SENSORID_KEY, sensorId);
-			me.put("procedure", sensorId);
-//
-//			if (observation.getProcedure().isSetHref()) {
-//				me.put("procedure", observation.getProcedure().getHref());
-//			}
-		}
 
 		/*
 		 * parse observed property
@@ -339,6 +328,19 @@ public class OMParser extends AbstractOMTransformer {
 			throw new TransformationException(e);
 		} catch (com.vividsolutions.jts.io.ParseException e) {
 			throw new TransformationException(e);
+		}
+                
+		/*
+		 * put sensor-id and procedure and original object
+		 */
+		for (MapEposEvent me : events) {
+			me.put(MapEposEvent.SENSORID_KEY, sensorId);
+			me.put("procedure", sensorId);
+                        me.put(MapEposEvent.ORIGNIAL_OBJECT_KEY, oDoc);
+                        
+//			if (observation.getProcedure().isSetHref()) {
+//				me.put("procedure", observation.getProcedure().getHref());
+//			}
 		}
 
 		return events.get(0);
