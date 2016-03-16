@@ -78,5 +78,7 @@ public interface EposEvent {
 	 * @param input the original basis for this event
 	 */
 	public void setOriginalObject(Object input);
+        
+        String getContentType();
 
 }

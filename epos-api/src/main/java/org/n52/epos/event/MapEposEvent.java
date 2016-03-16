@@ -186,6 +186,9 @@ public class MapEposEvent implements EposEvent, Map<String, Object> {
 	private long end;
 	
 	private Object originalObject;
+        
+        //default to XML for backwards compatibility
+        private String contentType = "application/xml";
 	
 	/**
 	 * 
@@ -502,4 +505,13 @@ public class MapEposEvent implements EposEvent, Map<String, Object> {
 	public void setOriginalObject(Object input) {
 		setValue(MapEposEvent.ORIGNIAL_OBJECT_KEY, input);		
 	}
+
+    @Override
+    public String getContentType() {
+        return this.contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
 }
