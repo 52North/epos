@@ -48,7 +48,7 @@
 		<esper.version>4.5.0</esper.version>
 		<slf4j.version>1.7.5</slf4j.version>
 		<logback.version>1.0.11</logback.version>
-		<oxf.version>2.0.0-alpha.3</oxf.version>
+		<oxf.version>2.0.0-alpha.3.3</oxf.version>
 		<n52.xml.version>2.1.1-SNAPSHOT</n52.xml.version>
 		<xmlbeans.version>2.6.0</xmlbeans.version>
 		<currentYear>2014</currentYear> <!-- manual setting -->
@@ -256,11 +256,6 @@
 			</dependency>
 
 			<!-- 52N libraries -->
-			<dependency>
-				<groupId>org.n52.sensorweb</groupId>
-				<artifactId>oxf-common</artifactId>
-				<version>${oxf.version}</version>
-			</dependency>
 			<dependency>
 				<groupId>org.n52.sensorweb</groupId>
 				<artifactId>52n-oxf-xmlbeans</artifactId>
