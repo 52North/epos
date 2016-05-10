@@ -108,8 +108,8 @@ public interface FilterInstantiationRepository {
 			}
 
 			throw new FilterInstantiationException(
-					"No FilterInstantiationRepository with supported Input '" + input.getClass().getName()
-							+ "' available.");
+					"Could not instantiate Filter for Input '" + input.getClass().getName()
+							+ "'");
 		}
 
 	}
