@@ -45,6 +45,8 @@ import org.slf4j.LoggerFactory;
 import com.espertech.esper.client.EventBean;
 import com.espertech.esper.client.PropertyAccessException;
 import com.espertech.esper.event.map.MapEventBean;
+import java.util.Collection;
+import org.n52.epos.event.EposEvent;
 
 
 
@@ -143,6 +145,18 @@ public class UpdateHandlerThread implements Runnable {
 			if (this.eventPattern.createsFinalOutput()) {
 				if (logger.isDebugEnabled())
 					logger.debug("performing output for statement: {}", this.eventPattern.createStringRepresentation());
+                                if (event.containsKey(MapEposEvent.CAUSALITY_KEY)) {
+                                    Object causes = event.get(MapEposEvent.CAUSALITY_KEY);
+                                    if (causes instanceof Collection) {
+                                        for (Object cause : (Collection) causes) {
+                                            if (cause instanceof EposEvent) {
+                                                event.put(MapEposEvent.PUBLICATION_KEY, ((EposEvent) cause).getValue(MapEposEvent.PUBLICATION_KEY));
+                                            }
+                                        }
+                                        
+                                    }
+
+                                }
 				this.listener.doOutput(event);
 			}
 		}

@@ -101,7 +101,11 @@ public class MapEposEvent implements EposEvent, Map<String, Object> {
 	 * key for the original message
 	 */
 	public static final String ORIGNIAL_OBJECT_KEY = "originalObject";
-	
+
+	/**
+	 * key for the publication
+	 */
+	public static final String PUBLICATION_KEY = "publicationId";
 	
 	/**
 	 * key for the feature of interest ID
