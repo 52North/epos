@@ -123,7 +123,7 @@ public class EventModelGenerator implements OutputGenerator {
 		for (String key : recursiveEvent.keySet()) {
 			if (key.equals(MapEposEvent.CAUSALITY_KEY) || key.equals(MapEposEvent.THIS_KEY) ||
 					key.equals(MapEposEvent.END_KEY) || key.equals(MapEposEvent.STRING_VALUE_KEY) || 
-					key.equals(MapEposEvent.DOUBLE_VALUE_KEY)) {
+					key.equals(MapEposEvent.DOUBLE_VALUE_KEY) || key.equals(MapEposEvent.PUBLICATION_KEY)) {
 				/*
 				 * Ignore following keys:
 				 * 
