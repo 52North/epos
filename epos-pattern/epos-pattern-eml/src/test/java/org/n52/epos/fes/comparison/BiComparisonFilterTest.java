@@ -26,23 +26,51 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  */
-package org.n52.epos.fes.logical;
+package org.n52.epos.fes.comparison;
 
-import org.n52.epos.fes.StatementPartial;
+import org.junit.Test;
+import org.n52.epos.fes.operands.CategoryOperand;
+import org.n52.epos.fes.operands.QuantityOperand;
 
 /**
  *
  * @author <a href="mailto:m.rieke@52north.org">Matthes Rieke</a>
  */
-public class AndOperator extends BiLogicalOperator {
+public class BiComparisonFilterTest {
 
-    public AndOperator() {
-        super("and");
+    @Test (expected = IllegalStateException.class)
+    public void testNotAssignability() {
+        new BiComparisonFilter(new QuantityOperand(1.2, null), new CategoryOperand("wow")) {
+            @Override
+            public String getStatementPartial() {
+                return "";
+            }
+        };
     }
     
-    public AndOperator(StatementPartial one, StatementPartial two) {
-        super(one, two, "and");
+    @Test
+    public void testAssignability() {
+        new BiComparisonFilter(new QuantityOperand(1.2, null), new QuantityOperand(1.2, null)) {
+            @Override
+            public String getStatementPartial() {
+                return "";
+            }
+        };
+        
+        new BiComparisonFilter(new CategoryOperand("wow"), new CustomCategoryOperand("wow")) {
+            @Override
+            public String getStatementPartial() {
+                return "";
+            }
+        };
     }
-
     
+    public static class CustomCategoryOperand extends CategoryOperand {
+        
+        public CustomCategoryOperand(String value) {
+            super(value);
+        }
+        
+    }
 }
+

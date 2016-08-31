@@ -26,23 +26,36 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  */
-package org.n52.epos.fes.logical;
+package org.n52.epos.fes;
 
-import org.n52.epos.fes.StatementPartial;
+import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
+import org.junit.Test;
+import org.n52.epos.fes.comparison.PropertyIsGreaterThan;
+import org.n52.epos.fes.logical.AndOperator;
+import org.n52.epos.fes.logical.NotOperator;
+import org.n52.epos.fes.operands.QuantityOperand;
+import org.n52.epos.fes.operands.ValueReferenceOperand;
 
 /**
  *
  * @author <a href="mailto:m.rieke@52north.org">Matthes Rieke</a>
  */
-public class AndOperator extends BiLogicalOperator {
+public class HierarchicalFilterTest {
 
-    public AndOperator() {
-        super("and");
+    @Test
+    public void testComplexFilterStatements() {
+        QuantityOperand op1 = new QuantityOperand(23.5);
+        QuantityOperand op2 = new QuantityOperand(5.23);
+        ValueReferenceOperand vr1 = new ValueReferenceOperand("procedure");
+        ValueReferenceOperand vr2 = new ValueReferenceOperand("observedProperty");
+        
+        PropertyIsGreaterThan greaterThan = new PropertyIsGreaterThan(op1, vr1);
+        PropertyIsGreaterThan greaterThan2 = new PropertyIsGreaterThan(vr2, op2);
+        NotOperator not = new NotOperator(new AndOperator(greaterThan, greaterThan2));
+        
+        Assert.assertThat(not.getStatementPartial(), CoreMatchers.equalTo(
+                "not((23.5 > procedure) and (observedProperty > 5.23))"));
     }
-    
-    public AndOperator(StatementPartial one, StatementPartial two) {
-        super(one, two, "and");
-    }
-
     
 }

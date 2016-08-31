@@ -26,23 +26,19 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  */
-package org.n52.epos.fes.logical;
+package org.n52.epos.fes.decoding.xml;
 
+import net.opengis.fes.x20.ComparisonOperatorType;
 import org.n52.epos.fes.StatementPartial;
 
 /**
  *
  * @author <a href="mailto:m.rieke@52north.org">Matthes Rieke</a>
  */
-public class AndOperator extends BiLogicalOperator {
+public class ComparsionOpsDecoder {
 
-    public AndOperator() {
-        super("and");
-    }
-    
-    public AndOperator(StatementPartial one, StatementPartial two) {
-        super(one, two, "and");
+    StatementPartial parseComarisonOp(ComparisonOperatorType comparisonOperatorType) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    
 }

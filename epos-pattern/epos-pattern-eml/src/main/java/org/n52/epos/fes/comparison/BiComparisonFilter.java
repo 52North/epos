@@ -26,23 +26,38 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  */
-package org.n52.epos.fes.logical;
+package org.n52.epos.fes.comparison;
 
+import java.util.Objects;
 import org.n52.epos.fes.StatementPartial;
+import org.n52.epos.fes.operands.Operand;
+import org.n52.epos.fes.operands.ValueReferenceOperand;
 
 /**
  *
  * @author <a href="mailto:m.rieke@52north.org">Matthes Rieke</a>
  */
-public class AndOperator extends BiLogicalOperator {
+public abstract class BiComparisonFilter implements StatementPartial {
 
-    public AndOperator() {
-        super("and");
-    }
-    
-    public AndOperator(StatementPartial one, StatementPartial two) {
-        super(one, two, "and");
+    protected final Operand one;
+    protected final Operand two;
+
+    public BiComparisonFilter(Operand one, Operand two) {
+        Objects.requireNonNull(one);
+        Objects.requireNonNull(two);
+        Class<? extends Operand> oneClass = one.getClass();
+        Class<? extends Operand> twoClass = two.getClass();
+        if (!oneClass.isAssignableFrom(ValueReferenceOperand.class) &&
+                !twoClass.isAssignableFrom(ValueReferenceOperand.class) &&
+                oneClass != twoClass &&
+                !oneClass.isAssignableFrom(twoClass) && 
+                !twoClass.isAssignableFrom(oneClass)) {
+            throw new IllegalStateException(String.format("Types are not intercomparable: %s vs %s",
+                    oneClass, twoClass));
+        }
+        
+        this.one = one;
+        this.two = two;
     }
 
-    
 }

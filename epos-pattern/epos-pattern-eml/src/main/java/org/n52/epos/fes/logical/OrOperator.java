@@ -35,6 +35,10 @@ import org.n52.epos.fes.StatementPartial;
  * @author <a href="mailto:m.rieke@52north.org">Matthes Rieke</a>
  */
 public class OrOperator extends BiLogicalOperator {
+    
+    public OrOperator() {
+        super("or");
+    }
 
     public OrOperator(StatementPartial one, StatementPartial two) {
         super(one, two, "or");

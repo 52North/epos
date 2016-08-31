@@ -26,7 +26,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  */
-package org.n52.epos.fes.logical;
+package org.n52.epos.fes.decoding;
 
 import org.n52.epos.fes.StatementPartial;
 
@@ -34,15 +34,8 @@ import org.n52.epos.fes.StatementPartial;
  *
  * @author <a href="mailto:m.rieke@52north.org">Matthes Rieke</a>
  */
-public class AndOperator extends BiLogicalOperator {
-
-    public AndOperator() {
-        super("and");
-    }
+public interface FesDecoder<T> {
     
-    public AndOperator(StatementPartial one, StatementPartial two) {
-        super(one, two, "and");
-    }
-
+    StatementPartial decode(T filter);
     
 }

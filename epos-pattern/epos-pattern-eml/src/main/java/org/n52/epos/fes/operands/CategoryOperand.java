@@ -26,23 +26,28 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  */
-package org.n52.epos.fes.logical;
+package org.n52.epos.fes.operands;
 
-import org.n52.epos.fes.StatementPartial;
+import java.util.Objects;
 
 /**
  *
  * @author <a href="mailto:m.rieke@52north.org">Matthes Rieke</a>
  */
-public class AndOperator extends BiLogicalOperator {
+public class CategoryOperand implements Operand {
 
-    public AndOperator() {
-        super("and");
+    private final String value;
+
+    public CategoryOperand(String value) {
+        Objects.requireNonNull(value);
+        this.value = value;
+    }
+
+    @Override
+    public String getStatementRepresentation() {
+        return value;
     }
     
-    public AndOperator(StatementPartial one, StatementPartial two) {
-        super(one, two, "and");
-    }
-
+    
     
 }

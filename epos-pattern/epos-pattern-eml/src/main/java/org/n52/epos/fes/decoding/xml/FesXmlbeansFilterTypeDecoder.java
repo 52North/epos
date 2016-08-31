@@ -26,61 +26,76 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  */
-package org.n52.epos.fes.logical;
+package org.n52.epos.fes.decoding.xml;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Predicate;
-import java.util.function.Supplier;
+import net.opengis.fes.x20.ComparisonOperatorType;
+import net.opengis.fes.x20.ComparisonOperatorsType;
+import net.opengis.fes.x20.FilterType;
+import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlObject;
 import org.n52.epos.fes.StatementPartial;
+import org.n52.epos.fes.decoding.FesDecoder;
+import org.n52.epos.fes.logical.AndOperator;
 
 /**
  *
  * @author <a href="mailto:m.rieke@52north.org">Matthes Rieke</a>
  */
-public abstract class BiLogicalOperator implements StatementPartial {
-
-    private StatementPartial one;
-    private StatementPartial two;
-    private final String op;
-
-    public BiLogicalOperator(String op) {
-        this(null, null, op);
-    }
-    
-    public BiLogicalOperator(StatementPartial one, StatementPartial two, String op) {
-        this.one = one;
-        this.two = two;
-        this.op = op;
-    }
-
-    public void setOne(StatementPartial one) {
-        this.one = one;
-    }
-
-    public void setTwo(StatementPartial two) {
-        this.two = two;
-    }
+public class FesXmlbeansFilterTypeDecoder implements FesDecoder<FilterType> {
 
     @Override
-    public String getStatementPartial() {
-        Objects.requireNonNull(one);
-        Objects.requireNonNull(two);
-        return String.format("(%s) %s (%s)", one.getStatementPartial(), op, two.getStatementPartial());
+    public StatementPartial decode(FilterType filter) {
+        List<StatementPartial> partials = new ArrayList<>();
+        
+        if (filter.isSetComparisonOps()) {
+            partials.add(parseComparisonOps(resolveChild(filter.getComparisonOps())));
+        }
+        
+        if (partials.size() == 1) {
+            return partials.get(0);
+        }
+        else {
+            return wrapWithAnd(partials);
+        }
     }
-    
-    public static StatementPartial wrapInAnd(List<StatementPartial> partials) {
-        return wrapIn(() -> {return new AndOperator();}, partials);
+
+    private XmlObject resolveChild(XmlObject xo) {
+        Objects.requireNonNull(xo);
+        XmlCursor cur = xo.newCursor();
+        
+        XmlObject result = null;
+        if (cur.toFirstChild()) {
+            result = cur.getObject();
+        }
+        cur.dispose();
+        
+        Objects.requireNonNull(result);
+        return result;
     }
-    
-    public static StatementPartial wrapInOr(List<StatementPartial> partials) {
-        return wrapIn(() -> {return new OrOperator();}, partials);
+
+    private StatementPartial parseComparisonOps(XmlObject element) {
+        if (!(element instanceof ComparisonOperatorsType)) {
+            throw new IllegalStateException("Content is not a ComparisonOperators element");
+        }
+        StatementPartial result;
+        
+        ComparisonOperatorsType cops = (ComparisonOperatorsType) element;
+        ComparisonOperatorType[] arr = cops.getComparisonOperatorArray();
+        if (arr.length > 1) {
+            throw new UnsupportedOperationException("multiple comparison ops are not yet supported");
+        }
+        
+        result = new ComparsionOpsDecoder().parseComarisonOp(arr[0]);
+        return result;
     }
-    
-    private static StatementPartial wrapIn(Supplier<BiLogicalOperator> supplier, List<StatementPartial> partials) {
-        BiLogicalOperator current = supplier.get();
-        BiLogicalOperator root = current;
-        BiLogicalOperator next;
+
+    protected StatementPartial wrapWithAnd(List<StatementPartial> partials) {
+        AndOperator current = new AndOperator();
+        AndOperator root = current;
+        AndOperator next;
         for (int i = 0; i < partials.size(); i++) {
             StatementPartial p = partials.get(i);
             
@@ -105,7 +120,8 @@ public abstract class BiLogicalOperator implements StatementPartial {
                 }
             }
             
-        }
+            
+        };
         
         return root;
     }

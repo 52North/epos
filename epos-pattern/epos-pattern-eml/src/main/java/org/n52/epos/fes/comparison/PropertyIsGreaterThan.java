@@ -26,23 +26,37 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  */
-package org.n52.epos.fes.logical;
+package org.n52.epos.fes.comparison;
 
-import org.n52.epos.fes.StatementPartial;
+import org.n52.epos.fes.operands.QuantityOperand;
+import org.n52.epos.fes.operands.ValueReferenceOperand;
 
 /**
  *
  * @author <a href="mailto:m.rieke@52north.org">Matthes Rieke</a>
  */
-public class AndOperator extends BiLogicalOperator {
-
-    public AndOperator() {
-        super("and");
-    }
+public class PropertyIsGreaterThan extends BiComparisonFilter {
     
-    public AndOperator(StatementPartial one, StatementPartial two) {
-        super(one, two, "and");
+    public PropertyIsGreaterThan(QuantityOperand one, QuantityOperand two) {
+        super(one, two);
     }
 
+    public PropertyIsGreaterThan(ValueReferenceOperand one, QuantityOperand two) {
+        super(one, two);
+    }
+
+    public PropertyIsGreaterThan(QuantityOperand one, ValueReferenceOperand two) {
+        super(one, two);
+    }
     
+    public PropertyIsGreaterThan(ValueReferenceOperand one, ValueReferenceOperand two) {
+        super(one, two);
+    }
+    
+    @Override
+    public String getStatementPartial() {
+        return String.format("%s > %s", one.getStatementRepresentation(),
+                two.getStatementRepresentation());
+    }
+
 }
