@@ -31,6 +31,8 @@ package org.n52.epos.fes.decoding.xml;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.xml.namespace.QName;
+import net.opengis.fes.x20.BinaryComparisonOpType;
 import net.opengis.fes.x20.ComparisonOperatorType;
 import net.opengis.fes.x20.ComparisonOperatorsType;
 import net.opengis.fes.x20.FilterType;
@@ -51,7 +53,11 @@ public class FesXmlbeansFilterTypeDecoder implements FesDecoder<FilterType> {
         List<StatementPartial> partials = new ArrayList<>();
         
         if (filter.isSetComparisonOps()) {
-            partials.add(parseComparisonOps(resolveChild(filter.getComparisonOps())));
+            if (filter.getComparisonOps() instanceof BinaryComparisonOpType) {
+                BinaryComparisonOpType bcops = (BinaryComparisonOpType) filter.getComparisonOps();
+                QName qName = bcops.newCursor().getName();
+                partials.add(parseComparisonOps(bcops, qName));
+            }
         }
         
         if (partials.size() == 1) {
@@ -62,33 +68,8 @@ public class FesXmlbeansFilterTypeDecoder implements FesDecoder<FilterType> {
         }
     }
 
-    private XmlObject resolveChild(XmlObject xo) {
-        Objects.requireNonNull(xo);
-        XmlCursor cur = xo.newCursor();
-        
-        XmlObject result = null;
-        if (cur.toFirstChild()) {
-            result = cur.getObject();
-        }
-        cur.dispose();
-        
-        Objects.requireNonNull(result);
-        return result;
-    }
-
-    private StatementPartial parseComparisonOps(XmlObject element) {
-        if (!(element instanceof ComparisonOperatorsType)) {
-            throw new IllegalStateException("Content is not a ComparisonOperators element");
-        }
-        StatementPartial result;
-        
-        ComparisonOperatorsType cops = (ComparisonOperatorsType) element;
-        ComparisonOperatorType[] arr = cops.getComparisonOperatorArray();
-        if (arr.length > 1) {
-            throw new UnsupportedOperationException("multiple comparison ops are not yet supported");
-        }
-        
-        result = new ComparsionOpsDecoder().parseComarisonOp(arr[0]);
+    private StatementPartial parseComparisonOps(BinaryComparisonOpType element, QName qName) {
+        StatementPartial result = new ComparsionOpsDecoder().decodeBinaryComarisonOperator(element, qName);
         return result;
     }
 

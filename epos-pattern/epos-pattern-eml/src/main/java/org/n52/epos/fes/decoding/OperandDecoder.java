@@ -26,26 +26,16 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  */
-package org.n52.epos.fes.comparison;
+package org.n52.epos.fes.decoding;
 
 import org.n52.epos.fes.operands.Operand;
-import org.n52.epos.fes.operands.QuantityOperand;
-import org.n52.epos.fes.operands.ValueReferenceOperand;
 
 /**
  *
  * @author <a href="mailto:m.rieke@52north.org">Matthes Rieke</a>
  */
-public class PropertyIsGreaterThan extends BiComparisonFilter {
+public interface OperandDecoder<T> {
+
+    Operand decode(T object);
     
-    public PropertyIsGreaterThan(Operand one, Operand two) {
-        super(one, two);
-    }
-
-    @Override
-    public String getStatementPartial() {
-        return String.format("%s > %s", one.getStatementRepresentation(),
-                two.getStatementRepresentation());
-    }
-
 }

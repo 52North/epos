@@ -28,45 +28,25 @@
  */
 package org.n52.epos.fes.decoding.xml;
 
-import org.n52.epos.fes.decoding.OperandDecoder;
-import java.util.Objects;
-import javax.xml.namespace.QName;
-import net.opengis.fes.x20.BinaryComparisonOpType;
-import net.opengis.fes.x20.ComparisonOperatorType;
-import net.opengis.fes.x20.PropertyIsGreaterThanDocument;
-import org.apache.xmlbeans.XmlObject;
+import java.io.IOException;
+import net.opengis.fes.x20.FilterDocument;
+import org.apache.xmlbeans.XmlException;
+import org.junit.Test;
 import org.n52.epos.fes.StatementPartial;
-import org.n52.epos.fes.comparison.PropertyIsGreaterThan;
-import org.n52.epos.fes.operands.Operand;
 
 /**
  *
  * @author <a href="mailto:m.rieke@52north.org">Matthes Rieke</a>
  */
-public class ComparsionOpsDecoder {
+public class FesXmlbeansFilterTypeDecoderTest {
     
-    private OperandDecoder operandDecoder = new FesXmlbeansOperandDecoder();
-
-    public StatementPartial decodeBinaryComarisonOperator(BinaryComparisonOpType element, QName qName) {
-        Objects.requireNonNull(element);
-        Objects.requireNonNull(qName);
-        
-        if (element.getExpressionArray().length != 2) {
-            throw new UnsupportedOperationException("Only two operands are supported for BinaryComparison filters");
-        }
-        
-        Operand one = parseOperand(element.getExpressionArray(0));
-        Operand two = parseOperand(element.getExpressionArray(1));
-        
-        if (qName.equals(PropertyIsGreaterThanDocument.type.getDocumentElementName())) {
-            return new PropertyIsGreaterThan(one, two);
-        }
-        
-        throw new UnsupportedOperationException("Filter type not yet supported: "+qName);
+    @Test
+    public void testDecoding() throws XmlException, IOException {
+        FilterDocument doc = FilterDocument.Factory.parse(getClass().getResourceAsStream("comparison.xml"));
+        FesXmlbeansFilterTypeDecoder dec = new FesXmlbeansFilterTypeDecoder();
+        StatementPartial partial = dec.decode(doc.getFilter());
+        String stmt = partial.getStatementPartial();
     }
 
-    private Operand parseOperand(XmlObject operand) {
-        return this.operandDecoder.decode(operand);
-    }
     
 }
