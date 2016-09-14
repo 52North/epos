@@ -51,8 +51,8 @@ import org.slf4j.LoggerFactory;
 public class TransformationToEposEventRepository implements TransformationRepository<EposEvent> {
 	
 	private static final Logger logger = LoggerFactory.getLogger(TransformationToEposEventRepository.class);
-	private Set<EposTransformer> transformers = new HashSet<EposTransformer>();
-	private Comparator<? super MessageTransformer<EposEvent>> comparator = new PriorityComparator();
+	private final Set<EposTransformer> transformers = new HashSet<>();
+	private final Comparator<? super MessageTransformer<EposEvent>> comparator = new PriorityComparator();
 	
 	public TransformationToEposEventRepository() {
 		ServiceLoader<EposTransformer> loader = ServiceLoader.load(EposTransformer.class);
@@ -64,7 +64,7 @@ public class TransformationToEposEventRepository implements TransformationReposi
 	
 	@Override
 	public EposEvent transform(Object input, String contentType) throws TransformationException {
-		MessageTransformer<EposEvent> trans = findTransformers(input);
+		MessageTransformer<EposEvent> trans = findTransformers(input, contentType);
 		
 		logger.debug("Using transformer {}", trans.getClass().getName());
 		
@@ -91,10 +91,10 @@ public class TransformationToEposEventRepository implements TransformationReposi
 		return result;
 	}
 	
-	private MessageTransformer<EposEvent> findTransformers(Object input) throws TransformationException {
-		List<MessageTransformer<EposEvent>> candidates = new ArrayList<MessageTransformer<EposEvent>>(transformers.size());
+	private MessageTransformer<EposEvent> findTransformers(Object input, String contentType) throws TransformationException {
+		List<MessageTransformer<EposEvent>> candidates = new ArrayList<>(transformers.size());
 		for (MessageTransformer<EposEvent> t : transformers) {
-			if (t.supportsInput(input, null)) {
+			if (t.supportsInput(input, contentType)) {
 				candidates.add(t);
 			}
 		}
@@ -119,7 +119,7 @@ public class TransformationToEposEventRepository implements TransformationReposi
 	@Override
 	public boolean supportsInput(Object input, String contentType) {
 		for (MessageTransformer<EposEvent> t : transformers) {
-			if (t.supportsInput(input, null)) {
+			if (t.supportsInput(input, contentType)) {
 				return true;
 			}
 		}
@@ -135,5 +135,12 @@ public class TransformationToEposEventRepository implements TransformationReposi
 		}
 		
 	}
+
+    @Override
+    public String toString() {
+        return getClass().getName() +" with Transformers: "+transformers.toString();
+    }
+        
+        
 
 }

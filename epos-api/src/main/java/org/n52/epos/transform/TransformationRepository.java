@@ -90,7 +90,10 @@ public interface TransformationRepository<O> {
 			repos = new ArrayList<>();
 			for (TransformationRepository<?> transformationRepsitory : loader) {
 				repos.add(transformationRepsitory);
+                                logger.info("Added repository: "+transformationRepsitory);
 			}
+                        
+                        
 		}
 
 		private static List<TransformationRepository<?>> getRepositories(

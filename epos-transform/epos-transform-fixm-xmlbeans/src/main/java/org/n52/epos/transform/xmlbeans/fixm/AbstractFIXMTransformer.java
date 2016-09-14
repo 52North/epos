@@ -60,7 +60,7 @@ public abstract class AbstractFIXMTransformer implements EposTransformer {
 		}
                 
                 if (input instanceof CharSequence) {
-                    if ("application/xml".equals(contentType)) {
+                    if ("application/xml".equals(contentType) && input.toString().contains("Flight>")) {
                         return true;
                     }
                 }
