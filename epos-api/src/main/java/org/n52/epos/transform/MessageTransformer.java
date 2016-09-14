@@ -37,9 +37,9 @@ package org.n52.epos.transform;
  */
 public interface MessageTransformer<O> {
 
-	O transform(Object input) throws TransformationException;
+	O transform(Object input, String contentType) throws TransformationException;
 
-	boolean supportsInput(Object input);
+	boolean supportsInput(Object input, String contentType);
 	
 	/**
 	 * An implementation shall provide a priority, ranging from

@@ -39,10 +39,6 @@ import java.util.Set;
 import org.joda.time.DateTime;
 import org.n52.epos.event.EposEvent;
 import org.n52.epos.event.MapEposEvent;
-import org.n52.epos.transform.EposTransformer;
-import org.n52.epos.transform.MessageTransformer;
-import org.n52.epos.transform.TransformationException;
-import org.n52.epos.transform.TransformationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,12 +63,12 @@ public class TransformationToEposEventRepository implements TransformationReposi
 	}
 	
 	@Override
-	public EposEvent transform(Object input) throws TransformationException {
+	public EposEvent transform(Object input, String contentType) throws TransformationException {
 		MessageTransformer<EposEvent> trans = findTransformers(input);
 		
 		logger.debug("Using transformer {}", trans.getClass().getName());
 		
-		EposEvent result = trans.transform(input);
+		EposEvent result = trans.transform(input, null);
 		
 		if (result == null) {
 			logger.warn("The resolved transformer ({}) was not able to create an event. Trying to at least provide "
@@ -98,7 +94,7 @@ public class TransformationToEposEventRepository implements TransformationReposi
 	private MessageTransformer<EposEvent> findTransformers(Object input) throws TransformationException {
 		List<MessageTransformer<EposEvent>> candidates = new ArrayList<MessageTransformer<EposEvent>>(transformers.size());
 		for (MessageTransformer<EposEvent> t : transformers) {
-			if (t.supportsInput(input)) {
+			if (t.supportsInput(input, null)) {
 				candidates.add(t);
 			}
 		}
@@ -115,15 +111,15 @@ public class TransformationToEposEventRepository implements TransformationReposi
 
 	@Override
 	public Set<Class<?>> getSupportedOutputs() {
-		Set<Class<?>> result = new HashSet<Class<?>>();
+		Set<Class<?>> result = new HashSet<>();
 		result.add(EposEvent.class);
 		return result;
 	}
 
 	@Override
-	public boolean supportsInput(Object input) {
+	public boolean supportsInput(Object input, String contentType) {
 		for (MessageTransformer<EposEvent> t : transformers) {
-			if (t.supportsInput(input)) {
+			if (t.supportsInput(input, null)) {
 				return true;
 			}
 		}

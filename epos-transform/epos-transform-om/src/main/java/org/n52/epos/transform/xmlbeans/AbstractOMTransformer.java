@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
 public abstract class AbstractOMTransformer implements EposTransformer {
 	
 	@Override
-	public boolean supportsInput(Object input) {
+	public boolean supportsInput(Object input, String contentType) {
 		if (input instanceof XmlObject) {
 			return supportsXmlBeansInput((XmlObject) input);
 		}
@@ -59,7 +59,7 @@ public abstract class AbstractOMTransformer implements EposTransformer {
 	}
 	
 	@Override
-	public EposEvent transform(Object input) throws TransformationException {
+	public EposEvent transform(Object input, String contentType) throws TransformationException {
 		XmlObject xo = null;
 		if (input instanceof Element) {
 			try {

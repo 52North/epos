@@ -21,7 +21,7 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>epos-transform-xmlbeans</artifactId>
+			<artifactId>epos-transform-om</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>

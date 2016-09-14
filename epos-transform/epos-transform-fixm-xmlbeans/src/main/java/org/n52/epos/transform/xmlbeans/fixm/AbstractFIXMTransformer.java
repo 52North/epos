@@ -26,7 +26,7 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  */
-package org.n52.epos.transform.xmlbeans.aixm;
+package org.n52.epos.transform.xmlbeans.fixm;
 
 import javax.xml.namespace.QName;
 
@@ -35,27 +35,37 @@ import org.apache.xmlbeans.XmlObject;
 import org.n52.epos.event.EposEvent;
 import org.n52.epos.transform.EposTransformer;
 import org.n52.epos.transform.TransformationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 
-public abstract class AbstractAIXMTransformer implements EposTransformer {
+public abstract class AbstractFIXMTransformer implements EposTransformer {
+    
+        private static final Logger LOG = LoggerFactory.getLogger(AbstractFIXMTransformer.class);
 	
 	@Override
 	public boolean supportsInput(Object input, String contentType) {
 		if (input instanceof XmlObject) {
 			return supportsXmlBeansInput((XmlObject) input);
 		}
-		return supportsInput(input, getSupportedQName());
+		return supportsInput(input, getSupportedQName(), contentType);
 	}
 	
-	protected boolean supportsInput(Object input, QName qn) {
-		if (!(input instanceof Element)) {
-			return false;
+	protected boolean supportsInput(Object input, QName qn, String contentType) {
+		if (input instanceof Element) {
+                    Element elem = (Element) input;
+
+                    return elem.getLocalName().equals(qn.getLocalPart()) &&
+                                    elem.getNamespaceURI().equals(qn.getNamespaceURI());
 		}
+                
+                if (input instanceof CharSequence) {
+                    if ("application/xml".equals(contentType)) {
+                        return true;
+                    }
+                }
 		
-		Element elem = (Element) input;
-		
-		return elem.getLocalName().equals(qn.getLocalPart()) &&
-				elem.getNamespaceURI().equals(qn.getNamespaceURI());
+                return false;
 	}
 	
 	@Override
@@ -71,6 +81,14 @@ public abstract class AbstractAIXMTransformer implements EposTransformer {
 		else if (input instanceof XmlObject) {
 			xo = (XmlObject) input;
 		}
+                else if (input instanceof CharSequence) {
+                    try {
+                        xo = XmlObject.Factory.parse(input.toString());
+                    } catch (XmlException ex) {
+                        LOG.warn("Could not parse XML", ex);
+                        throw new TransformationException(ex);
+                    }
+                }
 		
 		return transformXmlBeans(xo);
 	}

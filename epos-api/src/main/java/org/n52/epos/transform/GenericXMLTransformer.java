@@ -32,8 +32,6 @@ import java.util.Date;
 
 import org.n52.epos.event.EposEvent;
 import org.n52.epos.event.MapEposEvent;
-import org.n52.epos.transform.EposTransformer;
-import org.n52.epos.transform.TransformationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -41,7 +39,7 @@ import org.w3c.dom.Node;
 public class GenericXMLTransformer implements EposTransformer {
 
 	@Override
-	public EposEvent transform(Object input) throws TransformationException {
+	public EposEvent transform(Object input, String contentType) throws TransformationException {
 		Date now = new Date();
 		MapEposEvent result = new MapEposEvent(now.getTime(), now.getTime());
 		result.setOriginalObject(input);
@@ -49,7 +47,7 @@ public class GenericXMLTransformer implements EposTransformer {
 	}
 
 	@Override
-	public boolean supportsInput(Object input) {
+	public boolean supportsInput(Object input, String contentType) {
 		if (input instanceof Element || input instanceof Node ||
 				input instanceof Document) {
 			return true;

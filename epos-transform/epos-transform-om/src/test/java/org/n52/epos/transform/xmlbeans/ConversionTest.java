@@ -53,14 +53,14 @@ public class ConversionTest {
 	public void testConversion() throws Exception {
 		Class<?> processorInputClass = resolveProcesserInputClass();
 		Object result = TransformationRepository.Instance.transform(XmlObject.Factory.parse(
-				getClass().getResourceAsStream(OM_DOCUMENT)), processorInputClass);
+				getClass().getResourceAsStream(OM_DOCUMENT)), processorInputClass, null);
 		process(result);
 	}
 	
 	@org.junit.Test
 	public void testConversionOfElement() throws Exception {
 		Class<?> processorInputClass = resolveProcesserInputClass();
-		Object result = TransformationRepository.Instance.transform(readElement(), processorInputClass);
+		Object result = TransformationRepository.Instance.transform(readElement(), processorInputClass, null);
 		process(result);
 	}
 

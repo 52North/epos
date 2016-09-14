@@ -99,7 +99,7 @@ public class EventWorkflowBase {
 
 		for (String fn : fileNames) {
 			result.add((EposEvent) TransformationRepository.Instance.transform(
-					readXmlContent(fn), EposEvent.class));
+					readXmlContent(fn), EposEvent.class, null));
 			EposEngine.getInstance().filterEvent(result.get(result.size()-1));
 		}
 

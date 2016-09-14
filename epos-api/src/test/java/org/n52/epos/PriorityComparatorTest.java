@@ -47,7 +47,7 @@ public class PriorityComparatorTest {
 	
 	@Test
 	public void testComparison() throws TransformationException {
-		TransformationRepository.Instance.transform(input, EposEvent.class);
+		TransformationRepository.Instance.transform(input, EposEvent.class, null);
 		
 		Assert.assertTrue("Not the expected transformer: "+ selectedTransformer,
 				selectedTransformer.equals(LocalTransformer2.class));
@@ -56,13 +56,13 @@ public class PriorityComparatorTest {
 	public static class LocalTransformer1 implements EposTransformer {
 
 		@Override
-		public EposEvent transform(Object input) throws TransformationException {
+		public EposEvent transform(Object input, String contentType) throws TransformationException {
 			PriorityComparatorTest.selectedTransformer = getClass();
 			return null;
 		}
 
 		@Override
-		public boolean supportsInput(Object input) {
+		public boolean supportsInput(Object input, String contentType) {
 			return input instanceof RuntimeException;
 		}
 

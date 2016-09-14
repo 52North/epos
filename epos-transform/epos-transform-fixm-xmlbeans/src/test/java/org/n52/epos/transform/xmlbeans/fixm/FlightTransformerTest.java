@@ -26,21 +26,40 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  */
-package org.n52.epos.test;
 
+package org.n52.epos.transform.xmlbeans.fixm;
+
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.geom.Point;
 import java.io.IOException;
-
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
+import java.io.InputStream;
+import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
+import org.junit.Test;
 import org.n52.epos.event.EposEvent;
-import org.n52.epos.transform.TransformationException;
-import org.n52.epos.transform.TransformationRepository;
+import org.n52.epos.event.MapEposEvent;
 
-public class EventFactory {
+/**
+ *
+ * @author <a href="mailto:m.rieke@52north.org">Matthes Rieke</a>
+ */
+public class FlightTransformerTest {
 
-	public static EposEvent createOMEvent() throws XmlException, IOException, TransformationException {
-		XmlObject xo = XmlObject.Factory.parse(EventFactory.class.getResourceAsStream("om20-observation.xml"));
-		return (EposEvent) TransformationRepository.Instance.transform(xo, EposEvent.class, null);
-	}
+    @Test
+    public void testDecoding() throws IOException {
+        FlightTransformer decoder = new FlightTransformer();
+
+        EposEvent flight = decoder.decode(readFlight());
+
+        Assert.assertThat(flight.getValue("gufi"), CoreMatchers.is("8c7995c5-1a65-430c-96d8-a8347b9ed2a3"));
+        Assert.assertThat(flight.getValue("identification"), CoreMatchers.is("MNG200D"));
+        Point geom = (Point) (Geometry) flight.getValue(MapEposEvent.GEOMETRY_KEY);
+        Assert.assertThat(geom.getY(), CoreMatchers.is(35.15));
+        Assert.assertThat(geom.getX(), CoreMatchers.is(-119.38));
+    }
+
+    private InputStream readFlight() {
+        return getClass().getResourceAsStream("test-flight.xml");
+    }
 
 }

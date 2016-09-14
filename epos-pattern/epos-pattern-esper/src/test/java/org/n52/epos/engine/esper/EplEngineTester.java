@@ -26,35 +26,38 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  */
-package org.n52.epos.transform.xmlbeans.om20;
+package org.n52.epos.engine.esper;
 
-import java.io.IOException;
-import net.opengis.om.x20.OMObservationDocument;
-import org.apache.xmlbeans.XmlException;
-import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
-import org.junit.Test;
-import org.n52.epos.event.EposEvent;
-import org.n52.epos.transform.TransformationException;
+import com.espertech.esper.client.EPRuntime;
+import com.espertech.esper.client.EPServiceProvider;
+import com.espertech.esper.client.EPServiceProviderManager;
+import com.espertech.esper.client.EPStatement;
+import com.espertech.esper.client.EventBean;
+import java.util.Collections;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
+ * @author <a href="mailto:m.rieke@52north.org">Matthes Rieke</a>
  */
-public class OM20TransformerTest {
-
-    @Test
-    public void testTransformation() throws TransformationException, IOException, XmlException {
-        OM20Transformer transformer = new OM20Transformer();
-        
-        EposEvent result = transformer.transform(readXml(), null);
-        
-        Assert.assertThat((Double) result.getValue("doubleValue"), CoreMatchers.is(29.0));
-        Assert.assertThat(result.getValue("procedure").toString(), CoreMatchers.is("ws2500"));
-        Assert.assertThat(result.getValue("observedProperty").toString(), CoreMatchers.is("AirTemperature"));
-    }
-
-    private OMObservationDocument readXml() throws IOException, XmlException {
-        return OMObservationDocument.Factory.parse(getClass().getResourceAsStream("om.xml"));
-    }
+public class EplEngineTester {
     
+    private static final Logger LOG = LoggerFactory.getLogger(EplEngineTester.class);
+    
+    public static void main(String[] args) throws InterruptedException {
+        EPServiceProvider epService = EPServiceProviderManager.getDefaultProvider();
+        EPRuntime runtime = epService.getEPRuntime();
+        epService.getEPAdministrator().getConfiguration().addEventType("input", Collections.singletonMap("procedure", Double.class));
+        
+        EPStatement stmt = epService.getEPAdministrator().createEPL("select * from input where procedure > 0");
+        stmt.addListener((EventBean[] newEvents, EventBean[] oldEvents) -> {
+            System.out.println(newEvents[0].toString());
+        });
+        
+        runtime.sendEvent(Collections.singletonMap("procedure", 1.0), "input");
+        
+        Thread.sleep(10000);
+    }
+
 }

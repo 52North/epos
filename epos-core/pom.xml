@@ -52,7 +52,7 @@
 		<!-- used via ServiceLoader -->
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>epos-transform-xmlbeans</artifactId>
+			<artifactId>epos-transform-om</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

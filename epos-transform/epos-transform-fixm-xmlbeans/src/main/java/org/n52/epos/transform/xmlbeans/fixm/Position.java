@@ -26,21 +26,43 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
  * Public License for more details.
  */
-package org.n52.epos.test;
 
-import java.io.IOException;
+package org.n52.epos.transform.xmlbeans.fixm;
 
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
-import org.n52.epos.event.EposEvent;
-import org.n52.epos.transform.TransformationException;
-import org.n52.epos.transform.TransformationRepository;
+/**
+ *
+ * @author <a href="mailto:m.rieke@52north.org">Matthes Rieke</a>
+ */
+public class Position {
 
-public class EventFactory {
+    private double latitude;
+    private double longitude;
 
-	public static EposEvent createOMEvent() throws XmlException, IOException, TransformationException {
-		XmlObject xo = XmlObject.Factory.parse(EventFactory.class.getResourceAsStream("om20-observation.xml"));
-		return (EposEvent) TransformationRepository.Instance.transform(xo, EposEvent.class, null);
-	}
+    public Position() {
+        this.latitude = 0;
+        this.longitude = 0;
+    }
+
+
+    public Position(double latitude, double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
 
 }

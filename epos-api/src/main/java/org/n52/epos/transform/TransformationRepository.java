@@ -50,17 +50,19 @@ public interface TransformationRepository<O> {
 	 * Transform an object to the desired output type.
 	 * 
 	 * @param input the input object
+         * @param contentType the content/mime
 	 * @return the input object transformed to type O
 	 * @throws TransformationException if the transformation failed
 	 */
-	public O transform(Object input) throws TransformationException;
+	public O transform(Object input, String contentType) throws TransformationException;
 
 	/**
 	 * @param input the input class
+         * @param contentType the content/mime
 	 * @return true if and only if the input object can be transformed to the desired
 	 * output type O
 	 */
-	public boolean supportsInput(Object input);
+	public boolean supportsInput(Object input, String contentType);
 
 	/**
 	 * @return a set of supported output classes
@@ -78,14 +80,14 @@ public interface TransformationRepository<O> {
 	public static class Instance {
 
 		private static final Logger logger = LoggerFactory.getLogger(Instance.class);
-		private static List<TransformationRepository<?>> repos;
+		private static final List<TransformationRepository<?>> repos;
 
 		static {
 			@SuppressWarnings("rawtypes")
 			ServiceLoader<TransformationRepository> loader = ServiceLoader
 					.load(TransformationRepository.class);
 
-			repos = new ArrayList<TransformationRepository<?>>();
+			repos = new ArrayList<>();
 			for (TransformationRepository<?> transformationRepsitory : loader) {
 				repos.add(transformationRepsitory);
 			}
@@ -93,7 +95,7 @@ public interface TransformationRepository<O> {
 
 		private static List<TransformationRepository<?>> getRepositories(
 				Class<?> out) {
-			List<TransformationRepository<?>> result = new ArrayList<TransformationRepository<?>>();
+			List<TransformationRepository<?>> result = new ArrayList<>();
 
 			Set<Class<?>> outputClasses;
 			for (TransformationRepository<?> t : repos) {
@@ -109,16 +111,17 @@ public interface TransformationRepository<O> {
 		/**
 		 * @param input the input object
 		 * @param outputClass the desired output class type
+                 * @param contentType the content/mime
 		 * @return the transformed object as a type of outputClass
 		 * @throws TransformationException if no matching transformer is available
 		 */
-		public static <T> T transform(Object input, Class<? extends T> outputClass)
+		public static <T> T transform(Object input, Class<? extends T> outputClass, String contentType)
 				throws TransformationException {
-			List<TransformationRepository<?>> repos = getRepositories(outputClass);
-			for (TransformationRepository<?> t : repos) {
-				if (t.supportsInput(input)) {
+			List<TransformationRepository<?>> canidates = getRepositories(outputClass);
+			for (TransformationRepository<?> t : canidates) {
+				if (t.supportsInput(input, contentType)) {
 					logger.debug("Using {} TransformationRepository", t.getClass().getName());
-					Object result = t.transform(input);
+					Object result = t.transform(input, contentType);
 					return (T) result;
 				}
 
