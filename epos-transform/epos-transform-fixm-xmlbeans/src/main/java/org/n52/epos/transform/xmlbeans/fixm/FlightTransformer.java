@@ -64,6 +64,7 @@ import aero.fixm.flight.x30.FlightDocument;
 import aero.fixm.flight.x30.FlightType;
 import aero.fixm.foundation.x30.GeographicLocationType;
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 import java.util.List;
@@ -92,15 +93,22 @@ public class FlightTransformer extends AbstractFIXMTransformer {
     
     private static final Logger LOG = LoggerFactory.getLogger(FlightTransformer.class);
     private final GeometryFactory geometryFactory;
+    private final Envelope tb12bbox;
+    private final Envelope tb12bbox2;
+    private final Envelope tb12bbox3;
 
     public FlightTransformer() {
         this.geometryFactory = new GeometryFactory();
+        this.tb12bbox = new Envelope(new Coordinate(-88.991824, 36.594847), new Coordinate(-77.845203, 29.387093));
+        this.tb12bbox2 = new Envelope(new Coordinate(-93.940118, 41.044241), new Coordinate(-88.178444, 37.142075));
+        this.tb12bbox3 = new Envelope(new Coordinate(-84.051634, 28.954655), new Coordinate(-81.196927, 26.999078));
     }
     
     public EposEvent decode(XmlObject xo) throws IOException {
         if (xo instanceof FlightDocument) {
             FlightDocument fd = (FlightDocument) xo;
             Position curr = parseCurrentPosition(fd);
+            
             String gufi = parseGufi(fd);
             String identification = parseIdentification(fd);
             long now = System.currentTimeMillis();
@@ -109,6 +117,7 @@ public class FlightTransformer extends AbstractFIXMTransformer {
             event.setValue("gufi", gufi);
             event.setValue("identification", identification);
             Point geom = this.geometryFactory.createPoint(new Coordinate(curr.getLongitude(), curr.getLatitude()));
+            geom = applyTestbed12Shift(geom);
             event.setValue(MapEposEvent.GEOMETRY_KEY, geom);
             
             return event;
@@ -199,6 +208,26 @@ public class FlightTransformer extends AbstractFIXMTransformer {
     @Override
     protected QName getSupportedQName() {
         return FlightDocument.type.getDocumentElementName();
+    }
+
+    private Point applyTestbed12Shift(Point geom) {
+        if (tb12bbox.contains(geom.getCoordinate())) {
+            return this.geometryFactory.createPoint(new Coordinate(
+                    geom.getCoordinate().x - 37.830098 + 0.091904 - 0.491788, 
+                    geom.getCoordinate().y + 4.158672 + 0.313166));
+        }
+        else if (tb12bbox2.contains(geom.getCoordinate())) {
+            return this.geometryFactory.createPoint(new Coordinate(
+                    geom.getCoordinate().x - 32.054741, 
+                    geom.getCoordinate().y - 0.93747));
+        }
+        else if (tb12bbox3.contains(geom.getCoordinate())) {
+            return this.geometryFactory.createPoint(new Coordinate(
+                    geom.getCoordinate().x - 35.887528, 
+                    geom.getCoordinate().y + 5.96084));
+        }
+        
+        return geom;
     }
     
     
