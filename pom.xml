@@ -271,6 +271,16 @@
 				<artifactId>52n-xml-eml-v001</artifactId>
 				<version>${n52.xml.version}</version>
 			</dependency>
+                        <dependency>
+				<groupId>org.n52.sensorweb</groupId>
+				<artifactId>52n-xml-gml-v321</artifactId>
+				<version>${n52.xml.version}</version>
+			</dependency>
+                        <dependency>
+				<groupId>org.n52.sensorweb</groupId>
+				<artifactId>52n-xml-soap-v12</artifactId>
+				<version>${n52.xml.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>org.n52.sensorweb</groupId>
 				<artifactId>52n-xml-em-v020</artifactId>
