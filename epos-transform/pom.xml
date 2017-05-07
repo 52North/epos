@@ -18,7 +18,7 @@
 		<module>epos-transform-om</module>
                 <module>epos-transform-aixm-xmlbeans</module>
                 <module>epos-transform-aixm-xpath</module>
-                <module>epos-transform-fixm-xmlbeans</module>
+<!--                <module>epos-transform-fixm-xmlbeans</module>-->
 	</modules>
 
 </project>
