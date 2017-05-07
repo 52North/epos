@@ -281,6 +281,11 @@
 				<artifactId>52n-xml-soap-v12</artifactId>
 				<version>${n52.xml.version}</version>
 			</dependency>
+                        <dependency>
+                                <artifactId>52n-xml-xlink-v110</artifactId>
+                                <groupId>org.n52.sensorweb</groupId>
+                                <version>${n52.xml.version}</version>
+                        </dependency>
 			<dependency>
 				<groupId>org.n52.sensorweb</groupId>
 				<artifactId>52n-xml-em-v020</artifactId>

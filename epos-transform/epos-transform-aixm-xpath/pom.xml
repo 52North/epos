@@ -38,28 +38,9 @@
 			<artifactId>jts</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.n52.sensorweb</groupId>
-			<artifactId>52n-oxf-xmlbeans</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.n52.sensorweb</groupId>
-			<artifactId>52n-oxf-conversion</artifactId>
-		</dependency>
-                <dependency>
-                        <groupId>org.n52.sensorweb</groupId>
-                        <artifactId>52n-xml-gml-v321</artifactId>
-                </dependency>
-                <dependency>
-                        <groupId>org.n52.sensorweb</groupId>
-                        <artifactId>52n-xml-soap-v12</artifactId>
-                </dependency>
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
+                        <scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

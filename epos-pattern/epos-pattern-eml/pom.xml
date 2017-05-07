@@ -39,17 +39,13 @@
 		    <groupId>org.n52.sensorweb</groupId>
 		    <artifactId>52n-xml-em-v020</artifactId>
 		</dependency>
-		<dependency>
+<!--		<dependency>
 		    <groupId>org.n52.sensorweb</groupId>
 		    <artifactId>52n-oxf-conversion</artifactId>
-		</dependency>
+		</dependency>-->
                 <dependency>
                         <groupId>org.n52.sensorweb</groupId>
                         <artifactId>52n-xml-gml-v321</artifactId>
-                </dependency>
-                <dependency>
-                        <groupId>org.n52.sensorweb</groupId>
-                        <artifactId>52n-xml-soap-v12</artifactId>
                 </dependency>
                 <dependency>
 		    <groupId>org.n52.sensorweb</groupId>
