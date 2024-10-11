@@ -1,4 +1,8 @@
-# 52°North EPOS [![Build Status](https://travis-ci.org/52North/epos.png?branch=master)](https://travis-ci.org/52North/epos)
+# ARCHIVED
+
+This project is no longer maintained and will not receive any further updates. If you plan to continue using it, please be aware that future security issues will not be addressed.
+
+# 52°North EPOS
 
 EPOS provides event stream processing components using a powerful and
 extensible encoding/decoding architecture.
